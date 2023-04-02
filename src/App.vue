@@ -1,26 +1,20 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <UserScreen/>
+  <AdminScreen/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import UserScreen from '../src/screens/UserScreen/UserScreen.vue'
+import AdminScreen from '../src/screens/AdminScreen/AdminScreen.vue'
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    UserScreen,
+    AdminScreen
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import url(./style/main.css);
 </style>

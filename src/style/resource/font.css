@@ -1,0 +1,82 @@
+@font-face {
+    font-family: Pacifio-Regular;
+    src: url(../../assets/Fonts/Pacifico-Regular.ttf);
+}
+@font-face {
+    font-family: Font Regular;
+    src: url(../../assets/Fonts/notosans-regular.2cb88a13.woff2);
+}
+
+@font-face {
+    font-family: Font Bold;
+    src: url(../../assets/Fonts/notosans-bold.3ede5aff.woff2);
+}
+
+@font-face {
+    font-family: Font Italic;
+    src: url(../../assets/Fonts/notosans-italic.1c1aaac9.woff2);
+}
+
+@font-face {
+    font-family: Font SemiBold;
+    src: url(../../assets/Fonts/notosans-semibold.df3e6dc4.woff2);
+}
+
+body {
+    font-size: 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+}
+
+title {
+    font-size: 1rem;
+}
+
+button {
+    font-size: 0.875rem;
+}
+
+::placeholder {
+    font-size: 0.875rem;
+}
+p {
+    font-size: 1.025rem;
+    margin: 4px 0;
+}
+
+.text-red {
+    color: var(--text-red-color);
+}
+.text-blue {
+    color: var(--text-blue-color);
+}
+.text-white-primary {
+    color: var(--text-white-primary-color);
+}
+.text-white-secondary {
+    color: var(--text-white-secondary-color);
+}
+.font-bold {
+    font-family: Font Bold;
+}
+.font-semibold {
+    font-family: Font SemiBold;
+}

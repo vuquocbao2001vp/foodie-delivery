@@ -1,0 +1,133 @@
+.login-bg {
+    background-image: url(../../assets/Icons/login_background.jpg);
+    background-size: cover;
+}
+
+.restaurant-logo {
+    background-image: url(../../assets//Icons/restaurant.png);
+    background-size: cover;
+}
+
+.pizza-logo {
+    background-image: url(../../assets//Icons/pizza.png);
+    background-size: cover;
+}
+
+.icon-cart {
+    mask: url(../../assets//Icons/icon_cart.svg);
+    background-size: cover;
+}
+
+.icon-chevron {
+    mask: url(../../assets//Icons/ic_Chevron.png);
+    background-size: cover;
+    background-color: #000;
+}
+
+.icon-chevron-hover {
+    mask: url(../../assets//Icons/ic_Chevron.png);
+    background-size: cover;
+    background-color: rgb(39, 183, 248) !important;
+}
+
+.icon-X {
+    mask: url('@/assets/Icons/Icon_request.0a9f1483.svg') no-repeat -221px -5px;
+	width: 14px;
+	height: 15px;
+    background-color: var(--grid-border);
+}
+
+.icon-show-password{
+    background: url('@/assets/Icons/Icon.9280241f.svg') no-repeat -121px -125px;
+	width: 22px;
+	height: 14px;
+}
+.icon-not-show-password{
+    background: url('@/assets/Icons/Icon.9280241f.svg') no-repeat -145px -124px;
+	width: 22px;
+	height: 16px;
+}
+
+.icon-edit {
+    mask: url('@/assets/Icons/Icon.9280241f.svg') no-repeat -219px -3px;
+	width: 18px;
+	height: 18px;
+    background-color: var(--text-secondary-color);
+}
+
+.icon-edit:hover {
+    background-color: var(--text-blue-color);
+}
+
+.icon-delete {
+    mask: url('@/assets/Icons/Icon.9280241f.svg') no-repeat -171px -26px;
+	width: 18px;
+	height: 20px;
+    background-color: var(--text-red-color);
+}
+
+.icon-delete:hover {
+    mask: url('@/assets/Icons/Icon.9280241f.svg') no-repeat -171px -26px;
+	width: 18px;
+	height: 20px;
+    background-color: var(--input-error-border-color);
+}
+
+.icon-X-secondary{
+    mask: url('@/assets/Icons/Icon.9280241f.svg') no-repeat -222px -30px;
+	width: 12px;
+	height: 12px;
+    background-color: var(--text-secondary-color);
+}
+
+.icon-prev {
+    mask: url('@/assets/Icons/Sprites.64af8f61.svg') no-repeat -36px -361px;
+	width: 8px;
+	height: 14px;
+    background-color: var(--text-secondary-color);
+}
+.icon-next {
+    mask: url('@/assets/Icons/Sprites.64af8f61.svg') no-repeat -84px -361px;
+	width: 8px;
+	height: 14px;
+    background-color: var(--text-secondary-color);
+}
+
+.icon-check {
+    background-color: var(--primary);
+    mask: url(@/assets/Icons/Icon.9280241f.svg) no-repeat -52px -102px;
+	width: 17px;
+	height: 12px;
+}
+
+.icon-toast-success {
+	background-color: #fff;
+    mask: url(@/assets/Icons/Icon_request.0a9f1483.svg) no-repeat -624px -25px;
+	width: 20px;
+	height: 16px;
+}
+
+/* .icon-toast-error {
+	background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -752px -462px;
+	width: 36px;
+	height: 36px;
+} */
+
+.icon-center {
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.icon-right {
+    background-repeat: no-repeat;
+    background-position: right;
+    cursor: pointer;
+}
+
+.icon-left {
+    background-repeat: no-repeat;
+    background-position-x: 8px;
+    background-position-y: center;
+    cursor: pointer;
+}

@@ -1,0 +1,77 @@
+@import url(./resource/font.css);
+@import url(./resource/color.css);
+@import url(./resource/icon.css);
+@import url(./devextreme/dxRangeSlider.css);
+@import url(./devextreme/dxSelectBox.css);
+@import url(./devextreme/dxTextBox.css);
+@import url(./devextreme/dxCheckBox.css);
+
+html {
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--text-primary-color);
+    font-family: Font Regular !important;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-primary-color) !important;
+}
+
+textarea {
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    border: 1px solid #e0e5e6;
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--text-primary-color);
+    padding: 12px;
+    resize: none;
+    box-sizing: border-box;
+}
+textarea:focus {
+    box-shadow: 0 0 0 0.5px #dcdcdc;
+    outline: none;
+}
+
+.dx-widget {
+    font-family: Font Regular !important;
+}
+
+::placeholder {
+    font-style: italic;
+    color: var(--text-placeholder-color);
+    padding-left: 4px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #cdd3d6;
+    width: 10px;
+    height: 10px;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: #9e9e9e!important;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #fff;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1!important;
+}

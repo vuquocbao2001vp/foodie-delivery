@@ -1,0 +1,8 @@
+/* .dx-texteditor-input {
+    padding-left: 12px !important;
+} */
+.dx-placeholder {
+    /* padding-left: 6px !important; */
+    font-style: italic;
+    color: var(--text-placeholder-color) !important;
+}

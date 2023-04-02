@@ -1,0 +1,13 @@
+.dx-slider-handle {
+    height: 16px !important;
+    border-radius: 50% !important;
+    background-color: #666 !important;
+}
+.dx-rangeslider-start-handle, .dx-rangeslider-end-handle {
+    top: 5px !important;
+}
+.dx-slider-range.dx-slider-range-visible {
+    border: 1px solid #999999 !important;
+    background: #999999 !important;
+    border-radius: 2px;
+}
