@@ -1,8 +1,11 @@
-/* .dx-texteditor-input {
-    padding-left: 12px !important;
-} */
+
 .dx-placeholder {
-    /* padding-left: 6px !important; */
     font-style: italic;
     color: var(--text-placeholder-color) !important;
+}
+.dx-invalid-message > .dx-overlay-content {
+    padding: 4px 0 !important;
+    font-size: .85rem !important;
+    background-color: rgba(255, 255, 255, 0) !important;
+    color: var(--text-red-color) !important;
 }

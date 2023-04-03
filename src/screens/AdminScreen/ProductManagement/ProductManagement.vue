@@ -47,7 +47,7 @@
               <img class="img" :src="product.image" alt="" />
             </td>
             <td>{{product.name}}</td>
-            <td>{{product.category.category_name}}</td>
+            <td>{{product.category}}</td>
             <td class="td-text-center">{{product.price}}</td>
             <td>
               <div class="flex flex-icon">

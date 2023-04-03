@@ -1,22 +1,23 @@
 <template>
-  <div class="toast-container flex">
-    <div class="toast-message flex" :class="{ 'hide-toast': isHideToast }">
+  <div v-if="toastMessage" class="toast-container flex">
+    <div class="toast-message flex">
       <div class="toast-icon flex"><div class="icon-toast-success"></div></div>
-      <div class="toast-text">{{ text }}</div>
+      <div class="toast-text">{{ toastMessage }}</div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  props: ["isHideToast", "text"],
+  computed: {
+    ...mapGetters(["toastMessage"]),
+  },
 };
 </script>
 <style scoped>
-.hide-toast {
-  display: none !important;
-}
 .toast-container {
-z-index: 300;
+  z-index: 300;
   position: absolute;
   top: 16px;
   left: 0;

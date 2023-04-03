@@ -112,6 +112,17 @@
 	width: 36px;
 	height: 36px;
 } */
+.icon-warning {
+	background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -598px -463px;
+	width: 36px;
+	height: 37px;
+}
+
+.icon-info {
+	background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -672px -462px;
+	width: 36px;
+	height: 36px;
+}
 
 .icon-center {
     background-repeat: no-repeat;

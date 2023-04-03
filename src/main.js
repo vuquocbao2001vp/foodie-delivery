@@ -11,6 +11,13 @@ import DxCheckBox from "devextreme-vue/check-box"
 import DxRangeSlider from 'devextreme-vue/range-slider';
 import DxGallery from 'devextreme-vue/gallery';
 import DxRadioGroup from 'devextreme-vue/radio-group';
+import DxButton from 'devextreme-vue/button';
+import DxValidationSummary from 'devextreme-vue/validation-summary';
+import {
+  DxValidator,
+  DxRequiredRule,
+  DxEmailRule,
+} from 'devextreme-vue/validator';
 
 import BaseButton from '../src/components/base/BaseButton.vue'
 import BaseProduct from '../src/components/base/BaseProduct.vue'
@@ -20,7 +27,8 @@ import BaseLoader from '../src/components/base/BaseLoader.vue'
 import BaseToast from '../src/components/base/BaseToast.vue'
 
 import {Enum} from '../src/constants/enums/enum.js'
-import axiosPlugin from './constants/api/axiosInstance'
+import axiosInstance from './constants/api/axiosInstance'
+import compareObjects from './constants/functions/compareObjects'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -32,9 +40,14 @@ const app = createApp(App);
 app.component("DxSelectBox", DxSelectBox);
 app.component("DxTextBox", DxTextBox);
 app.component("DxCheckBox", DxCheckBox);
+app.component("DxButton", DxButton);
 app.component("DxRadioGroup", DxRadioGroup);
 app.component("DxRangeSlider", DxRangeSlider);
 app.component("DxGallery", DxGallery);
+app.component("DxValidationSummary", DxValidationSummary);
+app.component("DxValidator", DxValidator);
+app.component("DxRequiredRule", DxRequiredRule);
+app.component("DxEmailRule", DxEmailRule);
 
 app.component("BaseButton", BaseButton);
 app.component("BaseProduct", BaseProduct);
@@ -45,7 +58,8 @@ app.component("BaseToast", BaseToast);
 
 app.use(store);
 
-app.config.globalProperties.$axios = axiosPlugin
+app.config.globalProperties.$axios = axiosInstance
+app.config.globalProperties.$compareObjects = compareObjects
 
 app.provide('Enum', Enum);
 

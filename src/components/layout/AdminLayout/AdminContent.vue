@@ -1,6 +1,7 @@
 <template>
 <div class="b-content">
     <BaseLoader />
+    <BaseToast />
     <router-view></router-view>
 </div>
 </template>
