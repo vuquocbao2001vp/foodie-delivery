@@ -41,7 +41,7 @@ export default {
         },
         {
           routerLink: "/admin/order-management",
-          title: "Quản lý đơn hàng",
+          title: "Danh sách đơn hàng",
           icon: "icon-bank",
         },
         {

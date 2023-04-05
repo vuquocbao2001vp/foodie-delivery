@@ -19,6 +19,10 @@ import {
   DxEmailRule,
 } from 'devextreme-vue/validator';
 
+import {QuillEditor} from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import '@vueup/vue-quill/dist/vue-quill.core.css'
+
 import BaseButton from '../src/components/base/BaseButton.vue'
 import BaseProduct from '../src/components/base/BaseProduct.vue'
 import BaseTable from '../src/components/base/BaseTable.vue'
@@ -48,6 +52,8 @@ app.component("DxValidationSummary", DxValidationSummary);
 app.component("DxValidator", DxValidator);
 app.component("DxRequiredRule", DxRequiredRule);
 app.component("DxEmailRule", DxEmailRule);
+
+app.component("QuillEditor", QuillEditor);
 
 app.component("BaseButton", BaseButton);
 app.component("BaseProduct", BaseProduct);

@@ -68,6 +68,9 @@ p {
 .text-blue {
     color: var(--text-blue-color);
 }
+.text-green {
+    color: var(--text-green-color);
+}
 .text-white-primary {
     color: var(--text-white-primary-color);
 }

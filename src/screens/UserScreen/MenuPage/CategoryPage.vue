@@ -9,7 +9,11 @@
 </template>
 <script>
 export default {
-    
+    watch: {
+    "$route.path": function(value) {
+      console.log(value);
+    },
+  },
 }
 </script>
 <style scoped>

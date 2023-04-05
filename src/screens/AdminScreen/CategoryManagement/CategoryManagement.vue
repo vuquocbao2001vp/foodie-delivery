@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setCategories"]),
-    ...mapActions(["getCategories", "deleteCategory", "showToastMessage"]),
+    ...mapActions(["getCategories", "deleteCategory"]),
 
     /**
      * Hiển thị chi tiết danh mục

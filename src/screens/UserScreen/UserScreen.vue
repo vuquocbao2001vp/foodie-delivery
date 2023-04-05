@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loginRole!='admin'" class="container">
+  <div v-if="loginRole=='user'" class="container">
     <div class="top-container">
       <TheHeader/>
     </div>
@@ -12,7 +12,7 @@
 <script>
 import TheHeader from '@/components/layout/UserLayout/TheHeader.vue'
 import TheContent from '@/components/layout/UserLayout/TheContent.vue'
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   components: {
@@ -21,6 +21,10 @@ export default {
   },
   computed: {
     ...mapGetters(["loginRole"]),
+  },
+  
+  methods: {
+    ...mapMutations(["setRole"]),
   },
 }
 </script>

@@ -30,7 +30,7 @@
             <th>Email</th>
             <th>Địa chỉ</th>
             <th class="td-text-center">Ngày tạo</th>
-            <th class="td-text-center">Chức năng</th>
+            <th class="td-text-center">Chi tiết</th>
           </tr>
         </template>
         <template #table-body>
@@ -45,7 +45,7 @@
             <td>
               <div class="flex flex-icon">
                 <div @click="showDetail(true)" class="flex function-icon">
-                  <div class="icon-edit icon-center" title="Sửa"></div>
+                  <div class="icon-detail icon-center" title="Chi tiết"></div>
                 </div>
               </div>
             </td>

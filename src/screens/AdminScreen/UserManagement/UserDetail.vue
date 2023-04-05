@@ -38,8 +38,7 @@
       </template>
       <template #control>
         <div class="control-flex flex">
-            <!-- <div class="control-button"><BaseButton buttonType="regular-square" buttonName="Xác nhận"/></div> -->
-            <div class="control-button"><BaseButton buttonType="white-regular-square" buttonName="Đóng"/></div>
+            <div class="control-button" @click="showDetail(false)"><BaseButton buttonType="white-regular-square" buttonName="Đóng"/></div>
         </div>
       </template>
     </BasePopup>
@@ -51,7 +50,6 @@ export default {
   props: ["isShowDetail"],
   data() {
     return {
-        displayStatus: ['Hiển thị', 'Không hiển thị'],
     }
   },
   methods: {

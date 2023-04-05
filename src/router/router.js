@@ -5,12 +5,12 @@ import CategoryPage from '../screens/UserScreen/MenuPage/CategoryPage.vue'
 import ContactPage from '../screens/UserScreen/ContactPage/ContactPage.vue'
 import CartPage from '../screens/UserScreen/CartPage/CartPage.vue'
 import PaymentPage from '../screens/UserScreen/CartPage/PaymentPage.vue'
-import LoginPage from '../screens/UserScreen/LoginPage/LoginPage.vue'
-import ForgetPwPage from '../screens/UserScreen/LoginPage/ForgetPwPage.vue'
-import RegisterPage from '../screens/UserScreen/LoginPage/RegisterPage.vue'
+import LoginScreen from '../screens/LoginScreen/LoginScreen.vue'
+import LoginPage from '../screens/LoginScreen/LoginPage.vue'
+import ForgetPwPage from '../screens/LoginScreen/ForgetPwPage.vue'
+import RegisterPage from '../screens/LoginScreen/RegisterPage.vue'
 import FoodDetail from '../screens/UserScreen/MenuPage/FoodDetail.vue'
 import CheckOutPage from '../screens/UserScreen/CartPage/CheckOutPage.vue'
-// import AdminScreen from '../screens/AdminScreen/AdminScreen.vue'
 import AdminManagement from '../screens/AdminScreen/AdminManagement/AdminManagement.vue'
 import CategoryManagement from '../screens/AdminScreen/CategoryManagement/CategoryManagement.vue'
 import OrderManagement from '../screens/AdminScreen/OrderManagement/OrderManagement.vue'
@@ -20,7 +20,7 @@ import OverviewManagement from '../screens/AdminScreen/OverviewManagement/Overvi
 
 
 const routers = [
-    // {path: "/", component: HomePage},
+    {path: "/", component: HomePage},
     {path: "/home", name: "home", component: HomePage},
     {path: "/intro", name: "intro", component: IntroPage},
     {
@@ -39,10 +39,12 @@ const routers = [
     {path: "/contact", name: "contact", component: ContactPage},
     {path: "/cart", name: "cart", component: CartPage},
     {
-        path: "/login/",
-        name: "login",
-        component: LoginPage,
+        path: "/auth/",
+        name: "auth",
+        component: LoginScreen,
+        redirect: "/auth/login",
         children: [
+            {path: "login", name: "login", component: LoginPage},
             {path: "forget-password", name: "forget-password", component: ForgetPwPage},
             {path: "register", name: "register", component: RegisterPage},
         ]
@@ -53,7 +55,6 @@ const routers = [
     {
         path: "/admin/",
         name: "admin",
-        // component: AdminScreen,
         redirect: "/admin/overview",
         children: [
             {path: "overview", name: "Tổng quan", component: OverviewManagement},

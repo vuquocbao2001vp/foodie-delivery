@@ -30,7 +30,7 @@
             <th>Thời gian</th>
             <th>Người giao hàng</th>
             <th class="td-text-center">Trạng thái</th>
-            <th class="td-text-center">Chức năng</th>
+            <th class="td-text-center">Chi tiết</th>
           </tr>
         </template>
         <template #table-body>
@@ -41,15 +41,11 @@
             <td>240,000đ</td>
             <td>12h00 19/03/2023</td>
             <td>Lưu Bị</td>
-            <td>
-              <div class="flex flex-icon">
-                <DxSelectBox />
-              </div>
-            </td>
+            <td class="td-text-center text-green">Đã hoàn thành</td>
             <td>
               <div class="flex flex-icon">
                 <div @click="showDetail(true)" class="flex function-icon">
-                  <div class="icon-edit icon-center" title="Sửa"></div>
+                  <div class="icon-detail icon-center" title="Chi tiết"></div>
                 </div>
               </div>
             </td>

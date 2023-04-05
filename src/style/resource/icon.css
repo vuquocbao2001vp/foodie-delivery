@@ -124,6 +124,19 @@
 	height: 36px;
 }
 
+.icon-detail{
+    mask: url(@/assets/Icons/Icon_request.0a9f1483.svg) no-repeat -339px -27px;
+	width: 19px;
+	height: 19px;
+    background-color: var(--text-secondary-color);
+}
+
+.icon-detail:hover {
+    background-color: var(--text-blue-color);
+}
+
+
+
 .icon-center {
     background-repeat: no-repeat;
     background-position: center;

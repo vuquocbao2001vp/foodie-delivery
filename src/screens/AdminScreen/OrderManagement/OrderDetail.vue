@@ -49,27 +49,20 @@
         </div>
         <div class="content-item flex">
             <div class="item-title">Người giao hàng:</div>
-            <div class="item-input">
-                <DxTextBox/>
-            </div>
+            <div class="item-input">Lưu Bị</div>
         </div>
         <div class="content-item flex">
             <div class="item-title">Trạng thái:</div>
-            <div class="item-input">
-                <DxSelectBox/>
-            </div>
+            <div class="item-input text-green">Đã hoàn thành</div>
         </div>
         <div class="content-item last-item flex">
             <div class="item-title">Ghi chú người bán:</div>
-            <div class="item-input">
-                <textarea rows="2"></textarea>
-            </div>
+            <div class="item-input">Ghi chú ở đây</div>
         </div>
       </template>
       <template #control>
         <div class="control-flex flex">
-            <div class="control-button"><BaseButton buttonType="regular-square" buttonName="Xác nhận"/></div>
-            <div class="control-button"><BaseButton buttonType="white-regular-square" buttonName="Đóng"/></div>
+            <div class="control-button" @click="showDetail(false)"><BaseButton buttonType="white-regular-square" buttonName="Đóng"/></div>
         </div>
       </template>
     </BasePopup>

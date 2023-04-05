@@ -9,7 +9,7 @@ const getters = {
   },
   toastMessage(state){
     return state.toastMessage;
-  }
+  },
 };
 const mutations = {
   /**
@@ -29,7 +29,7 @@ const mutations = {
    */
   clearToastMessage(state){
     state.toastMessage = "";
-  }
+  },
 };
 const actions = {
   /**

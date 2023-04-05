@@ -1,23 +1,22 @@
 const state = {
-  isLinkToLogin: false,
-  loginRole: "admin",
+  loginRole: "guest",
 };
 
 const getters = {
-  isLinkToLogin(state) {
-    return state.isLinkToLogin;
-  },
   loginRole(state){
     return state.loginRole;
   }
 };
 const mutations = {
-  setIsLinkToLogin(state, isLinked) {
-    state.isLinkToLogin = isLinked;
-  },
+  setRole(state, role){
+    console.log(role);
+    state.loginRole = role;
+  }
 };
 
-const actions = {};
+const actions = {
+  
+};
 
 export default {
   state,

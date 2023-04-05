@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLinkToLogin == false" class="header flex">
+  <div class="header flex">
     <router-link to="/home" class="header-logo flex">
       <div class="pizza-logo icon-center logo"></div>
       <div class="logo-text">Foodie</div>
@@ -37,14 +37,14 @@
         class="icon-cart icon-center navbar-icon flex"
         title="Giỏ hàng"
       ></router-link>
-      <router-link to="/login" class="navbar-item-login flex"
+      <router-link to="/auth" class="navbar-item-login flex" @click="setRole('guest')"
         >Đăng nhập</router-link
       >
     </div>
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   data() {
@@ -53,22 +53,8 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters(["isLinkToLogin"]),
-  },
-
-  watch: {
-    "$route.path": function(value) {
-      if (value === "/login" || value === "/login/forget-password" || value === "/login/register") {
-        this.setIsLinkToLogin(true);
-      } else {
-        this.setIsLinkToLogin(false);
-      }
-    },
-  },
-
   methods: {
-    ...mapMutations(["setIsLinkToLogin"]),
+    ...mapMutations(["setRole"]),
     expandMenu(isExpand) {
       this.isMenuExpand = isExpand;
     },
