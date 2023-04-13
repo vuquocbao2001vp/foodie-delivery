@@ -10,6 +10,5 @@ export default {
 <style scoped>
 .content {
     width: 100%;
-    min-height: calc(100vh - 65px);
 }
 </style>

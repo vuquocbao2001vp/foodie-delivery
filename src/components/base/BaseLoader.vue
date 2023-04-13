@@ -16,7 +16,7 @@ export default {
   display: inline-block;
   position: absolute;
   top: 40%;
-  left: 50%;
+  left: calc(50% - 20px);
   width: 40px;
   height: 40px;
   z-index: 1000;

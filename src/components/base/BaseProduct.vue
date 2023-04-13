@@ -1,70 +1,80 @@
 <template>
   <div class="category-item">
-    <div @click="viewProduct" @mouseover="isHover=true" @mouseleave="isHover=false" class="item-image">
-        <img class="img" src="@/assets/Icons/pizza.png" alt="" />
-        <div v-show="isHover" class="img-nav flex">Thêm vào giỏ hàng</div>
+    <div
+      @click="viewProduct"
+      @mouseover="isHover = true"
+      @mouseleave="isHover = false"
+      class="item-image"
+    >
+      <img class="img" :src="product ? product.image : ''" alt="" />
+      <div v-show="isHover" class="img-nav flex">Thêm vào giỏ hàng</div>
     </div>
-    <p @click="viewProduct" class="item-name">Pizza xúc xích phô mai</p>
-    <p class="item-price">59.000 đ</p>
+    <p @click="viewProduct" class="item-name">
+      {{ product ? product.name : "" }}
+    </p>
+    <p class="item-price">
+      {{ product ? product.price.toLocaleString() : "" }}đ
+    </p>
   </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            isHover: false,
-        }
+  props: ["product"],
+  data() {
+    return {
+      isHover: false,
+    };
+  },
+  methods: {
+    viewProduct() {
+      this.$router.push({ name: "detail", query: { id: this.product.id } });
     },
-    methods: {
-        viewProduct(){
-            this.$router.push({ path: '/detail' })
-        },
-    },
+  },
 };
 </script>
 
 <style scoped>
 .category-item {
-    width: 200px;
-    margin-right: 36px;
-    margin-bottom: 24px;
-    box-sizing: border-box;
+  width: 200px;
+  margin-right: 36px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
 }
 .item-image {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    cursor: pointer;
-    box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 .img {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 .item-name {
-    width: 100%;
-    color: var(--text-red-color);
-    cursor: pointer;
+  width: 100%;
+  color: var(--text-red-color);
+  cursor: pointer;
 }
 .item-name:hover {
-    color: var(--text-primary-color);
+  color: var(--text-primary-color);
 }
 .item-price {
-    font-family: Font Bold;
+  font-family: Font Bold;
 }
 .img-nav {
-    position: absolute;
-    width: 100%;
-    height: 36px;
-    font-size: 0.95rem;
-    color: var(--text-white-secondary-color);
-    background-color: var(--primary);
-    justify-content: center;
-    bottom: 0;
-    font-family: Font SemiBold;
+  position: absolute;
+  width: 100%;
+  height: 36px;
+  font-size: 0.95rem;
+  color: var(--text-white-secondary-color);
+  background-color: var(--primary);
+  justify-content: center;
+  bottom: 0;
+  font-family: Font SemiBold;
 }
 .img-nav:hover {
-    color: var(--text-white-primary-color);
+  color: var(--text-white-primary-color);
 }
 </style>

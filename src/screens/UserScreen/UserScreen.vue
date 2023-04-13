@@ -1,10 +1,11 @@
 <template>
   <div v-if="loginRole=='user'" class="container">
-    <div class="top-container">
-      <TheHeader/>
-    </div>
+    <BaseLoader />
     <div class="content-container">
       <TheContent/>
+    </div>
+    <div class="top-container">
+      <TheHeader/>
     </div>
   </div>
 </template>
@@ -19,13 +20,19 @@ export default {
     TheHeader,
     TheContent
   },
+  created(){
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    if(vuex){
+      const userToken = vuex.user.userToken;
+      this.setUserToken(userToken);
+    }
+  },
   computed: {
     ...mapGetters(["loginRole"]),
   },
-  
   methods: {
-    ...mapMutations(["setRole"]),
-  },
+    ...mapMutations(["setUserToken"])
+  }
 }
 </script>
 
@@ -45,13 +52,13 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
 }
 .content-container {
     min-height: calc(100vh - 65px);
     width: 100%;
     box-sizing: border-box;
     margin-top: 65px;
+    padding-top: 32px;
 }
 
 </style>

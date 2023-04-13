@@ -10,12 +10,12 @@
       <form @submit.prevent="submitForm">
         <div class="main-input">
           <DxTextBox
-            label="Số điện thoại / Email"
+            label="Email"
             labelMode="floating"
-            v-model="userInput"
+            v-model="emailInput"
             :on-initialized="onInitialized"
             value-change-event="keyup"
-            max-length="20"
+            max-length="100"
           >
             <DxValidator>
               <DxRequiredRule message="" />
@@ -30,7 +30,7 @@
             :passwordChar="'*'"
             v-model="passwordInput"
             value-change-event="keyup"
-            max-length="20"
+            max-length="100"
           >
             <DxValidator>
               <DxRequiredRule message="" />
@@ -46,7 +46,7 @@
             type="success"
           />
         </div>
-        <div v-if="isWrongPassword == true" class="text-red text-italic">
+        <div v-if="isLoginSuccess == false" class="text-red text-italic">
           <div>Tài khoản hoặc mật khẩu chưa chính xác.</div>
           <div>Vui lòng đăng nhập lại.</div>
         </div>
@@ -72,20 +72,24 @@
   </div>
 </template>
 <script>
-import { mapMutations } from "vuex";
+import {mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   data() {
     return {
       elementFocus: null,
       isWrongPassword: false,
       loginMode: 1,
-      userInput: null,
+      emailInput: null,
       passwordInput: null,
     };
   },
-
+  computed: {
+    ...mapGetters(["isLoginSuccess"]),
+    
+  },
   methods: {
     ...mapMutations(["setRole"]),
+    ...mapActions(["adminLogin", "userLogin"]),
     loginOnClick() {
       this.$refs.submitButton.$el.click();
     },
@@ -101,13 +105,23 @@ export default {
         e.component.focus();
       }, 0);
     },
-    submitForm() {
-      if (this.userInput == "user") {
-        this.setRole("user");
-        this.linkToPage("/home");
-      } else if (this.userInput == "admin") {
-        this.setRole("admin");
-        this.linkToPage("/admin");
+    async submitForm() {
+      if (this.$route.path == "/auth/admin/login") {
+        await this.adminLogin({
+          email: this.emailInput,
+          password: this.passwordInput
+        })
+        if(this.isLoginSuccess){
+          this.linkToPage("/admin")
+        }
+      } else if (this.$route.path == "/auth/login") {
+        await this.userLogin({
+          email: this.emailInput,
+          password: this.passwordInput
+        })
+        if(this.isLoginSuccess){
+          this.linkToPage("/home")
+        }
       }
     },
   },

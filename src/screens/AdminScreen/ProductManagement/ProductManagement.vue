@@ -50,7 +50,7 @@
               <img class="img" :src="product.image" alt="" />
             </td>
             <td>{{ product.name }}</td>
-            <td>{{ product.category}}</td>
+            <td>{{ product.category_name }}</td>
             <td class="td-text-center">{{ product.price }}</td>
             <td>
               <div class="flex flex-icon" v-if="product.status">
@@ -75,7 +75,10 @@
                 >
                   <div class="icon-edit icon-center" title="Sửa"></div>
                 </div>
-                <div class="flex function-icon" @click="deleteProductOnClick(product)">
+                <div
+                  class="flex function-icon"
+                  @click="deleteProductOnClick(product)"
+                >
                   <div class="icon-delete icon-center" title="Xóa"></div>
                 </div>
               </div>
@@ -85,12 +88,14 @@
       </BaseTable>
     </div>
   </div>
+
   <ProductDetail
     :isShowDetail="isShowDetail"
     @showDetail="showDetail"
     :saveMode="saveMode"
     :selectedProduct="selectedProduct"
   />
+
   <BasePopup v-if="isShowPopup">
     <template #header>
       <div>Thông báo</div>
@@ -148,17 +153,19 @@ export default {
     },
   },
   created() {
-    const products = JSON.parse(sessionStorage.getItem("products"));
-    if (products) {
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    const products = vuex.admin.products;
+    if (products != null) {
       this.setProducts(products);
     } else {
-      this.getProducts({ limit: 10, offset: 10 });
+      this.getProducts({ limit: 10, offset: 0 });
     }
+    // for (let i = 0; i < this.products.length; i++) {
+    //   this.isCheck[i] = false;
+    // }
   },
   mounted() {
-    for (let i = 0; i < this.products.length; i++) {
-      this.isCheck[i] = false;
-    }
+    
   },
   methods: {
     ...mapMutations(["setProducts"]),
@@ -176,7 +183,7 @@ export default {
     /**
      * Hiển thị popup
      */
-    showPopup(isShow, message){
+    showPopup(isShow, message) {
       this.isShowPopup = isShow;
       this.popupMessage = message;
     },
@@ -186,13 +193,16 @@ export default {
      */
     deleteProductOnClick(product) {
       this.selectedProduct = product;
-      this.showPopup(true, "Bạn có chắc chắn muốn xóa sản phẩm "+product.name+" không?");
+      this.showPopup(
+        true,
+        "Bạn có chắc chắn muốn xóa sản phẩm " + product.name + " không?"
+      );
     },
 
     /**
      * sự kiện click xác nhận ở popup
      */
-    confirmPopupAction(){
+    confirmPopupAction() {
       this.deleteProduct(this.selectedProduct.id);
       this.showPopup(false);
     },
@@ -217,9 +227,7 @@ export default {
     checkAll() {
       if (this.isSelectAll) {
         this.isCheck.fill(true);
-        this.selectedProducts = this.products.map(
-          (product) => product.id
-        );
+        this.selectedProducts = this.products.map((product) => product.id);
       } else {
         this.isCheck.fill(false);
         this.selectedProducts = [];

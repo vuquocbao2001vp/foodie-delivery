@@ -2,152 +2,143 @@
   <div class="header-dashboard flex">
     <div class="header-icon icon-three-stripes"></div>
     <div class="header-branch">
-      <span class="header-left-branch"
-        >{{headerTitle}}</span
-      >
+      <span class="header-left-branch">{{ headerTitle }}</span>
     </div>
-
     <div class="flex-end-block flex">
-      <div class="header-button-text" title="Thông báo">
-        <div class="icon-bell icon-header"></div>
+      <div class="admin-name flex">
+        <span>{{admin ? admin.name : ''}}</span>
+        <div @click="expandAdmin" class="header-right-icon flex">
+          <div class="icon-down"></div>
+        </div>
+        <div v-if="isExpandAdmin" @click="logout" class="logout-panel flex">
+          Đăng xuất
+        </div>
       </div>
-      <div class="avata-header">
-        <img src="@/assets/Icons/default-avatar.jpg" alt="" />
-      </div>
-
-      <div class="header-right header-branch">
-        <span class="header-branch-titile">Nguyễn Quang Minh</span>
-      </div>
-      <div class="header-right-icon flex"><div class="icon-down"></div></div>
     </div>
   </div>
 </template>
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
-    data() {
-        return {
-            headerTitle: "",
+  data() {
+    return {
+      headerTitle: "",
+      isExpandAdmin: false,
+    };
+  },
+  computed: {
+    ...mapGetters(["admin"]),
+  },
+  mounted() {
+    this.headerTitle = this.$route.name;
+  },
+  created(){
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    if(vuex){
+        const admin = vuex.admin.admin;
+        if(admin !== null){
+            this.setAdmin(admin)
+        } else {
+            this.getAdminDetail();
         }
+    }
+  },
+  watch: {
+    "$route.name": function (value) {
+      this.headerTitle = value;
     },
-    mounted() {
-        this.headerTitle = this.$route.name;
+  },
+  methods: {
+    ...mapMutations(["setAdmin"]),
+    ...mapActions(["adminLogout", "getAdminDetail"]),
+
+    expandAdmin() {
+      this.isExpandAdmin = !this.isExpandAdmin;
+      if (this.isExpandAdmin == true) {
+        setTimeout(() => {
+          this.isExpandAdmin = false;
+        }, 10000);
+      }
     },
-    watch: {
-        "$route.name": function(value){
-            this.headerTitle = value;
-        }
+
+    logout() {
+      if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+        this.adminLogout();
+      } else {
+        this.isExpandAdmin = false;
+      }
     },
+  },
 };
 </script>
 <style scoped>
-
-.header-dashboard{
-    width: 100%;
-    height: 48px;
-    min-height: 48px !important;
-    background-color: #fff;
-    box-shadow: 0 3px 2px -1px rgb(233, 232, 232);
+.header-dashboard {
+  width: 100%;
+  height: 48px;
+  min-height: 48px !important;
+  background-color: #fff;
+  box-shadow: 0 3px 2px -1px rgb(233, 232, 232);
 }
-.header-branch{
-    padding-left: 8px;
-    font-family: Font SemiBold;
-    font-size: 14px;
+.header-branch {
+  padding-left: 8px;
+  font-family: Font SemiBold;
+  font-size: 14px;
 }
-.icon-down{
-    background: url('@/assets/Icons/Sprites.64af8f61.svg') no-repeat -1078px -38px;
-    width: 9px;
-    height: 6px;
-    margin-top: 3px !important;
-}
-.header-tooltip{
-    display: flex;
-    border: 1px solid #ebedf0;
-    border-radius: 40px;
-    margin: 0 22px;
-    cursor: pointer;
-    height: 30px;
-    padding: 0 12px;
-    align-items: center;
-}
-.header-point{
-    width: 6px;
-    height: 6px;
-    background-color: #4ea344;
-    border-radius: 50%;
-    border: 1px solid #fff;
-}
-.header-place{
-    padding-left: 5px;
-    width: fit-content;
+.icon-down {
+  background: url("@/assets/Icons/Sprites.64af8f61.svg") no-repeat -1078px -38px;
+  width: 9px;
+  height: 6px;
 }
 
-/* header button*/
-/* chứa các nút chức năng trợ giúp của header */
-.header-button{
-    display: flex;
-    margin-left: 12px;
+.header-right-icon {
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
-
-.header-button-text{
-    width: 44px ;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+.header-right-icon:hover {
+  background-color: #fff;
+  border-radius: 0 4px 4px 0;
 }
-.icon-header{
-    background: url('@/assets/Icons/Sprites.64af8f61.svg') no-repeat;
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    min-height: 24px;
-    cursor: pointer;
-}
-
-.icon-bell{
-    background-position: -788px -30px;
-}
-.avata-header{
-    border: 1px solid #ebedf0;
-    border-radius: 50%;    
-    width: 32px;
-    height: 32px;
-    margin-left: 16px;
-}
-
-.avata-header img{
-    width:  32px;
-    height: 32px;
-    border-radius: 50%;
-}
-.header-right-icon{
-    margin-left: 8px;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-}
-.header-left-branch{
-    font-size: 1.125rem;
-    font-family: Font Bold;
-    padding-left: 16px;
+.header-left-branch {
+  font-size: 1.125rem;
+  font-family: Font Bold;
+  padding-left: 16px;
 }
 
 /* content dashboard  */
-.content-dashboard{
-    padding-left: 20px;
+.content-dashboard {
+  padding-left: 20px;
 }
-
 
 .flex-end-block {
-    position: absolute;
-    right: 36px;
-    top: 0;
+  position: absolute;
+  right: 60px;
 }
-.icon-down-header-start {
-    mask: url('@/assets/Icons/Sprites.64af8f61.svg') no-repeat -178px -364px;
-	width: 12px;
-	height: 8px;
-    background-color: rgb(123, 123, 123);
+
+.admin-name {
+  position: relative;
+  min-width: 160px;
+  height: 36px;
+  /* background-color: #4ea344; */
+  justify-content: center;
+  background-color: var(--primary-bg);
+  border: 2px solid var(--input-normal-border-color);
+  border-radius: 4px;
+}
+.logout-panel {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  height: 36px;
+  width: 136px;
+  cursor: pointer;
+  justify-content: center;
+  border: 1px solid var(--input-normal-border-color);
+  background-color: #fff;
+  z-index: 100;
 }
 </style>

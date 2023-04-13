@@ -11,12 +11,15 @@
         <form @submit.prevent="submitForm">
           <div class="content flex">
             <div class="product-image">
-              <img class="img flex" :src="product.image" alt="" />
+              <img class="img flex" :src="productImageUrl" alt="" />
               <div
                 class="select-image-button flex"
                 @click="changeProductImageOnClick"
               >
                 <BaseButton buttonType="regular-square" buttonName="Chọn ảnh" />
+              </div>
+              <div v-if="isEmptyImage" class="text-red">
+                Chọn ảnh cho sản phẩm.
               </div>
               <input
                 hidden
@@ -52,7 +55,7 @@
                 <div class="item-input">
                   <DxSelectBox
                     :search-enabled="true"
-                    v-model:value="product.category"
+                    v-model:value="product.category_id"
                     :data-source="categories"
                     no-data-text="Không có dữ liệu"
                     display-expr="category_name"
@@ -80,12 +83,6 @@
                 </div>
               </div>
               <div class="content-item flex">
-                <div class="item-title">Đã bán</div>
-                <div class="item-input">
-                  <DxTextBox />
-                </div>
-              </div>
-              <div class="content-item flex">
                 <div class="item-title">Mô tả</div>
                 <div class="item-input">
                   <textarea
@@ -110,11 +107,15 @@
                   />
                 </div>
               </div>
-              <div class="content-item last-item flex">
+              <div class="content-item flex">
                 <div class="item-title">Sản phẩm nổi bật</div>
                 <div class="item-input">
                   <DxCheckBox v-model="product.highlight" text="Chọn" />
                 </div>
+              </div>
+              <div class="content-item last-item flex">
+                <div class="item-title">Đã bán</div>
+                <div class="item-input">{{ product.sold_count }}</div>
               </div>
             </div>
           </div>
@@ -198,7 +199,9 @@ export default {
       elementFocus: null,
       isShowPopup: false,
       popupMessage: "",
+      productImageFile: null,
       productImageUrl: null,
+      isEmptyImage: null,
     };
   },
   computed: {
@@ -211,8 +214,9 @@ export default {
     /**
      * Lấy danh mục từ storage, nếu chưa có thì gọi api lấy danh mục
      */
-    const categories = JSON.parse(sessionStorage.getItem("categories"));
-    if (categories) {
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    const categories = vuex.admin.categories;
+    if (categories != null) {
       this.setCategories(categories);
     } else {
       this.getCategories();
@@ -222,7 +226,15 @@ export default {
     selectedProduct: function (value) {
       this.product = { ...value };
       this.oldProduct = { ...value };
+      this.productImageUrl =
+        this.product.image != null ? this.product.image : "";
     },
+    isShowDetail: function (value){
+      if(value == false){
+        this.productImageFile = null;
+        this.productImageUrl = null;
+      }
+    }
   },
   methods: {
     ...mapMutations(["setProducts", "setCategories"]),
@@ -243,12 +255,12 @@ export default {
      * Event chọn file ảnh từ máy
      */
     changeProductImage(event) {
-      const file = event.target.files[0];
+      this.productImageFile = event.target.files[0];
       const reader = new FileReader();
+      reader.readAsDataURL(this.productImageFile);
       reader.onload = () => {
         this.productImageUrl = reader.result;
       };
-      reader.readAsDataURL(file);
     },
     /**
      * Chọn ảnh từ máy khi click button chọn ảnh
@@ -290,15 +302,39 @@ export default {
      * Khi form validate thành công thì thực hiện gọi api
      */
     submitForm() {
-      // if (!this.$compareObjects(this.product, this.oldProduct)) {
-      //   if (this.saveMode == this.SAVE_MODE.Add) {
-      //     this.createProduct(this.product);
-      //   } else {
-      //     this.editProduct({ id: this.product.id, product: this.product });
-      //   }
-      // }
-      // this.showDetail(false);
-      console.log(this.product, this.oldProduct);
+      if (
+        this.product.highlight === undefined ||
+        this.product.highlight == false
+      )
+        this.product.highlight = 0;
+      else if (this.product.highlight == true) this.product.highlight = 1;
+      if (this.product.description === undefined) this.product.description = "";
+      
+      if (this.productImageUrl == "") {
+        this.isEmptyImage = true;
+      }
+      else if (
+        this.productImageFile != null ||
+        !this.$compareObjects(this.product, this.oldProduct)
+      ) {
+        this.isEmptyImage = false;
+        if (this.saveMode == this.SAVE_MODE.Add) {
+          this.createProduct({
+            product: this.product,
+            image: this.productImageFile,
+          });
+        } else {
+          this.editProduct({
+            id: this.product.id,
+            product: this.product,
+            image: this.productImageFile,
+          });
+        }
+        this.showDetail(false);
+      } else {
+        this.isEmptyImage = false;
+        this.showDetail(false);
+      }
     },
     /**
      * Ẩn form chi tiết

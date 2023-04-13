@@ -1,202 +1,264 @@
 <template>
   <div class="detail-container">
     <div class="detail-top-container flex">
-        <div class="detail-image flex">
-            <img class="img" src="@/assets/Icons/pizza.png" alt="">
+      <div class="detail-image flex">
+        <img
+          class="img"
+          :src="productDetail ? productDetail.image : ''"
+          alt=""
+        />
+      </div>
+      <div class="detail-order">
+        <div class="top-detail">
+          <div class="product-title menu-header-text">
+            {{ productDetail ? productDetail.name : "" }}
+          </div>
+          <div class="space-border"></div>
+          <div class="product-price">
+            {{ productDetail ? productDetail.price.toLocaleString() : "" }}đ
+          </div>
+          <div class="product-option flex">
+            <div class="product-option-title">Mã:</div>
+            <div class="product-option-main">
+              {{ productDetail ? productDetail.id : "" }}
+            </div>
+          </div>
+          <div class="product-option flex">
+            <div class="product-option-title">Danh mục:</div>
+            <div class="product-option-main">
+              {{ productDetail ? productDetail.category_name : "" }}
+            </div>
+          </div>
+          <div class="product-option flex">
+            <div class="product-option-title">Mô tả:</div>
+            <div class="product-option-main">
+              {{ productDetail ? productDetail.description : "" }}
+            </div>
+          </div>
+          <div class="product-option flex">
+            <div class="product-option-title">Số lượng:</div>
+            <div class="product-option-main">
+              <div class="quantity-selection flex">
+                <div
+                  class="quantity-selection-nav quantity-selection-left flex"
+                  @click="quantity > 1 ? (quantity -= 1) : quantity"
+                >
+                  -
+                </div>
+                <div
+                  class="quantity-selection-nav quantity-selection-text flex"
+                >
+                  {{ quantity }}
+                </div>
+                <div
+                  class="quantity-selection-nav quantity-selection-right flex"
+                  @click="quantity += 1"
+                >
+                  +
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="detail-order">
-            <div class="product-title menu-header-text">Pizza xúc xích phô mai nướng</div>
-            <p class="product-description">Đây là phần mô tả cho phép người dùng chỉ thay đổi kích thước của textarea theo một hướng nào đó người dùng sẽ không thể thay đổi kích thước của textarea bằng cách kéo thả viền của nó</p>
-            <div class="space-border"></div>
-            <div class="product-price">49,000 - 59,000 đ</div>
-            <div class="product-option">
-                <div class="product-option-title">Size</div>
-                <div class="product-option-main flex">
-                    <div class="size-option">
-                        <BaseButton buttonName="M" buttonType="white" />
-                    </div>
-                    <div class="size-option">
-                        <BaseButton buttonName="L" buttonType="white" />
-                    </div>
-                </div>
+        <div class="flex">
+          <div class="total flex">
+            <div class="total-title">TẠM TÍNH:</div>
+            <div class="total-text">
+              {{
+                productDetail
+                  ? (productDetail.price * quantity).toLocaleString()
+                  : ""
+              }}đ
             </div>
-            <div class="product-option">
-                <div class="product-option-title">Ghi chú</div>
-                <div class="product-option-main flex">
-                    <textarea rows="3" placeholder="Nhập ghi chú của bạn tại đây..."></textarea>
-                </div>
-            </div>
-            <div class="product-option">
-                <div class="product-option-main order-nav flex">
-                    <div class="size-option">
-                        <div class="quantity-selection flex">
-                            <div class="quantity-selection-nav quantity-selection-left flex">-</div>
-                            <div class="quantity-selection-nav quantity-selection-text flex">1</div>
-                            <div class="quantity-selection-nav quantity-selection-right flex">+</div>
-                        </div>
-                    </div>
-                    <div class="order-button" @click="addProductToCart">
-                        <BaseButton buttonType="regular" buttonName="THÊM VÀO GIỎ HÀNG" />
-                    </div>
-                </div>
-            </div>
+          </div>
+          <div class="order-button" @click="addProductToCart">
+            <BaseButton buttonType="regular" buttonName="THÊM VÀO GIỎ HÀNG" />
+          </div>
         </div>
+      </div>
     </div>
+
     <div class="similar-product flex">
-        <div class="top-bar"></div>
-        <div class="similar-product-title">SẢN PHẨM TƯƠNG TỰ</div>
-        <div class="similar-product-main flex">
-            <BaseProduct />
-            <BaseProduct />
-            <BaseProduct />
-            <BaseProduct />
-        </div>
+      <div class="top-bar"></div>
+      <div class="similar-product-title">SẢN PHẨM TƯƠNG TỰ</div>
+      <div class="similar-product-main flex">
+        <BaseProduct />
+        <BaseProduct />
+        <BaseProduct />
+        <BaseProduct />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
-    methods: {
-        addProductToCart(){
-            this.$router.push({ path: '/cart' })
-        },
+  data() {
+    return {
+      quantity: 1,
+    };
+  },
+  computed: {
+    ...mapGetters(["productDetail"]),
+  },
+  created() {
+    this.getProductDetail(this.$route.query.id);
+  },
+  methods: {
+    ...mapMutations(["setProductDetail", "addToCart"]),
+    ...mapActions(["getProductDetail"]),
+    addProductToCart() {
+      this.addToCart({ product: this.productDetail, quantity: this.quantity });
+      this.$router.push({ path: "/cart" });
     },
-}
+  },
+};
 </script>
 
 <style scoped>
 .detail-container {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 64px 10% 0 10%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 64px 10% 0 10%;
 }
 .detail-top-container {
-    align-items: flex-start;
-    width: 100%;
+  align-items: flex-start;
+  width: 100%;
 }
 .detail-image {
-    width: 42%;
-    min-height: 400px;
-    background-color: #fff;
-    margin-right: 6%;
-    justify-content: center;
-    box-sizing: border-box;
+  width: 460px;
+  height: 460px;
+  background-color: #fff;
+  margin-right: 6%;
+  justify-content: center;
+  box-sizing: border-box;
 }
 .img {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 .detail-order {
-    width: 52%;
-    min-height: 400px;
-    background-color: #fff;
-    /* box-shadow: 0 2px 5px 0 rgb(0 0 0 / 30%); */
-    /* border-radius: 8px; */
-    box-sizing: border-box;
+  width: 54%;
+  box-sizing: border-box;
+}
+.top-detail {
+  width: 100%;
+  padding-bottom: 36px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--grid-border);
+  box-sizing: border-box;
 }
 .menu-header-text {
-    font-size: 1.6rem;
-    color: #494949 !important;
-    font-family: Font Bold;
-    padding: 0;
-    width: fit-content;
+  font-size: 1.6rem;
+  color: #494949 !important;
+  font-family: Font Bold;
+  width: fit-content;
 }
-.product-description{
-    font-size: 1rem;
-    font-style: italic;
-    color: #777;
-    padding: 4px 0;
+.product-description {
+  font-size: 1rem;
+  font-style: italic;
+  color: #777;
+  padding: 4px 0;
 }
-.space-border{
-    width: 64px;
-    height: 4px;
-    border-radius: 2px;
-    margin: 8px 0 16px 0;
-    background-color: rgba(0,0,0,.1);
+.space-border {
+  width: 64px;
+  height: 4px;
+  border-radius: 2px;
+  margin: 6px 0 12px 0;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .product-price {
-    font-size: 1.3rem;
-    font-family: Font Bold;
-    color: var(--text-secondary-color);
+  font-size: 1.3rem;
+  font-family: Font Bold;
+  color: var(--text-secondary-color);
 }
 .size-option {
-    margin-right: 12px;
+  margin-right: 12px;
 }
 .quantity-selection {
-    height: 48px;
-    box-sizing: border-box;
+  height: 36px;
+  box-sizing: border-box;
 }
 .quantity-selection-nav {
-    height: 48px;
-    border: 1px solid;
-    border-color: #e0e5e6;
-    color: var(--text-primary-color);
-    justify-content: center;
-    background-color: #f7f7f7;
+  height: 40px;
+  border: 1px solid;
+  border-color: #e0e5e6;
+  color: var(--text-primary-color);
+  justify-content: center;
+  background-color: #f7f7f7;
 }
 .quantity-selection-nav:hover {
   background-color: var(--primary-bg);
 }
 
-.quantity-selection-left{
-    width: 40px;
-    border-radius: 99px 0 0 99px;
-    cursor: pointer;
+.quantity-selection-left {
+  width: 36px;
+  border-radius: 99px 0 0 99px;
+  cursor: pointer;
 }
-.quantity-selection-text{
-    width: 56px;
-    border: 1px 0 !important;
+.quantity-selection-text {
+  width: 40px;
+  border: 1px 0 !important;
 }
-.quantity-selection-right{
-    width: 40px;
-    border-radius: 0 99px 99px 0;
-    cursor: pointer;
+.quantity-selection-right {
+  width: 36px;
+  border-radius: 0 99px 99px 0;
+  cursor: pointer;
 }
 .product-option {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 .product-option-title {
-    font-size: 1rem;
+  font-size: 1rem;
+  width: 120px;
 }
 .product-option-main {
-    margin-top: 8px;
+  font-size: 1rem;
 }
 .order-button {
-    height: 48px;
-    width: 220px;
-    margin-left: 4px;
+  height: 46px;
+  min-width: 220px;
+  margin-left: 56px;
 }
 .order-nav {
-    padding-top: 16px !important;
-    justify-content: flex-start;
+  padding-top: 16px !important;
+  justify-content: flex-start;
 }
 .similar-product {
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 64px;
-    box-sizing: border-box;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 64px;
+  box-sizing: border-box;
 }
 .top-bar {
-    width: 60%;
-    height: 1px;
-    background-color: #ccc;
-    margin-bottom:12px;
+  width: 60%;
+  height: 1px;
+  background-color: #ccc;
+  margin-bottom: 12px;
 }
 .similar-product-title {
-    font-size: 1.5rem;
-    font-family: Font Bold;
-    color: var(--text-primary-color);
-    margin-bottom: 32px;
+  font-size: 1.5rem;
+  font-family: Font Bold;
+  color: var(--text-primary-color);
+  margin-bottom: 32px;
 }
 .similar-product-main {
-    width: 100%;
-    max-height: 256px;
-    justify-content: center;
-    box-sizing: border-box;
-    flex-wrap: wrap;
-    overflow: hidden;
+  width: 100%;
+  max-height: 256px;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.total {
+  font-size: 1.125rem;
+  font-family: Font SemiBold;
+}
+.total-title {
+  color: var(--text-secondary-color);
+  width: 106px;
 }
 </style>

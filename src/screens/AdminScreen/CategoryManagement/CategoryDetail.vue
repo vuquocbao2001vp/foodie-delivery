@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   props: ["isShowDetail", "saveMode", "selectedCategory"],
@@ -149,7 +149,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setCategories"]),
     ...mapActions(["getCategories", "createCategory", "editCategory"]),
 
     /**

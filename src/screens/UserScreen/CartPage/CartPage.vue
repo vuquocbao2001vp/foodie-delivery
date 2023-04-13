@@ -12,228 +12,158 @@
           />
         </router-link>
       </div>
-      <div class="cart-order flex" v-if="isEmptyCart == false">
-        <div class="cart-order-product">
-          <table>
-            <thead>
-              <tr>
-                <th class="col-product">SẢN PHẨM</th>
-                <th class="col-price">ĐƠN GIÁ</th>
-                <th class="col-quantity text-center">SỐ LƯỢNG</th>
-                <th class="col-total text-right">TẠM TÍNH</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="td-product flex">
-                    <div class="td-product-x-icon flex">
-                      <div class="icon-X icon-center"></div>
-                    </div>
-                    <img
-                      class="td-product-img"
-                      src="@/assets/Icons/pizza.png"
-                      alt=""
-                    />
-                    <div class="td-product-info">
-                      <div class="td-product-name">
-                        Pizza xúc xích phô mai nướng
+      <div v-if="isEmptyCart == false">
+        <div class="cart-order flex">
+          <div class="cart-order-product">
+            <table>
+              <thead>
+                <tr>
+                  <th class="col-product">SẢN PHẨM</th>
+                  <th class="col-price">ĐƠN GIÁ</th>
+                  <th class="col-quantity text-center">SỐ LƯỢNG</th>
+                  <th class="col-total text-right">TẠM TÍNH</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in cart" :key="item">
+                  <td>
+                    <div class="td-product flex">
+                      <div
+                        class="td-product-x-icon flex"
+                        @click="removeFromCart(item.product.id)"
+                      >
+                        <div class="icon-X icon-center"></div>
                       </div>
-                      <div class="td-product-size">SIZE: M</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="bold">49,999đ</td>
-                <td class="text-center">
-                  <div class="quantity-selection flex">
-                    <div
-                      class="quantity-selection-nav quantity-selection-left flex"
-                    >
-                      -
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-text flex"
-                    >
-                      1
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-right flex"
-                    >
-                      +
-                    </div>
-                  </div>
-                </td>
-                <td class="text-right bold">100,000đ</td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="td-product flex">
-                    <div class="td-product-x-icon flex">
-                      <div class="icon-X icon-center"></div>
-                    </div>
-                    <img
-                      class="td-product-img"
-                      src="@/assets/Icons/pizza.png"
-                      alt=""
-                    />
-                    <div class="td-product-info">
-                      <div class="td-product-name">
-                        Pizza xúc xích phô mai nướng
+                      <img
+                        class="td-product-img"
+                        :src="item.product.image"
+                        alt=""
+                      />
+                      <div class="td-product-info">
+                        <div class="td-product-name">
+                          {{ item.product.name }}
+                        </div>
                       </div>
-                      <div class="td-product-size">SIZE: M</div>
                     </div>
-                  </div>
-                </td>
-                <td class="bold">49,999đ</td>
-                <td class="text-center">
-                  <div class="quantity-selection flex">
-                    <div
-                      class="quantity-selection-nav quantity-selection-left flex"
-                    >
-                      -
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-text flex"
-                    >
-                      1
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-right flex"
-                    >
-                      +
-                    </div>
-                  </div>
-                </td>
-                <td class="text-right bold">100,000đ</td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="td-product flex">
-                    <div class="td-product-x-icon flex">
-                      <div class="icon-X icon-center"></div>
-                    </div>
-                    <img
-                      class="td-product-img"
-                      src="@/assets/Icons/pizza.png"
-                      alt=""
-                    />
-                    <div class="td-product-info">
-                      <div class="td-product-name">
-                        Pizza xúc xích phô mai nướng
+                  </td>
+                  <td class="bold">
+                    {{ item.product.price.toLocaleString() }}đ
+                  </td>
+                  <td class="text-center">
+                    <div class="quantity-selection flex">
+                      <div
+                        class="quantity-selection-nav quantity-selection-left flex"
+                        @click="
+                          updateCartItemQuantity({
+                            productId: item.product.id,
+                            quantity: item.quantity - 1,
+                          })
+                        "
+                      >
+                        -
                       </div>
-                      <div class="td-product-size">SIZE: M</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="bold">49,999đ</td>
-                <td class="text-center">
-                  <div class="quantity-selection flex">
-                    <div
-                      class="quantity-selection-nav quantity-selection-left flex"
-                    >
-                      -
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-text flex"
-                    >
-                      1
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-right flex"
-                    >
-                      +
-                    </div>
-                  </div>
-                </td>
-                <td class="text-right bold">100,000đ</td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="td-product flex">
-                    <div class="td-product-x-icon flex">
-                      <div class="icon-X icon-center"></div>
-                    </div>
-                    <img
-                      class="td-product-img"
-                      src="@/assets/Icons/pizza.png"
-                      alt=""
-                    />
-                    <div class="td-product-info">
-                      <div class="td-product-name">
-                        Pizza xúc xích phô mai nướng
+                      <div
+                        class="quantity-selection-nav quantity-selection-text flex"
+                      >
+                        {{ item.quantity }}
                       </div>
-                      <div class="td-product-size">SIZE: M</div>
+                      <div
+                        class="quantity-selection-nav quantity-selection-right flex"
+                        @click="
+                          updateCartItemQuantity({
+                            productId: item.product.id,
+                            quantity: item.quantity + 1,
+                          })
+                        "
+                      >
+                        +
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="bold">49,999đ</td>
-                <td class="text-center">
-                  <div class="quantity-selection flex">
-                    <div
-                      class="quantity-selection-nav quantity-selection-left flex"
-                    >
-                      -
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-text flex"
-                    >
-                      1
-                    </div>
-                    <div
-                      class="quantity-selection-nav quantity-selection-right flex"
-                    >
-                      +
-                    </div>
-                  </div>
-                </td>
-                <td class="text-right bold">100,000đ</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="cart-order-bill">
-          <table>
-            <thead>
-              <tr>
-                <th>CỘNG GIỎ HÀNG</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Tạm tính</td>
-                <td class="bold text-right">300,000đ</td>
-              </tr>
-              <tr>
-                <td>Tổng</td>
-                <td class="bold text-right">300,000đ</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="cart-order-bill-button">
-            <router-link to="/payment">
-              <BaseButton
-                buttonType="regular-square"
-                buttonName="TIẾN HÀNH THANH TOÁN"
-              />
-            </router-link>
+                  </td>
+                  <td class="text-right bold">
+                    {{ (item.product.price * item.quantity).toLocaleString() }}đ
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="cart-order-bill">
+            <table>
+              <thead>
+                <tr>
+                  <th>CỘNG GIỎ HÀNG</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tạm tính</td>
+                  <td class="bold text-right">{{ total.toLocaleString() }}đ</td>
+                </tr>
+                <tr>
+                  <td>Tổng</td>
+                  <td class="bold text-right">{{ total.toLocaleString() }}đ</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="cart-order-bill-button">
+              <router-link to="/payment">
+                <BaseButton
+                  buttonType="regular-square"
+                  buttonName="TIẾN HÀNH THANH TOÁN"
+                />
+              </router-link>
+            </div>
           </div>
         </div>
+        <div class="back-to-store-button">
+          <router-link to="/menu">
+            <BaseButton
+              buttonType="white-square"
+              buttonName="QUAY LẠI CỬA HÀNG"
+          /></router-link>
+        </div>
       </div>
-    </div>
-    <div class="back-to-store-button">
-      <router-link to="/menu">
-        <BaseButton buttonType="white-square" buttonName="QUAY LẠI CỬA HÀNG"
-      /></router-link>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
       isEmptyCart: false,
+      total: 0,
     };
+  },
+  computed: {
+    ...mapGetters(["cart"]),
+  },
+  created() {
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    const cart = vuex.user.cart;
+    if (cart.length > 0) {
+      this.setCart(cart);
+    } else {
+      this.isEmptyCart = true;
+    }
+  },
+  watch: {
+    cart: {
+      handler(value) {
+        this.total = 0;
+        value.forEach((item) => {
+          this.total += item.product.price * item.quantity;
+        });
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    ...mapMutations(["setCart", "removeCartItem", "updateCartItemQuantity"]),
+    removeFromCart(id) {
+      this.removeCartItem(id);
+    },
   },
 };
 </script>
@@ -262,7 +192,7 @@ export default {
 }
 .cart-order {
   width: 100%;
-  max-height: 461px;
+  height: 461px;
   align-items: flex-start;
 }
 .cart-order-product {

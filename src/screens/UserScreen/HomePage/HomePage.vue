@@ -1,20 +1,19 @@
 <template>
     <div class="slideshow">
-      <DxGallery
-        :data-source="bannerImgs"
+      <!-- <DxGallery
+        :data-source=""
         loop="true"
         slideshow-delay="3000"
         show-indicator="true"
-      />
+      /> -->
+      home
     </div>
 </template>
 <script>
-// import bannerImgs from '@/store/modules/image.js'
 
 export default {
   data() {
     return {
-      bannerImgs: require('@/store/modules/image.js'),
     }
   },
 }

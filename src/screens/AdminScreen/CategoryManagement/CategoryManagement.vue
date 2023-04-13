@@ -4,7 +4,7 @@
       <div class="top-button" @click="showDetail(true, SAVE_MODE.Add, {})">
         <BaseButton buttonType="regular-square" buttonName="Danh mục mới" />
       </div>
-      <div class="top-button" v-if="selectedCategories.length > 0">
+      <div class="top-button" v-if="selectedCategories.length > 0" @click="deleteMultiCategory">
         <BaseButton buttonType="red-square" buttonName="Xóa" />
       </div>
     </div>
@@ -123,17 +123,19 @@ export default {
     /**
      * Lấy danh mục từ storage, nếu chưa có thì gọi api lấy danh mục
      */
-    const categories = JSON.parse(sessionStorage.getItem("categories"));
-    if (categories) {
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    const categories = vuex.admin.categories;
+    if (categories != null) {
       this.setCategories(categories);
     } else {
       this.getCategories();
     }
+    // for (let i = 0; i < this.categories.length; i++) {
+    //   this.isCheck[i] = false;
+    // }
   },
   mounted() {
-    for (let i = 0; i < this.categories.length; i++) {
-      this.isCheck[i] = false;
-    }
+    
   },
   methods: {
     ...mapMutations(["setCategories"]),
@@ -200,6 +202,9 @@ export default {
         this.selectedCategories = [];
       }
     },
+    deleteMultiCategory(){
+      console.log(this.selectedCategories);
+    }
   },
 };
 </script>

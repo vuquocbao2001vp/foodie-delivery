@@ -8,7 +8,10 @@
       <router-link to="/home" class="navbar-item flex">Trang chủ</router-link>
       <router-link to="/intro" class="navbar-item flex">Giới thiệu</router-link>
       <router-link
-        to="/menu"
+        to="/menu/all"
+        :class="[
+          { 'router-link-active active': $route.path.indexOf('/menu/') > -1 },
+        ]"
         class="navbar-item flex"
         @mouseover="expandMenu(true)"
         @mouseleave="expandMenu(false)"
@@ -18,16 +21,12 @@
           :class="{ 'icon-chevron-hover': isMenuExpand }"
         ></div>
         <div class="menu-expand flex" v-if="isMenuExpand">
-          <router-link to="/menu/pizza" class="menu-item">Pizza</router-link>
-          <router-link to="/menu/hamburger" class="menu-item"
-            >Hamburger</router-link
-          >
-          <router-link to="/menu/ga-ran" class="menu-item">Gà rán</router-link>
-          <router-link to="/menu/do-an-vat" class="menu-item"
-            >Đồ ăn vặt</router-link
-          >
-          <router-link to="/menu/do-uong" class="menu-item"
-            >Đồ uống</router-link
+          <router-link
+            v-for="category in listCategories"
+            :key="category.id"
+            :to="{ name: getRouterLink(category.category_name) }"
+            class="menu-item"
+            >{{ category.category_name }}</router-link
           >
         </div>
       </router-link>
@@ -37,26 +36,69 @@
         class="icon-cart icon-center navbar-icon flex"
         title="Giỏ hàng"
       ></router-link>
-      <router-link to="/auth" class="navbar-item-login flex" @click="setRole('guest')"
+      <!-- <router-link to="/auth" class="navbar-item-login flex"
         >Đăng nhập</router-link
-      >
+      > -->
+      <div class="flex account">
+        <div class="default-avatar flex">
+          <img src="@/assets/Icons/default-avatar.jpg" alt="" />
+        </div>
+        <div class="account-main">
+          <div class="account-text">Tài khoản</div>
+          <div v-if="isLogin">{{user? user.email: ''}}</div>
+          <router-link to="/auth/login" v-if="!isLogin" class="login-text">Đăng nhập</router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       isMenuExpand: false,
+      isLogin: false,
     };
   },
-
+  computed: {
+    ...mapGetters(["listCategories", "user"]),
+  },
+  created() {
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    if (vuex) {
+      const categories = vuex.user.listCategories;
+      if (categories != null) {
+        this.setListCategories(categories);
+      } else {
+        this.getListCategories();
+      }
+      const user = vuex.user.user;
+      const userToken = vuex.user.userToken;
+      if(user !== null){
+        this.setUser(user);
+        this.isLogin = true;
+      } 
+      else if(userToken !== null){
+        this.getUserDetail();
+        this.isLogin = true;
+      }
+    }
+  },
   methods: {
-    ...mapMutations(["setRole"]),
+    ...mapMutations(["setListCategories", "setUser"]),
+    ...mapActions(["getListCategories", "getUserDetail"]),
+
     expandMenu(isExpand) {
       this.isMenuExpand = isExpand;
+    },
+
+    getRouterLink(categoryName) {
+      const unidecode = require("unidecode");
+      let str = unidecode(categoryName.toLowerCase());
+      let router = str.replace(/\s+/g, "-");
+      return router;
     },
   },
 };
@@ -64,10 +106,11 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 100%;
+  height: 65px;
   box-shadow: 0 4px 2px -1px rgb(233, 232, 232);
   box-sizing: border-box;
   background-color: #fff;
+  z-index: 100;
 }
 
 .logo {
@@ -111,7 +154,9 @@ export default {
 }
 .navbar-icon {
   height: 54px;
+  min-width: 54px;
   width: 54px;
+  box-sizing: border-box;
   cursor: pointer;
 }
 .icon-cart {
@@ -148,7 +193,7 @@ export default {
 }
 .menu-expand {
   position: absolute;
-  z-index: 2000;
+  z-index: 200 !important;
   top: 56px;
   left: -8px;
   width: 168px;
@@ -173,5 +218,29 @@ export default {
 .menu-item.router-link-active {
   color: var(--text-white-primary-color) !important;
   background-color: var(--primary);
+}
+.default-avatar {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.default-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.account-text {
+  font-family: Font SemiBold;
+}
+.account-main {
+  margin-left: 8px;
+}
+.account {
+  align-items: flex-end;
+}
+.login-text:hover{
+  color: var(--text-red-color) !important;
 }
 </style>

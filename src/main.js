@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import 'devextreme/dist/css/dx.light.css';
-import {createRouter, createWebHistory} from 'vue-router'
-import routers from '../src/router/router.js'
+import router from '../src/router/router.js'
 import store from '../src/store/store.js'
 
 import DxSelectBox from "devextreme-vue/select-box"
@@ -31,13 +30,8 @@ import BaseLoader from '../src/components/base/BaseLoader.vue'
 import BaseToast from '../src/components/base/BaseToast.vue'
 
 import {Enum} from '../src/constants/enums/enum.js'
-import axiosInstance from './constants/api/axiosInstance'
 import compareObjects from './constants/functions/compareObjects'
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes: routers,
-})
+// import { encrypt, decrypt } from "./constants/functions/vueCrypto";
 
 const app = createApp(App);
 
@@ -64,8 +58,9 @@ app.component("BaseToast", BaseToast);
 
 app.use(store);
 
-app.config.globalProperties.$axios = axiosInstance
 app.config.globalProperties.$compareObjects = compareObjects
+// app.config.globalProperties.$encrypt = encrypt
+// app.config.globalProperties.$decrypt = decrypt
 
 app.provide('Enum', Enum);
 

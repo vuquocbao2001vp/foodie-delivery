@@ -2,7 +2,7 @@
   <div class="payment-page">
     <div class="payment-login-header">
       <span class="text-grey">Bạn đã có tài khoản?</span>
-      <router-link to="/login"
+      <router-link to="/auth/login"
         ><span class="text-red">Bấm vào đây để đăng nhập</span></router-link
       >
     </div>
@@ -10,73 +10,75 @@
       <div class="user-payment-info">
         <div class="user-payment-title">THÔNG TIN THANH TOÁN</div>
         <div class="user-payment-container">
-            <div class="row-container flex">
-                <div class="input-item left-input">
-                    <span class="input-title">Tên *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
-                <div class="input-item right-input">
-                    <span class="input-title">Họ *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
+          <div class="row-container flex">
+            <div class="input-item left-input">
+              <span class="input-title">Tên *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
             </div>
-            <div class="row-container flex">
-                <div class="input-item left-input">
-                    <span class="input-title">Số điện thoại *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
-                <div class="input-item right-input">
-                    <span class="input-title">Email *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
+            <div class="input-item right-input">
+              <span class="input-title">Họ *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
             </div>
-            <div class="row-container flex">
-                <div class="input-item">
-                    <span class="input-title">Địa chỉ *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
+          </div>
+          <div class="row-container flex">
+            <div class="input-item left-input">
+              <span class="input-title">Số điện thoại *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
             </div>
-            <div class="row-container flex">
-                <div>
-                  <DxCheckBox text="Tạo tài khoản mới"/>
-                </div>
+            <div class="input-item right-input">
+              <span class="input-title">Email *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
             </div>
-            <div class="row-container flex">
-                <div class="input-item">
-                    <span class="input-title">Tạo mật khẩu của bạn *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
+          </div>
+          <div class="row-container flex">
+            <div class="input-item">
+              <span class="input-title">Địa chỉ *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
             </div>
-            <div class="row-container flex">
-                <div class="input-item">
-                    <span class="input-title">Nhập lại mật khẩu *</span>
-                    <div class="input-box">
-                        <DxTextBox />
-                    </div>
-                </div>
+          </div>
+          <div class="row-container flex">
+            <div>
+              <DxCheckBox text="Tạo tài khoản mới" />
             </div>
-            <div class="user-payment-title mgt-24">THÔNG TIN BỔ SUNG</div>
-            <div class="row-container flex">
-                <div class="input-item">
-                    <span class="input-title">Ghi chú</span>
-                    <div class="input-box">
-                        <textarea rows="3" placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."></textarea>
-                    </div>
-                </div>
+          </div>
+          <div class="row-container flex">
+            <div class="input-item">
+              <span class="input-title">Tạo mật khẩu của bạn *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
             </div>
-            
+          </div>
+          <div class="row-container flex">
+            <div class="input-item">
+              <span class="input-title">Nhập lại mật khẩu *</span>
+              <div class="input-box">
+                <DxTextBox />
+              </div>
+            </div>
+          </div>
+          <div class="user-payment-title mgt-24">THÔNG TIN BỔ SUNG</div>
+          <div class="row-container flex">
+            <div class="input-item">
+              <span class="input-title">Ghi chú</span>
+              <div class="input-box">
+                <textarea
+                  rows="3"
+                  placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                ></textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="payment-order">
@@ -92,7 +94,7 @@
             <tbody>
               <tr>
                 <td class="td-product flex">
-                  <img class="td-img" src="@/assets/Icons/pizza.png" alt="">
+                  <img class="td-img" src="@/assets/Icons/pizza.png" alt="" />
                   <div class="td-product-info">
                     <div class="bold">Pizza xúc xích phô mai nướng</div>
                     <div class="text-grey">Size: M</div>
@@ -103,7 +105,7 @@
               </tr>
               <tr>
                 <td class="td-product flex">
-                  <img class="td-img" src="@/assets/Icons/pizza.png" alt="">
+                  <img class="td-img" src="@/assets/Icons/pizza.png" alt="" />
                   <div class="td-product-info">
                     <div class="bold">Pizza xúc xích phô mai nướng</div>
                     <div class="text-grey">Size: M</div>
@@ -112,7 +114,7 @@
                 </td>
                 <td class="bold text-right">300,000đ</td>
               </tr>
-              
+
               <tr>
                 <td>Tạm tính</td>
                 <td class="bold text-right">300,000đ</td>
@@ -133,7 +135,10 @@
           </div>
           <div class="term-of-use mgt-24 flex">
             <DxCheckBox />
-            <div class="term-text">Tôi đã đọc và đồng ý với <span class="text-red">điều khoản và điều kiện </span>của website*</div>
+            <div class="term-text">
+              Tôi đã đọc và đồng ý với
+              <span class="text-red">điều khoản và điều kiện </span>của website*
+            </div>
           </div>
         </div>
         <div class="order-button mgt-24">
@@ -197,31 +202,31 @@ export default {};
   border: 2px solid var(--primary-border);
 }
 .input-title {
-    font-family: Font SemiBold;
+  font-family: Font SemiBold;
 }
 .input-box {
-    width: 100%;
-    margin-top: 4px;
+  width: 100%;
+  margin-top: 4px;
 }
 .user-payment-container {
-    width: 100%;
+  width: 100%;
 }
 .row-container {
-    width: 100%;
-    position: relative;
-    margin-top: 16px;
-    box-sizing: border-box;
+  width: 100%;
+  position: relative;
+  margin-top: 16px;
+  box-sizing: border-box;
 }
 .input-item {
-    width: 100%;
-    position: relative;
+  width: 100%;
+  position: relative;
 }
 .left-input {
-    width: 48%;
-    margin-right: 4%;
+  width: 48%;
+  margin-right: 4%;
 }
 .right-input {
-    width: 48%;
+  width: 48%;
 }
 .mgt-24 {
   margin-top: 24px;
@@ -283,7 +288,6 @@ td {
 }
 .td-product {
   padding: 8px 0;
-
 }
 .td-img {
   width: 64px;
@@ -294,7 +298,8 @@ td {
   margin-left: 16px;
   font-size: 0.825rem;
 }
-.payment-method .bold, .payment-method .text-grey {
+.payment-method .bold,
+.payment-method .text-grey {
   font-size: 0.875rem !important;
 }
 .term-text {

@@ -1,17 +1,20 @@
 <template>
   <div v-if="loginRole == 'guest'" class="login-screen flex">
       <router-view></router-view>
+      <BaseLoader />
     </div>
   
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapGetters(["loginRole"]),
   },
-  
+  methods: {
+    ...mapMutations(["setRole"]),
+  }
 };
 </script>
 

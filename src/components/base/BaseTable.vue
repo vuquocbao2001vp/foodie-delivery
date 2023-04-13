@@ -18,6 +18,7 @@ table {
   width: 100%;
   border-spacing: 0;
   box-sizing: border-box;
+  z-index: 1;
 }
 
 table thead th {

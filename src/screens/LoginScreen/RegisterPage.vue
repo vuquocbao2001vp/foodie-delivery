@@ -7,36 +7,42 @@
       <div class="flex">Foodie</div>
     </div>
     <div class="login-container-main">
-      <div class="main-input">
-        <div class="input-title text-italic">Họ tên *</div>
-        <DxTextBox />
-      </div>
-      <div class="main-input">
-        <div class="input-title text-italic">Số điện thoại *</div>
-        <DxTextBox />
-      </div>
-      <div class="main-input">
-        <div class="input-title text-italic">Email *</div>
-        <DxTextBox />
-      </div>
-      <div class="main-input">
-        <div class="input-title text-italic">Mật khẩu *</div>
-        <DxTextBox :mode="'password'" :passwordChar="'*'" />
-      </div>
-      <div class="main-input">
-        <div class="input-title text-italic">Nhập lại mật khẩu *</div>
-        <DxTextBox :mode="'password'" :passwordChar="'*'" />
-      </div>
-      <div v-if="isWrongPassword == true" class="text-red text-italic">
-        <div>Tài khoản hoặc mật khẩu chưa chính xác.</div>
-        <div>Vui lòng đăng nhập lại.</div>
-      </div>
-      <div class="login-button">
-        <BaseButton buttonType="regular-square" buttonName="Đăng ký" />
-      </div>
-      <div class="forget-password flex" @click="returnToLogin">
-        Quay lại đăng nhập.
-      </div>
+      <form @submit.prevent="submitForm">
+        <div class="main-input">
+          <div class="input-title text-italic">
+            Họ tên <span class="text-red">*</span>
+          </div>
+          <DxTextBox />
+        </div>
+        <div class="main-input">
+          <div class="input-title text-italic">
+            Email <span class="text-red">*</span>
+          </div>
+          <DxTextBox />
+        </div>
+        <div class="main-input">
+          <div class="input-title text-italic">Số điện thoại</div>
+          <DxTextBox />
+        </div>
+        <div class="main-input">
+          <div class="input-title text-italic">
+            Mật khẩu <span class="text-red">*</span>
+          </div>
+          <DxTextBox :mode="'password'" :passwordChar="'*'" />
+        </div>
+        <div class="main-input">
+          <div class="input-title text-italic">
+            Nhập lại mật khẩu <span class="text-red">*</span>
+          </div>
+          <DxTextBox :mode="'password'" :passwordChar="'*'" />
+        </div>
+        <div class="login-button">
+          <BaseButton buttonType="regular-square" buttonName="Đăng ký" />
+        </div>
+        <div class="forget-password flex" @click="returnToLogin">
+          Quay lại đăng nhập.
+        </div>
+      </form>
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
   <div class="menu-page flex">
     <div class="menu-navbar">
       <div class="menu-selection">
-        <router-link to="/menu" class="menu-header-text selection-header"
+        <router-link to="/menu/all" class="menu-header-text selection-header"
           >MENU</router-link
         >
         <div class="space-border"></div>
@@ -15,28 +15,16 @@
           />
         </div>
         <div class="flex" style="flex-direction: column">
-          <router-link to="/menu/pizza" class="selection-item"
-            >Pizza</router-link
-          >
-          <router-link to="/menu/hamburger" class="selection-item"
-            >Hamburger</router-link
-          >
-          <router-link to="/menu/ga-ran" class="selection-item"
-            >Gà rán</router-link
-          >
-          <router-link to="/menu/do-an-vat" class="selection-item"
-            >Đồ ăn vặt</router-link
-          >
-          <router-link to="/menu/do-uong" class="selection-item"
-            >Đồ uống</router-link
+          <router-link
+            v-for="category in listCategories"
+            :key="category.id"
+            :to="{ name: getRouterLink(category.category_name) }"
+            class="selection-item"
+            >{{ category.category_name }}</router-link
           >
         </div>
         <div class="arrange-selection">
-          <DxSelectBox
-            :items="arrangeSelection"
-            :value="arrangeSelection[0]"
-            @value-changed="methodd"
-          />
+          <DxSelectBox :items="arrangeSelection" :value="arrangeSelection[0]" />
         </div>
       </div>
       <div class="menu-filter">
@@ -60,7 +48,7 @@
               {{ priceEnd.toLocaleString() }}đ</span
             >
           </div>
-          <div class="filter-button">
+          <div class="filter-button" @click="filterByPrice">
             <BaseButton buttonName="Lọc" buttonType="grey" />
           </div>
         </div>
@@ -70,6 +58,7 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import BaseButton from "@/components/base/BaseButton.vue";
 export default {
   components: { BaseButton },
@@ -80,17 +69,71 @@ export default {
         "Giá từ thấp tới cao",
         "Giá từ cao xuống thấp",
       ],
-      priceStart: 0,
-      priceEnd: 100000,
+      priceStart: null,
+      priceEnd: null,
+      timeout: null,
+      textSearch: null,
     };
   },
-  watch: {},
+  computed: {
+    ...mapGetters(["listCategories"]),
+  },
+  created() {
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    if (vuex) {
+      const categories = vuex.user.listCategories;
+      if (categories != null) {
+        this.setListCategories(categories);
+      } else {
+        this.getListCategories();
+      }
+    }
+    this.priceStart = 0;
+    this.priceEnd = 100000;
+  },
+  watch: {
+    textSearch: function (value) {
+      this.setMenuFilter({
+        name: value,
+        minPrice: this.priceStart,
+        maxPrice: this.priceEnd,
+      });
+    },
+  },
+  methods: {
+    ...mapMutations(["setListCategories", "setMenuFilter"]),
+    ...mapActions(["getListCategories"]),
+
+    getRouterLink(categoryName) {
+      const unidecode = require("unidecode");
+      let str = unidecode(categoryName.toLowerCase());
+      let router = str.replace(/\s+/g, "-");
+      return router;
+    },
+    /**
+     * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
+     */
+    getTextSearch(data) {
+      clearTimeout(this.timeout);
+      var self = this;
+      this.timeout = setTimeout(function () {
+        self.textSearch = data.value;
+      }, 500);
+    },
+    filterByPrice() {
+      this.setMenuFilter({
+        name: this.textSearch,
+        minPrice: this.priceStart,
+        maxPrice: this.priceEnd,
+      });
+    },
+  },
 };
 </script>
 <style scoped>
 .menu-page {
   width: 100%;
-  padding: 32px 0 0 10%;
+  padding-left: 10%;
   box-sizing: border-box;
   align-items: baseline;
   position: relative;
