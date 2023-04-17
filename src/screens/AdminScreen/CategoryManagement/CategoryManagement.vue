@@ -130,13 +130,8 @@ export default {
     } else {
       this.getCategories();
     }
-    // for (let i = 0; i < this.categories.length; i++) {
-    //   this.isCheck[i] = false;
-    // }
   },
-  mounted() {
-    
-  },
+  
   methods: {
     ...mapMutations(["setCategories"]),
     ...mapActions(["getCategories", "deleteCategory"]),

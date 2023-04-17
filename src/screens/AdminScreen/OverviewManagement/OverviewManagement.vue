@@ -57,8 +57,6 @@ export default {
       const converter = new QuillDeltaToHtmlConverter (delta.ops, {});
       const html = converter.convert();
       this.quillHtml = html;
-      console.log(html);
-      // document.getElementById('content').innerHTML = html;
     }
   },
 };

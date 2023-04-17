@@ -160,12 +160,6 @@ export default {
     } else {
       this.getProducts({ limit: 10, offset: 0 });
     }
-    // for (let i = 0; i < this.products.length; i++) {
-    //   this.isCheck[i] = false;
-    // }
-  },
-  mounted() {
-    
   },
   methods: {
     ...mapMutations(["setProducts"]),

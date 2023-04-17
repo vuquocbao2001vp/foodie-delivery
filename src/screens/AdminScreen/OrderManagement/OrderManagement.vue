@@ -73,12 +73,6 @@ export default {
   computed: {
     ...mapGetters(["products"]),
   },
-  mounted(){
-    // this.getProducts({
-    //   limit: 10,
-    //   offset: 0,
-    // });
-  },
   methods: {
     ...mapMutations(["setProducts"]),
     ...mapActions(["getProducts"]),

@@ -147,6 +147,7 @@ const actions = {
       console.log(error);
     }
   },
+
 };
 
 export default {

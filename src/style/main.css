@@ -22,7 +22,9 @@ body {
     align-items: center;
     box-sizing: border-box;
 }
-
+div {
+    user-select: none;
+}
 a {
     text-decoration: none;
     color: var(--text-primary-color) !important;

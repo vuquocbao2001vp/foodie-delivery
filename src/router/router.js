@@ -45,7 +45,6 @@ const routers = [
     path: "/auth/",
     name: "auth",
     component: LoginScreen,
-    redirect: "/auth/admin/login",
     children: [
       { path: "login", name: "login", component: LoginPage },
       {
@@ -100,6 +99,7 @@ const routers = [
 
 const unidecode = require("unidecode");
 const vuex = JSON.parse(localStorage.getItem("vuex"));
+
 if (vuex) {
   const categories = vuex.user.listCategories;
   if (categories) {
@@ -114,6 +114,7 @@ if (vuex) {
     });
   }
 }
+
 const router = createRouter({
   history: createWebHistory(),
   routes: routers,
@@ -124,7 +125,6 @@ router.beforeEach((to, from, next) => {
   // Kiểm tra xem route tồn tại hay không
   const exists = router.getRoutes().some((route) => route.path === to.path);
   if (exists) {
-    console.log(from, to);
     // Nếu tồn tại thì tiếp tục điều hướng
     next();
   } else {
@@ -137,7 +137,7 @@ router.beforeEach((to, from, next) => {
 
   // về login
   if (
-    vuex.admin.adminToken !== null &&
+    vuex.admin.adminToken !== null && vuex.user.userToken == null &&
     to.path.split("/")[1] == "auth" &&
     from.path == "/"
   ) {
@@ -147,8 +147,8 @@ router.beforeEach((to, from, next) => {
       router.go(-1);
     }
   }
-  if (
-    vuex.user.userToken !== null &&
+  else if (
+    vuex.user.userToken !== null && vuex.admin.adminToken == null &&
     to.path.split("/")[1] == "auth" &&
     from.path == "/"
   ) {

@@ -16,6 +16,8 @@ import {
   DxValidator,
   DxRequiredRule,
   DxEmailRule,
+  DxCompareRule,
+  DxStringLengthRule,
 } from 'devextreme-vue/validator';
 
 import {QuillEditor} from '@vueup/vue-quill'
@@ -31,7 +33,6 @@ import BaseToast from '../src/components/base/BaseToast.vue'
 
 import {Enum} from '../src/constants/enums/enum.js'
 import compareObjects from './constants/functions/compareObjects'
-// import { encrypt, decrypt } from "./constants/functions/vueCrypto";
 
 const app = createApp(App);
 
@@ -46,6 +47,8 @@ app.component("DxValidationSummary", DxValidationSummary);
 app.component("DxValidator", DxValidator);
 app.component("DxRequiredRule", DxRequiredRule);
 app.component("DxEmailRule", DxEmailRule);
+app.component("DxCompareRule", DxCompareRule);
+app.component("DxStringLengthRule", DxStringLengthRule);
 
 app.component("QuillEditor", QuillEditor);
 
@@ -59,8 +62,6 @@ app.component("BaseToast", BaseToast);
 app.use(store);
 
 app.config.globalProperties.$compareObjects = compareObjects
-// app.config.globalProperties.$encrypt = encrypt
-// app.config.globalProperties.$decrypt = decrypt
 
 app.provide('Enum', Enum);
 

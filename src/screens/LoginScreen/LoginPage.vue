@@ -46,7 +46,7 @@
             type="success"
           />
         </div>
-        <div v-if="isLoginSuccess == false" class="text-red text-italic">
+        <div v-if="isWrongPassword == true" class="text-red text-italic">
           <div>Tài khoản hoặc mật khẩu chưa chính xác.</div>
           <div>Vui lòng đăng nhập lại.</div>
         </div>
@@ -78,14 +78,15 @@ export default {
     return {
       elementFocus: null,
       isWrongPassword: false,
-      loginMode: 1,
       emailInput: null,
       passwordInput: null,
     };
   },
   computed: {
     ...mapGetters(["isLoginSuccess"]),
-    
+  },
+  created(){
+    this.isWrongPassword = false;
   },
   methods: {
     ...mapMutations(["setRole"]),
@@ -114,6 +115,9 @@ export default {
         if(this.isLoginSuccess){
           this.linkToPage("/admin")
         }
+        else{
+          this.isWrongPassword = true;
+        }
       } else if (this.$route.path == "/auth/login") {
         await this.userLogin({
           email: this.emailInput,
@@ -121,6 +125,9 @@ export default {
         })
         if(this.isLoginSuccess){
           this.linkToPage("/home")
+        }
+        else{
+          this.isWrongPassword = true;
         }
       }
     },

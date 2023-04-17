@@ -6,7 +6,7 @@
     </div>
     <div class="flex-end-block flex">
       <div class="admin-name flex">
-        <span>{{admin ? admin.name : ''}}</span>
+        <span>{{ admin ? admin.name : "" }}</span>
         <div @click="expandAdmin" class="header-right-icon flex">
           <div class="icon-down"></div>
         </div>
@@ -29,18 +29,13 @@ export default {
   computed: {
     ...mapGetters(["admin"]),
   },
-  mounted() {
-    this.headerTitle = this.$route.name;
-  },
-  created(){
+  created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
-    if(vuex){
-        const admin = vuex.admin.admin;
-        if(admin !== null){
-            this.setAdmin(admin)
-        } else {
-            this.getAdminDetail();
-        }
+    const admin = vuex.admin.admin;
+    if (admin !== null) {
+      this.setAdmin(admin);
+    } else {
+      this.getAdminDetail();
     }
   },
   watch: {
