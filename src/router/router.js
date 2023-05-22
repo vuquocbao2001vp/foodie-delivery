@@ -3,6 +3,7 @@ import store from "@/store/store";
 
 import HomePage from "../screens/UserScreen/HomePage/HomePage.vue";
 import IntroPage from "../screens/UserScreen/IntroPage/IntroPage.vue";
+import UserPage from "../screens/UserScreen/UserPage/UserPage.vue";
 import MenuPage from "../screens/UserScreen/MenuPage/MenuPage.vue";
 import CategoryPage from "../screens/UserScreen/MenuPage/CategoryPage.vue";
 import ContactPage from "../screens/UserScreen/ContactPage/ContactPage.vue";
@@ -33,6 +34,7 @@ const routers = [
       { path: "detail", name: "detail", component: FoodDetail },
       { path: "payment", name: "payment", component: PaymentPage },
       { path: "checkout", name: "checkout", component: CheckOutPage },
+      { path: "user", name: "user", component: UserPage },
     ],
   },
   {
@@ -100,8 +102,12 @@ const routers = [
 const unidecode = require("unidecode");
 const vuex = JSON.parse(localStorage.getItem("vuex"));
 
-if (vuex) {
-  const categories = vuex.user.listCategories;
+// if (vuex) {
+//   const categories = vuex.user.listCategories;
+
+  store.dispatch("getListCategories")
+  const categories = store.state.user.listCategories;
+  console.log(categories);
   if (categories) {
     categories.forEach((category) => {
       let str = unidecode(category.category_name.toLowerCase());
@@ -113,7 +119,7 @@ if (vuex) {
       });
     });
   }
-}
+// }
 
 const router = createRouter({
   history: createWebHistory(),

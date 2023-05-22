@@ -4,7 +4,7 @@
       <div class="top-button" @click="showDetail(true, SAVE_MODE.Add, {})">
         <BaseButton buttonType="regular-square" buttonName="Danh mục mới" />
       </div>
-      <div class="top-button" v-if="selectedCategories.length > 0" @click="deleteMultiCategory">
+      <div class="top-button" v-if="selectedCategories.length > 0" @click="deleteMultiCategoryOnClick">
         <BaseButton buttonType="red-square" buttonName="Xóa" />
       </div>
     </div>
@@ -16,20 +16,18 @@
               <div @click="checkAll"><DxCheckBox v-model="isSelectAll" /></div>
             </th>
             <th class="th-category-name">Tên danh mục</th>
-            <th class="td-text-center">Thứ tự hiển thị</th>
             <th class="td-text-center">Trạng thái</th>
             <th class="td-text-center">Chức năng</th>
           </tr>
         </template>
         <template #table-body>
-          <tr v-for="(category, index) in categories" :key="category.id">
+          <tr v-for="category in categories" :key="category.id">
             <td class="td-text-center">
-              <div @click="selectCategory(category.id, index)">
-                <DxCheckBox v-model="isCheck[index]" />
+              <div @click="selectCategory(category.id)">
+                <DxCheckBox v-model="isCheck[category.id]" />
               </div>
             </td>
             <td>{{ category.category_name }}</td>
-            <td class="td-text-center">{{ category.order }}</td>
             <td>
               <div class="flex flex-icon" v-if="category.status">
                 <div class="flex function-icon">
@@ -119,6 +117,7 @@ export default {
       return this.Enum.SAVE_MODE;
     },
   },
+
   created() {
     /**
      * Lấy danh mục từ storage, nếu chưa có thì gọi api lấy danh mục
@@ -134,7 +133,7 @@ export default {
   
   methods: {
     ...mapMutations(["setCategories"]),
-    ...mapActions(["getCategories", "deleteCategory"]),
+    ...mapActions(["getCategories", "deleteCategory", "deleteMultiCategory"]),
 
     /**
      * Hiển thị chi tiết danh mục
@@ -166,13 +165,16 @@ export default {
       if(action == "deleteCategory"){
         this.deleteCategory(this.selectedCategory.id);
       }
+      else if(action == "deleteMultiCategory"){
+        this.deleteMultiCategory(this.selectedCategories)
+      }
       this.showPopup(false);
     },
     /**
      * Khi tích chọn checkbox thì id của danh mục sẽ được thêm vào mảng selectedCategories
      */
-    selectCategory(categoryId, index) {
-      if (!this.isCheck[index]) {
+    selectCategory(categoryId) {
+      if (!this.isCheck[categoryId]) {
         this.isSelectAll = false;
         let id = this.selectedCategories.indexOf(categoryId);
         this.selectedCategories.splice(id, 1);
@@ -188,7 +190,9 @@ export default {
      */
     checkAll() {
       if (this.isSelectAll) {
-        this.isCheck.fill(true);
+        for (let i = 0; i < this.categories.length; i++) {
+          this.isCheck[this.categories[i].id] =  true;
+        }
         this.selectedCategories = this.categories.map(
           (category) => category.id
         );
@@ -197,8 +201,10 @@ export default {
         this.selectedCategories = [];
       }
     },
-    deleteMultiCategory(){
+    deleteMultiCategoryOnClick(){
       console.log(this.selectedCategories);
+      this.showPopup(true, "Bạn có chắc chắn muốn xóa những danh mục đã chọn không?")
+      this.popupAction = "deleteMultiCategory";
     }
   },
 };

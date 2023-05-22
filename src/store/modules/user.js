@@ -17,7 +17,7 @@ const getters = {
   cart: (state) => state.cart,
 };
 const mutations = {
-  setUser(state, user){
+  setUser(state, user) {
     state.user = user;
   },
   setUserToken(state, token) {
@@ -30,34 +30,43 @@ const mutations = {
   setListProducts(state, data) {
     state.listProducts = data;
   },
-  setCart(state, data){
+  setCart(state, data) {
     state.cart = data;
   },
-  addToCart(state, object){
-    const index = state.cart.findIndex(item => item.product.id === object.product.id);
-    if(index !== -1){
-      state.cart[index].quantity += object.quantity;
+
+  addToCart(state, object) {
+    console.log(state.cart);
+    if (state.cart) {
+      const index = state.cart.findIndex(
+        (item) => item.product.id === object.product.id
+      );
+      if (index !== -1) {
+        state.cart[index].amount += object.amount;
+      } else {
+        state.cart.push(object);
+      }
     }
     else {
+      state.cart = [];
       state.cart.push(object);
     }
   },
-  removeCartItem(state, productId){
-    const index = state.cart.findIndex(item => item.product.id === productId);
-    if(index !== -1){
+  removeCartItem(state, productId) {
+    const index = state.cart.findIndex((item) => item.product.id === productId);
+    if (index !== -1) {
       state.cart.splice(index, 1);
     }
   },
-  updateCartItemQuantity(state, {productId, quantity}){
-    const index = state.cart.findIndex(item => item.product.id === productId);
-    if(index !== -1){
-      if(quantity === 0){
+  updateCartItemQuantity(state, { productId, amount }) {
+    const index = state.cart.findIndex((item) => item.product.id === productId);
+    if (index !== -1) {
+      if (amount === 0) {
         state.cart.splice(index, 1);
-      } else{
-        state.cart[index].quantity = quantity;
+      } else {
+        state.cart[index].amount = amount;
       }
     }
-  }
+  },
 };
 
 const actions = {
@@ -83,7 +92,7 @@ const actions = {
     commit("setLoading", true);
     try {
       await userAxios.get("/logout");
-      
+
       dispatch("clearLocalStorage");
       commit("setLoading", false);
 
@@ -93,23 +102,23 @@ const actions = {
     }
   },
   clearLocalStorage({ commit }) {
-    commit("setUser", null)
+    commit("setUser", null);
     commit("setUserToken", null);
+    commit("setCart", null);
     // commit("setCategories", null);
     // commit("setProducts", null);
   },
 
-  async getUserDetail({ commit}) {
+  async getUserDetail({ commit }) {
     commit("setLoading", true);
     try {
       const response = await userAxios.get("/user");
-      commit("setUser", response.data)
+      commit("setUser", response.data);
       commit("setLoading", false);
     } catch {
       commit("setLoading", false);
     }
   },
-
 
   async getListCategories({ commit }) {
     commit("setLoading", true);
@@ -124,22 +133,26 @@ const actions = {
     }
   },
 
-  async getListProducts({ commit}, {category_id, name, min_price, max_price, limit, page}) {
+  async getListProducts(
+    { commit },
+    {page, per_page, category_id, name, min_price, max_price }
+  ) {
     commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('category_id', category_id);
+    formData.append('name', name);
+    formData.append('min_price', min_price);
+    formData.append('max_price', max_price);
     try {
       await guestAxios
-        .get("/product/list", {
+        .post("/product/list", formData, {
           params: {
-            category_id: category_id,
-            name: name,
-            min_price: min_price,
-            max_price: max_price,
-            limit: limit,
-            page: page
+            page: page,
+            per_page: per_page,
           },
         })
         .then((response) => {
-          commit("setListProducts", response.data.data);
+          commit("setListProducts", response.data.data.data);
           commit("setLoading", false);
         });
     } catch (error) {
@@ -148,6 +161,36 @@ const actions = {
     }
   },
 
+  async addProductToCart({ commit, dispatch }, { product_id, amount }) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append("product_id", product_id);
+    formData.append("amount", amount);
+    try {
+      await userAxios.post("/cart/add-or-update", formData).then(() => {
+        commit("setLoading", false);
+        if (router.path == "cart") {
+          dispatch("getCartDetail");
+        }
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getCartDetail({ commit }) {
+    commit("setLoading", true);
+    try {
+      await userAxios.get("/cart").then((response) => {
+        commit("setLoading", false);
+        commit("setCart", response.data.data);
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
 };
 
 export default {

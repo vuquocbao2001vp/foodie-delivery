@@ -23,28 +23,28 @@ export default {
     ]),
   },
   created() {
-    const vuex = JSON.parse(localStorage.getItem("vuex"));
-    if (vuex) {
-      const categories = vuex.user.listCategories;
-      if (categories != null) {
-        this.setListCategories(categories);
-      } else {
-        this.getListCategories();
-      }
-      const products = vuex.user.listProducts;
-      if (products != null) {
-        this.setListProducts(products);
-      } else {
+    // const vuex = JSON.parse(localStorage.getItem("vuex"));
+    // if (vuex) {
+      // const categories = vuex.user.listCategories;
+      // if (categories != null) {
+      //   this.setListCategories(categories);
+      // } else {
+        // this.getListCategories();
+      // }
+      // const products = vuex.user.listProducts;
+      // if (products != null) {
+      //   this.setListProducts(products);
+      // } else {
         this.getListProducts({
+          page: 1,
+          per_page: 200,
           category_id: "",
           name: "",
           min_price: "",
           max_price: "",
-          limit: 100,
-          page: null,
         });
-      }
-    }
+      // }
+    // }
 
     this.getCategoryId(this.listCategories);
     if (this.categoryId != 0) {
@@ -69,12 +69,12 @@ export default {
     menuFilter: {
       handler(value) {
         this.getProductFilter({
+          page: 1,
+          per_page: 200,
           category_id: this.categoryId,
           name: value.name,
           min_price: value.minPrice,
-          max_price: value.maxPrice,
-          limit: 100,
-          page: null,
+          max_price: value.maxPrice
         });
       },
       deep: true,

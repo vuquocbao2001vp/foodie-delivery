@@ -12,6 +12,7 @@ const state = {
   },
   productFilter: null,
   productDetail: null,
+  articleSelected: null,
 };
 
 const getters = {
@@ -22,6 +23,7 @@ const getters = {
   menuFilter: (state) => state.menuFilter,
   productFilter: (state) => state.productFilter,
   productDetail: (state) => state.productDetail,
+  articleSelected: (state) => state.articleSelected,
 };
 const mutations = {
   /**
@@ -61,6 +63,9 @@ const mutations = {
   },
   setProductDetail(state, product){
     state.productDetail = product;
+  },
+  setArticle(state, article){
+    state.articleSelected = article
   }
 };
 const actions = {
@@ -73,22 +78,23 @@ const actions = {
       commit("clearToastMessage");
     }, 3000); // Hiển thị Toast trong 3 giây
   },
-  async getProductFilter({ commit}, {category_id, name, min_price, max_price, limit, page}) {
+  async getProductFilter({ commit}, {page, per_page, category_id, name, min_price, max_price}) {
     commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('category_id', category_id);
+    formData.append('name', name);
+    formData.append('min_price', min_price);
+    formData.append('max_price', max_price);
     try {
       await guestAxios
-        .get("/product/list", {
+        .post("/product/list", formData, {
           params: {
-            category_id: category_id,
-            name: name,
-            min_price: min_price,
-            max_price: max_price,
-            limit: limit,
-            page: page
+            page: page,
+            per_page: per_page,
           },
         })
         .then((response) => {
-          commit("setProductFilter", response.data.data);
+          commit("setProductFilter", response.data.data.data);
           commit("setLoading", false);
         });
     } catch (error) {

@@ -71,7 +71,7 @@
               }}đ
             </div>
           </div>
-          <div class="order-button" @click="addProductToCart">
+          <div class="order-button" @click="addProductToCartOnClick">
             <BaseButton buttonType="regular" buttonName="THÊM VÀO GIỎ HÀNG" />
           </div>
         </div>
@@ -97,6 +97,7 @@ export default {
   data() {
     return {
       quantity: 1,
+      isLogin: null,
     };
   },
   computed: {
@@ -104,13 +105,28 @@ export default {
   },
   created() {
     this.getProductDetail(this.$route.query.id);
+    const vuex = JSON.parse(localStorage.getItem("vuex"));
+    if (vuex) {
+      const user = vuex.user.user;
+      if (user !== null) {
+        this.isLogin = true;
+      } else this.isLogin = false;
+    }
   },
   methods: {
     ...mapMutations(["setProductDetail", "addToCart"]),
-    ...mapActions(["getProductDetail"]),
-    addProductToCart() {
-      this.addToCart({ product: this.productDetail, quantity: this.quantity });
-      this.$router.push({ path: "/cart" });
+    ...mapActions(["getProductDetail", "addProductToCart"]),
+    addProductToCartOnClick() {
+      if (this.isLogin) {
+        this.addProductToCart({
+          product_id: this.productDetail.id,
+          amount: this.quantity,
+        });
+        this.$router.push({ path: "/cart" });
+      } else {
+        this.addToCart({ product: this.productDetail, amount: this.quantity });
+        this.$router.push({ path: "/cart" });
+      }
     },
   },
 };

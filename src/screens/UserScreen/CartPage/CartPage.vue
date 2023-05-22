@@ -53,35 +53,25 @@
                     <div class="quantity-selection flex">
                       <div
                         class="quantity-selection-nav quantity-selection-left flex"
-                        @click="
-                          updateCartItemQuantity({
-                            productId: item.product.id,
-                            quantity: item.quantity - 1,
-                          })
-                        "
+                        @click="changeAmount(item.product.id, item.amount - 1)"
                       >
                         -
                       </div>
                       <div
                         class="quantity-selection-nav quantity-selection-text flex"
                       >
-                        {{ item.quantity }}
+                        {{ item.amount }}
                       </div>
                       <div
                         class="quantity-selection-nav quantity-selection-right flex"
-                        @click="
-                          updateCartItemQuantity({
-                            productId: item.product.id,
-                            quantity: item.quantity + 1,
-                          })
-                        "
+                        @click="changeAmount(item.product.id, item.amount + 1)"
                       >
                         +
                       </div>
                     </div>
                   </td>
                   <td class="text-right bold">
-                    {{ (item.product.price * item.quantity).toLocaleString() }}đ
+                    {{ (item.product.price * item.amount).toLocaleString() }}đ
                   </td>
                 </tr>
               </tbody>
@@ -128,12 +118,13 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   data() {
     return {
-      isEmptyCart: false,
+      isEmptyCart: null,
       total: 0,
+      isLogin: null,
     };
   },
   computed: {
@@ -141,28 +132,65 @@ export default {
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
-    const cart = vuex.user.cart;
-    if (cart.length > 0) {
-      this.setCart(cart);
-    } else {
-      this.isEmptyCart = true;
+    if (vuex) {
+      const user = vuex.user.user;
+      if (user !== null) {
+        this.isLogin = true;
+        this.getCartDetail();
+      } else {
+        this.isLogin = false;
+        const cart = vuex.user.cart;
+        if (cart) {
+          if (cart.length > 0) {
+            this.setCart(cart);
+          } else {
+            this.isEmptyCart = true;
+          }
+        } else {
+          this.isEmptyCart = true;
+        }
+      }
     }
   },
   watch: {
     cart: {
       handler(value) {
-        this.total = 0;
-        value.forEach((item) => {
-          this.total += item.product.price * item.quantity;
-        });
+        if (value.length == 0) {
+          this.isEmptyCart = true;
+        } else {
+          this.isEmptyCart = false;
+          this.total = 0;
+          value.forEach((item) => {
+            this.total += item.product.price * item.amount;
+          });
+        }
       },
       deep: true,
     },
   },
   methods: {
     ...mapMutations(["setCart", "removeCartItem", "updateCartItemQuantity"]),
+    ...mapActions(["getCartDetail", "addProductToCart"]),
     removeFromCart(id) {
+      if (this.isLogin) {
+        this.addProductToCart({
+          product_id: id,
+          amount: 0,
+        });
+      }
       this.removeCartItem(id);
+    },
+    changeAmount(id, amount) {
+      if (this.isLogin) {
+        this.addProductToCart({
+          product_id: id,
+          amount: amount,
+        });
+      }
+      this.updateCartItemQuantity({
+        productId: id,
+        amount: amount,
+      });
     },
   },
 };

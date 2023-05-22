@@ -33,7 +33,7 @@
             <DxTextBox
               v-model="codeInput"
               :on-initialized="onInitialized"
-              value-change-event="keyup"
+              value-change-event="focusout"
               max-length="100"
             >
               <DxValidator>

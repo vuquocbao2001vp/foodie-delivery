@@ -17,7 +17,7 @@
               <DxTextBox
                 v-model="category.category_name"
                 :on-initialized="onInitialized"
-                value-change-event="keyup"
+                value-change-event="focusout"
                 max-length="100"
               >
                 <DxValidator>
@@ -26,20 +26,7 @@
               </DxTextBox>
             </div>
           </div>
-          <div class="content-item flex" v-if="saveMode == SAVE_MODE.Edit">
-            <div class="item-title">
-              Thứ tự hiển thị <span class="text-red">*</span>
-            </div>
-            <div class="item-input">
-              <DxTextBox v-model="category.order">
-                <DxValidator>
-                  <DxRequiredRule
-                    message="Thứ tự danh mục không được để trống."
-                  />
-                </DxValidator>
-              </DxTextBox>
-            </div>
-          </div>
+          
           <div class="content-item flex">
             <div class="item-title">
               Trạng thái <span class="text-red">*</span>
@@ -56,7 +43,6 @@
             </div>
           </div>
           <div>
-            <!-- <DxValidationSummary ref="ok"/> -->
             <div v-show="false">
               <DxButton
                 ref="summary"

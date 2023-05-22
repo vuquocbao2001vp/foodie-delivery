@@ -90,10 +90,6 @@ const actions = {
   },
 
 
-
-
-
-
   /**
    * Api lấy tất cả danh mục
    */
@@ -117,6 +113,27 @@ const actions = {
     try {
       commit("setLoading", true);
       await adminAxios.delete(`/admin/category/delete/${id}`).then(() => {
+        dispatch("getCategories");
+        commit("setLoading", false);
+        dispatch("showToastMessage", "Xóa danh mục thành công.");
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  /**
+   * Api xóa nhiều danh mục theo id
+   */
+  async deleteMultiCategory({ commit, dispatch }, ids) {
+    try {
+      commit("setLoading", true);
+      await adminAxios.delete('/admin/category/delete-many', {
+        data: {
+          ids: ids
+        }
+      }).then(() => {
         dispatch("getCategories");
         commit("setLoading", false);
         dispatch("showToastMessage", "Xóa danh mục thành công.");
@@ -166,15 +183,18 @@ const actions = {
   /**
    * Api lấy sản phẩm
    */
-  async getProducts({ commit }, { limit, offset }) {
+  async getProducts({ commit }, { page, per_page, category_id, name }) {
     commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('category_id', category_id);
+    formData.append('name', name);
     try {
       await adminAxios
-        .get("/admin/product/list", {
+        .post("/admin/product/list", formData, {
           params: {
-            limit: limit,
-            offset: offset,
-          },
+            page: page,
+            per_page: per_page,
+          }
         })
         .then((response) => {
           commit("setProducts", response.data.data);
@@ -193,7 +213,7 @@ const actions = {
     commit("setLoading", true);
     try {
       await adminAxios.delete(`/admin/product/delete/${id}`).then(() => {
-        dispatch("getProducts", { limit: 10, offset: 0 });
+        dispatch("getProducts", { page: 1, per_page: 10, category_id: "", name: "" });
         commit("setLoading", false);
         dispatch("showToastMessage", "Xóa sản phẩm thành công.");
       });
@@ -218,7 +238,7 @@ const actions = {
     formData.append('highlight', product.highlight);
     try {
       await adminAxios.post("/admin/product/create", formData).then(() => {
-        dispatch("getProducts", { limit: 10, offset: 0 });
+        dispatch("getProducts", { page: 1, per_page: 10, category_id: "", name: "" });
         commit("setLoading", false);
         dispatch("showToastMessage", "Thêm sản phẩm mới thành công.");
       });
@@ -245,9 +265,37 @@ const actions = {
     formData.append('highlight', product.highlight);
     try {
       await adminAxios.post(`/admin/product/update/${id}`, formData).then(() => {
-        dispatch("getProducts", { limit: 10, offset: 0 });
+        dispatch("getProducts", { page: 1, per_page: 10, category_id: "", name: "" });
         commit("setLoading", false);
         dispatch("showToastMessage", "Sửa sản phẩm thành công.");
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async createArticle({ commit, dispatch }, { text }) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('body', text);
+    try {
+      await adminAxios.post('/admin/article/create', formData).then(() => {
+        commit("setLoading", false);
+        dispatch("showToastMessage", "Tạo bài viết thành công.");
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getArticle({ commit }, id) {
+    commit("setLoading", true);
+    try {
+      await adminAxios.get(`/admin/article/${id}`).then((response) => {
+        commit("setLoading", false);
+        commit("setArticle", response.data.data)
       });
     } catch (error) {
       commit("setLoading", false);

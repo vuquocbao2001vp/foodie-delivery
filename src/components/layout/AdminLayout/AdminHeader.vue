@@ -6,7 +6,7 @@
     </div>
     <div class="flex-end-block flex">
       <div class="admin-name flex">
-        <span>{{ admin ? admin.name : "" }}</span>
+        <span>{{ admin ? admin.first_name : "" }}</span>
         <div @click="expandAdmin" class="header-right-icon flex">
           <div class="icon-down"></div>
         </div>
@@ -57,7 +57,7 @@ export default {
     },
 
     logout() {
-      if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+      if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
         this.adminLogout();
       } else {
         this.isExpandAdmin = false;

@@ -4,20 +4,43 @@
       <div class="top-button" @click="showDetail(true, SAVE_MODE.Add, {})">
         <BaseButton buttonType="regular-square" buttonName="Sản phẩm mới" />
       </div>
-      <div class="top-button" v-if="selectedProducts.length > 0">
+      <div
+        class="top-button"
+        v-if="selectedProducts.length > 0"
+        @click="deleteMultiProductOnClick"
+      >
         <BaseButton buttonType="red-square" buttonName="Xóa" />
       </div>
       <div class="paging-control flex">
-        <div class="search-input">
-          <DxTextBox mode="search" placeholder="Tìm kiếm" />
+        <div class="item-input">
+          <DxSelectBox
+            :search-enabled="true"
+            v-model:value="categorySearch"
+            :data-source="listCategories"
+            no-data-text="Không có dữ liệu"
+            display-expr="category_name"
+            value-expr="id"
+            placeholder="Lọc theo danh mục"
+          />
         </div>
-        <div class="paging-icon flex" title="Trang trước">
+        <div class="search-input">
+          <DxTextBox
+            mode="search"
+            placeholder="Tìm kiếm"
+            value-change-event="keyup"
+            @value-changed="getTextSearch"
+          />
+        </div>
+        <div @click="previousPage" class="paging-icon flex" title="Trang trước">
           <div class="icon-prev icon-center"></div>
         </div>
         <span class="paging-number"
-          >10 <span class="font-semibold">of</span> 50</span
+          ><span class="font-semibold"
+            >{{ products.from }}-{{ products.to }}
+          </span>
+          trong số <span class="font-semibold">{{ products.total }}</span></span
         >
-        <div class="paging-icon flex" title="Trang sau">
+        <div @click="nextPage" class="paging-icon flex" title="Trang sau">
           <div class="icon-next icon-center"></div>
         </div>
       </div>
@@ -40,17 +63,17 @@
           </tr>
         </template>
         <template #table-body>
-          <tr v-for="(product, index) in products" :key="product.id">
+          <tr v-for="product in products.data" :key="product.id">
             <td class="td-text-center">
-              <div @click="selectProduct(product.id, index)">
-                <DxCheckBox v-model="isCheck[index]" />
+              <div @click="selectProduct(product.id)">
+                <DxCheckBox v-model="isCheck[product.id]" />
               </div>
             </td>
             <td class="td-text-center">
               <img class="img" :src="product.image" alt="" />
             </td>
             <td>{{ product.name }}</td>
-            <td>{{ product.category_name }}</td>
+            <td>{{ (product.category_id > 0) ? product.category.category_name : ""}}</td>
             <td class="td-text-center">{{ product.price }}</td>
             <td>
               <div class="flex flex-icon" v-if="product.status">
@@ -144,26 +167,71 @@ export default {
       saveMode: null,
       isShowPopup: false,
       popupMessage: "",
+      timeout: null,
+      textSearch: "",
+      categorySearch: "",
     };
   },
   computed: {
-    ...mapGetters(["products"]),
+    ...mapGetters(["products", "categories"]),
+    // showProducts(){
+    //   return this.products;
+    // },
+
     SAVE_MODE() {
       return this.Enum.SAVE_MODE;
+    },
+    listCategories() {
+      let allCategories = {
+        id: "",
+        category_name: "Tất cả",
+      };
+      let uncategorized = {
+        id: 0,
+        category_name: "Chưa được phân loại",
+      };
+      return [allCategories, ...this.categories, uncategorized];
+    },
+  },
+  watch: {
+    textSearch: function (value) {
+      this.getProducts({
+        page: this.products.current_page,
+        per_page: 10,
+        name: value,
+        category_id: this.categorySearch,
+      });
+    },
+    categorySearch: function (value) {
+      this.getProducts({
+        page: this.products.current_page,
+        per_page: 10,
+        name: this.textSearch,
+        category_id: value,
+      });
     },
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
-    const products = vuex.admin.products;
-    if (products != null) {
-      this.setProducts(products);
+    const categories = vuex.admin.categories;
+    if (categories != null) {
+      this.setCategories(categories);
     } else {
-      this.getProducts({ limit: 10, offset: 0 });
+      this.getCategories();
     }
+    // const vuex = JSON.parse(localStorage.getItem("vuex"));
+    // const products = vuex.admin.products;
+    // if (products != null) {
+    //   this.setProducts(products);
+    // } else {
+    this.getProducts({ page: 1, per_page: 10, category_id: "", name: "" });
+    // }
+    // this.textSearch = "";
+    // this.offset = 0;
   },
   methods: {
-    ...mapMutations(["setProducts"]),
-    ...mapActions(["getProducts", "deleteProduct"]),
+    ...mapMutations(["setProducts", "setCategories"]),
+    ...mapActions(["getProducts", "deleteProduct", "getCategories"]),
 
     /**
      * Hiển thị chi tiết sản phẩm
@@ -203,8 +271,8 @@ export default {
     /**
      * Khi tích chọn checkbox thì id của sản phẩm sẽ được thêm vào mảng selectedProducts
      */
-    selectProduct(productId, index) {
-      if (!this.isCheck[index]) {
+    selectProduct(productId) {
+      if (!this.isCheck[productId]) {
         this.isSelectAll = false;
         let id = this.selectedProducts.indexOf(productId);
         this.selectedProducts.splice(id, 1);
@@ -220,11 +288,48 @@ export default {
      */
     checkAll() {
       if (this.isSelectAll) {
-        this.isCheck.fill(true);
+        for (let i = 0; i < this.products.length; i++) {
+          this.isCheck[this.products[i].id] = true;
+        }
         this.selectedProducts = this.products.map((product) => product.id);
       } else {
         this.isCheck.fill(false);
         this.selectedProducts = [];
+      }
+    },
+    deleteMultiProductOnClick() {
+      console.log(this.selectedProducts);
+      // this.showPopup(true, "Bạn có chắc chắn muốn xóa những danh mục đã chọn không?")
+      // this.popupAction = "deleteMultiCategory";
+    },
+    /**
+     * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
+     */
+    getTextSearch(data) {
+      clearTimeout(this.timeout);
+      var self = this;
+      this.timeout = setTimeout(function () {
+        self.textSearch = data.value;
+      }, 500);
+    },
+    previousPage() {
+      if (this.products.current_page > 1) {
+        this.getProducts({
+          page: this.products.current_page - 1,
+          per_page: 10,
+          name: this.textSearch,
+          category_id: this.categorySearch,
+        });
+      }
+    },
+    nextPage() {
+      if (this.products.current_page < this.products.last_page) {
+        this.getProducts({
+          page: this.products.current_page + 1,
+          per_page: 10,
+          name: this.textSearch,
+          category_id: this.categorySearch,
+        });
       }
     },
   },
@@ -285,7 +390,7 @@ tbody tr {
 }
 .search-input {
   width: 240px;
-  margin-right: 24px;
+  margin: 0 24px;
 }
 .paging-control {
   height: 34px;

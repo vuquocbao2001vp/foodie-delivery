@@ -37,7 +37,7 @@
                   <DxTextBox
                     v-model="product.name"
                     :on-initialized="onInitialized"
-                    value-change-event="keyup"
+                    value-change-event="focusout"
                     max-length="100"
                   >
                     <DxValidator>
@@ -71,7 +71,7 @@
                 <div class="item-input">
                   <DxTextBox
                     v-model="product.price"
-                    value-change-event="keyup"
+                    value-change-event="focusout"
                     max-length="20"
                   >
                     <DxValidator>
@@ -113,7 +113,7 @@
                   <DxCheckBox v-model="product.highlight" text="Chọn" />
                 </div>
               </div>
-              <div class="content-item last-item flex">
+              <div v-if="saveMode == SAVE_MODE.Edit" class="content-item last-item flex">
                 <div class="item-title">Đã bán</div>
                 <div class="item-input">{{ product.sold_count }}</div>
               </div>

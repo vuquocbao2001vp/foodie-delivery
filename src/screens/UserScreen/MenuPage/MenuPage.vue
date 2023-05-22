@@ -79,15 +79,15 @@ export default {
     ...mapGetters(["listCategories"]),
   },
   created() {
-    const vuex = JSON.parse(localStorage.getItem("vuex"));
-    if (vuex) {
-      const categories = vuex.user.listCategories;
-      if (categories != null) {
-        this.setListCategories(categories);
-      } else {
+    // const vuex = JSON.parse(localStorage.getItem("vuex"));
+    // if (vuex) {
+    //   const categories = vuex.user.listCategories;
+    //   if (categories != null) {
+    //     this.setListCategories(categories);
+    //   } else {
         this.getListCategories();
-      }
-    }
+    //   }
+    // }
     this.priceStart = 0;
     this.priceEnd = 100000;
   },

@@ -5,6 +5,7 @@ import user from './modules/user.js'
 import admin from './modules/admin.js'
 import component from './modules/component.js'
 import auth from './modules/auth.js'
+import order from './modules/order.js'
 
 const store = createStore({
   modules: {
@@ -12,6 +13,7 @@ const store = createStore({
     user,
     component,
     auth,
+    order
   },
   plugins: [
     createPersistedState({

@@ -67,13 +67,14 @@ export default {
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
+    // this.getListCategories();
     if (vuex) {
-      const categories = vuex.user.listCategories;
-      if (categories != null) {
-        this.setListCategories(categories);
-      } else {
-        this.getListCategories();
-      }
+      // const categories = vuex.user.listCategories;
+      // if (categories != null) {
+      //   this.setListCategories(categories);
+      // } else {
+        // this.getListCategories();
+      // }
       const user = vuex.user.user;
       const userToken = vuex.user.userToken;
       if(user !== null){
@@ -145,6 +146,7 @@ export default {
   font-family: Font Bold;
   box-sizing: border-box;
   position: relative;
+  white-space: nowrap;
 }
 .navbar-item:hover {
   color: var(--text-blue-color) !important;
@@ -233,9 +235,11 @@ export default {
 }
 .account-text {
   font-family: Font SemiBold;
+  white-space: nowrap;
 }
 .account-main {
   margin-left: 8px;
+  white-space: nowrap;
 }
 .account {
   align-items: flex-end;

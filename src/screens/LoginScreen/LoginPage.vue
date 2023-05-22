@@ -14,7 +14,7 @@
             labelMode="floating"
             v-model="emailInput"
             :on-initialized="onInitialized"
-            value-change-event="keyup"
+            value-change-event="focusout"
             max-length="100"
           >
             <DxValidator>
@@ -29,7 +29,7 @@
             :mode="'password'"
             :passwordChar="'*'"
             v-model="passwordInput"
-            value-change-event="keyup"
+            value-change-event="focusout"
             max-length="100"
           >
             <DxValidator>
