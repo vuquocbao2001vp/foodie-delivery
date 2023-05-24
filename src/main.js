@@ -33,6 +33,7 @@ import BaseToast from '../src/components/base/BaseToast.vue'
 
 import {Enum} from '../src/constants/enums/enum.js'
 import compareObjects from './constants/functions/compareObjects'
+import formatDate from './constants/functions/formatDate'
 
 const app = createApp(App);
 
@@ -62,6 +63,7 @@ app.component("BaseToast", BaseToast);
 app.use(store);
 
 app.config.globalProperties.$compareObjects = compareObjects
+app.config.globalProperties.$formatDate = formatDate
 
 app.provide('Enum', Enum);
 

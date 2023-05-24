@@ -18,7 +18,7 @@ export default {
     ...mapGetters(["articleSelected"]),
   },
   created() {
-    this.getArticle(29);
+    this.getArticle(this.$route.query.id);
   },
   watch: {
     articleSelected: function (value) {

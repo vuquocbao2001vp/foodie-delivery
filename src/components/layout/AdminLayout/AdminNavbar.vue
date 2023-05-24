@@ -40,6 +40,11 @@ export default {
           icon: "icon-money",
         },
         {
+          routerLink: "/admin/article-management",
+          title: "Bài viết",
+          icon: "icon-money",
+        },
+        {
           routerLink: "/admin/order-management",
           title: "Danh sách đơn hàng",
           icon: "icon-bank",

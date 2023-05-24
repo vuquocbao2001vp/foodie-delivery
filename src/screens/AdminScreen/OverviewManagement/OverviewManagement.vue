@@ -68,23 +68,24 @@ export default {
     ...mapMutations(["setArticle"]),
     ...mapActions(["createArticle", "getArticle"]),
     saveBlog() {
-      let jsonString = JSON.stringify(this.$refs.myQuillEditor.getContents());
-      try {
-        this.createArticle({ text: jsonString });
-      } catch (error) {
-        console.log(error);
-      }
-      try {
-        this.getArticle(15);
-      } catch (error) {
-        console.log(error);
-      }
+      // let jsonString = JSON.stringify(this.$refs.myQuillEditor.getContents());
+      // try {
+      //   this.createArticle({ text: jsonString });
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      // try {
+      //   this.getArticle(15);
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      console.log(this.articleSelected);
     },
   },
 };
 </script>
 
-<style >
+<style scoped>
 .quill-editor {
   width: 800px;
   height: 100px;

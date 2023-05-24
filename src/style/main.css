@@ -7,63 +7,69 @@
 @import url(./devextreme/dxCheckBox.css);
 
 html {
-    font-size: 16px;
-    box-sizing: border-box;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    color: var(--text-primary-color);
-    font-family: Font Regular !important;
+  margin: 0;
+  color: var(--text-primary-color);
+  font-family: Font Regular !important;
 }
 
 .flex {
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 }
 div {
-    user-select: none;
+  user-select: none;
 }
 a {
-    text-decoration: none;
-    color: var(--text-primary-color) !important;
+  text-decoration: none;
+  color: var(--text-primary-color) !important;
 }
 
 textarea {
-    width: 100%;
-    height: 100%;
-    font-size: 1rem;
-    border: 1px solid #e0e5e6;
-    border-radius: 8px;
-    background-color: #fff;
-    color: var(--text-primary-color);
-    padding: 12px;
-    resize: none;
-    box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  border: 1px solid #e0e5e6;
+  border-radius: 8px;
+  background-color: #fff;
+  color: var(--text-primary-color);
+  padding: 12px;
+  resize: none;
+  box-sizing: border-box;
 }
 textarea:focus {
-    box-shadow: 0 0 0 0.5px #dcdcdc;
-    outline: none;
+  box-shadow: 0 0 0 0.5px #dcdcdc;
+  outline: none;
 }
 
 .dx-widget {
-    font-family: Font Regular !important;
+  font-family: Font Regular !important;
 }
 
+.ql-align-center {
+  text-align: center;
+}
+.ql-align-right {
+  text-align: right;
+}
 ::placeholder {
-    font-style: italic;
-    color: var(--text-placeholder-color);
-    padding-left: 4px;
+  font-style: italic;
+  color: var(--text-placeholder-color);
+  padding-left: 4px;
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-    background: #b8bcc3;
+  background: #b8bcc3;
 }
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }

@@ -8,6 +8,8 @@ import MenuPage from "../screens/UserScreen/MenuPage/MenuPage.vue";
 import CategoryPage from "../screens/UserScreen/MenuPage/CategoryPage.vue";
 import ContactPage from "../screens/UserScreen/ContactPage/ContactPage.vue";
 import CartPage from "../screens/UserScreen/CartPage/CartPage.vue";
+import NewsPage from "../screens/UserScreen/NewsPage/NewsPage.vue";
+import ArticlePage from "../screens/UserScreen/NewsPage/ArticlePage.vue";
 import PaymentPage from "../screens/UserScreen/CartPage/PaymentPage.vue";
 import LoginScreen from "../screens/LoginScreen/LoginScreen.vue";
 import LoginPage from "../screens/LoginScreen/LoginPage.vue";
@@ -16,6 +18,7 @@ import RegisterPage from "../screens/LoginScreen/RegisterPage.vue";
 import FoodDetail from "../screens/UserScreen/MenuPage/FoodDetail.vue";
 import CheckOutPage from "../screens/UserScreen/CartPage/CheckOutPage.vue";
 import AdminManagement from "../screens/AdminScreen/AdminManagement/AdminManagement.vue";
+import ArticleManagement from "../screens/AdminScreen/ArticleManagement/ArticleManagement.vue";
 import CategoryManagement from "../screens/AdminScreen/CategoryManagement/CategoryManagement.vue";
 import OrderManagement from "../screens/AdminScreen/OrderManagement/OrderManagement.vue";
 import ProductManagement from "../screens/AdminScreen/ProductManagement/ProductManagement.vue";
@@ -35,6 +38,8 @@ const routers = [
       { path: "payment", name: "payment", component: PaymentPage },
       { path: "checkout", name: "checkout", component: CheckOutPage },
       { path: "user", name: "user", component: UserPage },
+      { path: "news", name: "news", component: NewsPage },
+      { path: "article", name: "article", component: ArticlePage },
     ],
   },
   {
@@ -91,6 +96,11 @@ const routers = [
         component: ProductManagement,
       },
       {
+        path: "article-management",
+        name: "Bài viết",
+        component: ArticleManagement,
+      },
+      {
         path: "user-management",
         name: "Danh sách người dùng",
         component: UserManagement,
@@ -102,24 +112,18 @@ const routers = [
 const unidecode = require("unidecode");
 const vuex = JSON.parse(localStorage.getItem("vuex"));
 
-// if (vuex) {
-//   const categories = vuex.user.listCategories;
-
-  store.dispatch("getListCategories")
-  const categories = store.state.user.listCategories;
-  console.log(categories);
-  if (categories) {
-    categories.forEach((category) => {
-      let str = unidecode(category.category_name.toLowerCase());
-      let link = str.replace(/\s+/g, "-");
-      routers[1].children.push({
-        path: link,
-        name: link,
-        component: CategoryPage,
-      });
+const categories = store.state.user.listCategories;
+if (categories) {
+  categories.forEach((category) => {
+    let str = unidecode(category.category_name.toLowerCase());
+    let link = str.replace(/\s+/g, "-");
+    routers[1].children.push({
+      path: link,
+      name: link,
+      component: CategoryPage,
     });
-  }
-// }
+  });
+}
 
 const router = createRouter({
   history: createWebHistory(),
@@ -140,10 +144,10 @@ router.beforeEach((to, from, next) => {
       next("/home");
     }
   }
-
   // về login
   if (
-    vuex.admin.adminToken !== null && vuex.user.userToken == null &&
+    vuex.admin.adminToken !== null &&
+    vuex.user.userToken == null &&
     to.path.split("/")[1] == "auth" &&
     from.path == "/"
   ) {
@@ -152,9 +156,9 @@ router.beforeEach((to, from, next) => {
     } else {
       router.go(-1);
     }
-  }
-  else if (
-    vuex.user.userToken !== null && vuex.admin.adminToken == null &&
+  } else if (
+    vuex.user.userToken !== null &&
+    vuex.admin.adminToken == null &&
     to.path.split("/")[1] == "auth" &&
     from.path == "/"
   ) {
@@ -169,7 +173,7 @@ router.beforeEach((to, from, next) => {
     to.path.split("/")[1] == "admin" &&
     from.path == "/"
   ) {
-    store.dispatch("linkToLoginPage")
+    store.dispatch("linkToLoginPage");
   }
 });
 

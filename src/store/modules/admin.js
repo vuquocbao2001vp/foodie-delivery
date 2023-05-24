@@ -93,7 +93,7 @@ const actions = {
   /**
    * Api lấy tất cả danh mục
    */
-  async getCategories({ commit }) {
+  async getCategories({ commit}) {
     try {
       commit("setLoading", true);
       await adminAxios.get("/admin/category/getAll").then((response) => {
@@ -275,14 +275,39 @@ const actions = {
     }
   },
 
-  async createArticle({ commit, dispatch }, { text }) {
+  async createArticle({ commit, dispatch }, {body, title, image}) {
     commit("setLoading", true);
     const formData = new FormData();
-    formData.append('body', text);
+    formData.append('body', body);
+    formData.append('title', title);
+    if(image != null){
+      formData.append('image', image);
+    }
     try {
       await adminAxios.post('/admin/article/create', formData).then(() => {
         commit("setLoading", false);
         dispatch("showToastMessage", "Tạo bài viết thành công.");
+        dispatch("getArticleList", '')
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async updateArticle({ commit, dispatch }, {id, body, title, image}) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('body', body);
+    formData.append('title', title);
+    if(image != null){
+      formData.append('image', image);
+    }
+    try {
+      await adminAxios.post(`/admin/article/${id}`, formData).then(() => {
+        commit("setLoading", false);
+        dispatch("showToastMessage", "Sửa bài viết thành công.");
+        dispatch("getArticleList", '')
       });
     } catch (error) {
       commit("setLoading", false);
@@ -296,6 +321,37 @@ const actions = {
       await adminAxios.get(`/admin/article/${id}`).then((response) => {
         commit("setLoading", false);
         commit("setArticle", response.data.data)
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getArticleList({ commit }, search) {
+    commit("setLoading", true);
+    try {
+      await adminAxios.get('/admin/article', {
+        params: {
+          search: search
+        }
+      }).then((response) => {
+        commit("setArticles", response.data.data)
+        commit("setLoading", false);
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async deleteArticle({ commit, dispatch}, id) {
+    commit("setLoading", true);
+    try {
+      await adminAxios.delete(`/admin/article/${id}`).then(() => {
+        commit("setLoading", false);
+        dispatch("showToastMessage", "Xóa bài viết thành công.");
+        dispatch("getArticleList", '')
       });
     } catch (error) {
       commit("setLoading", false);

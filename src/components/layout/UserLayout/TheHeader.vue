@@ -30,6 +30,7 @@
           >
         </div>
       </router-link>
+      <router-link to="/news" class="navbar-item flex">Tin tức</router-link>
       <router-link to="/contact" class="navbar-item flex">Liên hệ</router-link>
       <router-link
         to="/cart"

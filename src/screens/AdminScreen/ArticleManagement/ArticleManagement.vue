@@ -2,27 +2,16 @@
   <div class="main-content">
     <div class="top-control flex">
       <div class="top-button" @click="showDetail(true, SAVE_MODE.Add, {})">
-        <BaseButton buttonType="regular-square" buttonName="Sản phẩm mới" />
+        <BaseButton buttonType="regular-square" buttonName="Bài viết mới" />
       </div>
       <div
         class="top-button"
-        v-if="selectedProducts.length > 0"
-        @click="deleteMultiProductOnClick"
+        v-if="selectedArticles.length > 0"
+        @click="deleteMultiArticleOnClick"
       >
         <BaseButton buttonType="red-square" buttonName="Xóa" />
       </div>
       <div class="paging-control flex">
-        <div class="item-input">
-          <DxSelectBox
-            :search-enabled="true"
-            v-model:value="categorySearch"
-            :data-source="listCategories"
-            no-data-text="Không có dữ liệu"
-            display-expr="category_name"
-            value-expr="id"
-            placeholder="Lọc theo danh mục"
-          />
-        </div>
         <div class="search-input">
           <DxTextBox
             mode="search"
@@ -30,18 +19,6 @@
             value-change-event="keyup"
             @value-changed="getTextSearch"
           />
-        </div>
-        <div @click="previousPage" class="paging-icon flex" title="Trang trước">
-          <div class="icon-prev icon-center"></div>
-        </div>
-        <span class="paging-number"
-          ><span class="font-semibold"
-            >{{ products.from }}-{{ products.to }}
-          </span>
-          trong số <span class="font-semibold">{{ products.total }}</span></span
-        >
-        <div @click="nextPage" class="paging-icon flex" title="Trang sau">
-          <div class="icon-next icon-center"></div>
         </div>
       </div>
     </div>
@@ -53,54 +30,35 @@
               <div @click="checkAll"><DxCheckBox v-model="isSelectAll" /></div>
             </th>
             <th class="td-text-center">Ảnh</th>
-            <th>Tên sản phẩm</th>
-            <th>Danh mục</th>
-            <th class="td-text-center">Giá</th>
-            <th class="td-text-center">Trạng thái</th>
-            <th class="td-text-center">Sản phẩm nổi bật</th>
-            <th class="td-text-center">Đã bán</th>
+            <th>Tiêu đề</th>
+            <th class="td-text-center">Ngày tạo</th>
             <th class="td-text-center">Chức năng</th>
           </tr>
         </template>
         <template #table-body>
-          <tr v-for="product in products.data" :key="product.id">
+          <tr v-for="article in articles" :key="article.id">
             <td class="td-text-center">
-              <div @click="selectProduct(product.id)">
-                <DxCheckBox v-model="isCheck[product.id]" />
+              <div @click="selectArticle(article.id)">
+                <DxCheckBox v-model="isCheck[article.id]" :disabled="article.id == 29"/>
               </div>
             </td>
             <td class="td-text-center">
-              <img class="img" :src="product.image" alt="" />
+              <img class="img" :src="article.media" alt="" />
             </td>
-            <td>{{ product.name }}</td>
-            <td>{{ (product.category_id > 0) ? product.category.category_name : ""}}</td>
-            <td class="td-text-center">{{ product.price }}</td>
-            <td>
-              <div class="flex flex-icon" v-if="product.status">
-                <div class="flex function-icon">
-                  <div class="icon-check icon-center"></div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="flex flex-icon" v-if="product.highlight">
-                <div class="flex function-icon">
-                  <div class="icon-check icon-center"></div>
-                </div>
-              </div>
-            </td>
-            <td class="td-text-center">{{ product.sold_count }}</td>
+            <td>{{ article.title }}</td>
+            <td class="td-text-center">{{ formatDate(article.created_at) }}</td>
             <td>
               <div class="flex flex-icon">
                 <div
-                  @click="showDetail(true, SAVE_MODE.Edit, product)"
+                  @click="showDetail(true, SAVE_MODE.Edit, article)"
                   class="flex function-icon"
                 >
                   <div class="icon-edit icon-center" title="Sửa"></div>
                 </div>
                 <div
+                  v-if="article.id !== 29"
                   class="flex function-icon"
-                  @click="deleteProductOnClick(product)"
+                  @click="deleteArticleOnClick(article)"
                 >
                   <div class="icon-delete icon-center" title="Xóa"></div>
                 </div>
@@ -111,12 +69,11 @@
       </BaseTable>
     </div>
   </div>
-
-  <ProductDetail
+  <ArticleDetail
     :isShowDetail="isShowDetail"
     @showDetail="showDetail"
     :saveMode="saveMode"
-    :selectedProduct="selectedProduct"
+    :selectedArticle="selectedArticle"
   />
 
   <BasePopup v-if="isShowPopup">
@@ -149,19 +106,21 @@
 </template>
 
 <script>
-import ProductDetail from "./ProductDetail.vue";
+import ArticleDetail from "./ArticleDetail.vue";
+import formatDate from "@/constants/functions/formatDate.js";
 import { mapMutations, mapActions, mapGetters } from "vuex";
 
 export default {
   components: {
-    ProductDetail,
+    ArticleDetail,
   },
   inject: ["Enum"],
   data() {
     return {
       isShowDetail: false,
-      selectedProduct: {},
-      selectedProducts: [],
+      selectedArticle: {},
+      deleteToArticle: {},
+      selectedArticles: [],
       isSelectAll: false,
       isCheck: [],
       saveMode: null,
@@ -169,69 +128,38 @@ export default {
       popupMessage: "",
       timeout: null,
       textSearch: "",
-      categorySearch: "",
     };
   },
   computed: {
-    ...mapGetters(["products", "categories"]),
-    // showProducts(){
-    //   return this.products;
-    // },
-
+    ...mapGetters(["articles", "articleSelected"]),
     SAVE_MODE() {
       return this.Enum.SAVE_MODE;
-    },
-    listCategories() {
-      let allCategories = {
-        id: "",
-        category_name: "Tất cả",
-      };
-      let uncategorized = {
-        id: 0,
-        category_name: "Chưa được phân loại",
-      };
-      return [allCategories, ...this.categories, uncategorized];
     },
   },
   watch: {
     textSearch: function (value) {
-      this.getProducts({
-        page: this.products.current_page,
-        per_page: 10,
-        name: value,
-        category_id: this.categorySearch,
-      });
-    },
-    categorySearch: function (value) {
-      this.getProducts({
-        page: this.products.current_page,
-        per_page: 10,
-        name: this.textSearch,
-        category_id: value,
-      });
+      this.getArticleList(value);
     },
   },
   created() {
-    const vuex = JSON.parse(localStorage.getItem("vuex"));
-    const categories = vuex.admin.categories;
-    if (categories != null) {
-      this.setCategories(categories);
-    } else {
-      this.getCategories();
-    }
-    this.getProducts({ page: 1, per_page: 10, category_id: "", name: "" });
+    this.getArticleList("");
   },
   methods: {
-    ...mapMutations(["setProducts", "setCategories"]),
-    ...mapActions(["getProducts", "deleteProduct", "getCategories"]),
-
+    ...mapMutations(["setArticles", "setArticle"]),
+    ...mapActions(["getArticleList", "getArticle", "deleteArticle"]),
+    formatDate,
     /**
      * Hiển thị chi tiết sản phẩm
      */
-    showDetail(isShow, mode, product) {
-      this.isShowDetail = isShow;
+    async showDetail(isShow, mode, article) {
       this.saveMode = mode;
-      this.selectedProduct = product;
+      if (isShow == true && mode == this.SAVE_MODE.Edit) {
+        await this.getArticle(article.id);
+        this.isShowDetail = isShow;
+      } else {
+        this.setArticle([])
+        this.isShowDetail = isShow;
+      }
     },
 
     /**
@@ -245,11 +173,11 @@ export default {
     /**
      * Xóa sản phẩm khi click vào icon xóa ở cột chức năng
      */
-    deleteProductOnClick(product) {
-      this.selectedProduct = product;
+    deleteArticleOnClick(article) {
+      this.deleteToArticle = article;
       this.showPopup(
         true,
-        "Bạn có chắc chắn muốn xóa sản phẩm " + product.name + " không?"
+        "Bạn có chắc chắn muốn xóa bài viết " + article.title + " không?"
       );
     },
 
@@ -257,20 +185,20 @@ export default {
      * sự kiện click xác nhận ở popup
      */
     confirmPopupAction() {
-      this.deleteProduct(this.selectedProduct.id);
+      this.deleteArticle(this.deleteToArticle.id);
       this.showPopup(false);
     },
     /**
      * Khi tích chọn checkbox thì id của sản phẩm sẽ được thêm vào mảng selectedProducts
      */
-    selectProduct(productId) {
-      if (!this.isCheck[productId]) {
+    selectArticle(articleId) {
+      if (!this.isCheck[articleId]) {
         this.isSelectAll = false;
-        let id = this.selectedProducts.indexOf(productId);
-        this.selectedProducts.splice(id, 1);
+        let id = this.selectedArticles.indexOf(articleId);
+        this.selectedArticles.splice(id, 1);
       } else {
-        this.selectedProducts.push(productId);
-        if (this.selectedProducts.length == this.products.length) {
+        this.selectedArticles.push(articleId);
+        if (this.selectedArticles.length == this.articles.length) {
           this.isSelectAll = true;
         }
       }
@@ -280,17 +208,17 @@ export default {
      */
     checkAll() {
       if (this.isSelectAll) {
-        for (let i = 0; i < this.products.length; i++) {
-          this.isCheck[this.products[i].id] = true;
+        for (let i = 0; i < this.articles.length; i++) {
+          this.isCheck[this.articles[i].id] = true;
         }
-        this.selectedProducts = this.products.map((product) => product.id);
+        this.selectedArticles = this.articles.map((article) => article.id);
       } else {
         this.isCheck.fill(false);
-        this.selectedProducts = [];
+        this.selectedArticles = [];
       }
     },
-    deleteMultiProductOnClick() {
-      console.log(this.selectedProducts);
+    deleteMultiArticleOnClick() {
+      console.log(this.selectedArticles);
       // this.showPopup(true, "Bạn có chắc chắn muốn xóa những danh mục đã chọn không?")
       // this.popupAction = "deleteMultiCategory";
     },
@@ -303,26 +231,6 @@ export default {
       this.timeout = setTimeout(function () {
         self.textSearch = data.value;
       }, 500);
-    },
-    previousPage() {
-      if (this.products.current_page > 1) {
-        this.getProducts({
-          page: this.products.current_page - 1,
-          per_page: 10,
-          name: this.textSearch,
-          category_id: this.categorySearch,
-        });
-      }
-    },
-    nextPage() {
-      if (this.products.current_page < this.products.last_page) {
-        this.getProducts({
-          page: this.products.current_page + 1,
-          per_page: 10,
-          name: this.textSearch,
-          category_id: this.categorySearch,
-        });
-      }
     },
   },
 };

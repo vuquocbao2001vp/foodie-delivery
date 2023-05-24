@@ -9,7 +9,7 @@
       <img class="img" :src="product ? product.image : ''" alt="" />
       <div v-show="isHover" class="img-nav flex">Thêm vào giỏ hàng</div>
     </div>
-    <p @click="viewProduct" class="item-name">
+    <p :title="product ? product.name : ''" @click="viewProduct" class="item-name">
       {{ product ? product.name : "" }}
     </p>
     <p class="item-price">
@@ -56,6 +56,9 @@ export default {
   width: 100%;
   color: var(--text-red-color);
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis;
 }
 .item-name:hover {
   color: var(--text-primary-color);
