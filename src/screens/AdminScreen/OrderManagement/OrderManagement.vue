@@ -2,10 +2,22 @@
   <div class="main-content">
     <div class="top-control flex">
       <div class="paging-control flex">
+        <div class="item-input">
+          <DxSelectBox
+            v-model:value="statusSearch"
+            :data-source="listStatusFilter"
+            no-data-text="Không có dữ liệu"
+            display-expr="value"
+            value-expr="id"
+            placeholder="Lọc theo trạng thái"
+          />
+        </div>
         <div class="search-input">
           <DxTextBox
             mode="search"
             placeholder="Tìm kiếm"
+            value-change-event="keyup"
+            @value-changed="getTextSearch"
           />
         </div>
         <div class="paging-icon flex" title="Trang trước">
@@ -23,29 +35,51 @@
       <BaseTable>
         <template #table-header>
           <tr>
-            <th>Mã đơn hàng</th>
-            <th class="th-category-name">Họ tên</th>
-            <th>Số điện thoại</th>
-            <th>Tổng tiền</th>
+            <th class="td-text-center">Đơn hàng</th>
             <th>Thời gian</th>
-            <th>Người giao hàng</th>
+            <th class="th-left">Khách hàng</th>
+            <th class="th-left">Sản phẩm</th>
+            <th>Tổng tiền</th>
             <th class="td-text-center">Trạng thái</th>
-            <th class="td-text-center">Chi tiết</th>
           </tr>
         </template>
         <template #table-body>
-          <tr>
-            <td>ĐH1234</td>
-            <td>Tào Tháo</td>
-            <td>0123456789</td>
-            <td>240,000đ</td>
-            <td>12h00 19/03/2023</td>
-            <td>Lưu Bị</td>
-            <td class="td-text-center text-green">Đã hoàn thành</td>
-            <td>
-              <div class="flex flex-icon">
-                <div @click="showDetail(true)" class="flex function-icon">
-                  <div class="icon-detail icon-center" title="Chi tiết"></div>
+          <tr v-for="order in orderList.data" :key="order">
+            <td class="td-text-center td-id">{{ order.id }}</td>
+            <td class="td-time">{{ formatOrderTime(order.created_at) }}</td>
+            <td class="pdh-4 td-user">
+              <div class="pdh-4">
+                {{ order.last_name + " " + order.first_name }}
+              </div>
+              <div class="pdh-4">{{ order.phone }}</div>
+              <div class="pdh-4">{{ order.email }}</div>
+              <div class="pdh-4">{{ order.address }}</div>
+            </td>
+            <td class="pdh-4 td-product">
+              <div v-for="product in order.detail" :key="product" class="pdh-4">
+                <div>
+                  {{ product.product.name }}
+                  <span class="text-bold">x{{ product.amount }}</span>
+                </div>
+              </div>
+              <div v-if="order.note" class="pdh-4">
+                <span class="text-bold">Ghi chú: </span>{{ order.note }}
+              </div>
+            </td>
+            <td class="td-total-money">{{ order.total_price.toLocaleString()}}đ</td>
+            <td class="td-status">
+              <div class="td-selectbox-flex flex">
+                <div class="td-selectbox">
+                  <DxSelectBox
+                    v-model:value="order.status"
+                    :data-source="listStatus"
+                    no-data-text="Không có dữ liệu"
+                    display-expr="value"
+                    value-expr="id"
+                    placeholder=""
+                    @value-changed="changeOrderStatus"
+                    @item-click="changeOrderStatusOnClick(order.id)"
+                  />
                 </div>
               </div>
             </td>
@@ -68,17 +102,77 @@ export default {
   data() {
     return {
       isShowDetail: false,
+      statusSearch: null,
+      listStatus: [
+        { id: 1, value: "Đơn hàng mới" },
+        { id: 2, value: "Đang xử lý" },
+        { id: 3, value: "Đang vận chuyển" },
+        { id: 4, value: "Đã hoàn thành" },
+      ],
+      oStatus: null,
+      timeout: null,
+      textSearch: "",
     };
   },
   computed: {
-    ...mapGetters(["products"]),
+    ...mapGetters(["orderList"]),
+    listStatusFilter() {
+      let allStatus = {
+        id: "",
+        value: "Tất cả",
+      };
+      return [allStatus, ...this.listStatus];
+    },
+  },
+  watch: {
+    statusSearch: function (value) {
+      this.getOrderList({ page: 1, per_page: 3, search: "", status: value });
+    },
+    textSearch: function (value) {
+      console.log(value);
+      this.getOrderList({ page: 1, per_page: 5, search: value, status: "" });
+    },
+  },
+  created() {
+    this.getOrderList({ page: 1, per_page: 5, search: "", status: "" });
   },
   methods: {
-    ...mapMutations(["setProducts"]),
-    ...mapActions(["getProducts"]),
+    ...mapMutations(["setOrderList"]),
+    ...mapActions(["getOrderList", "updateOrder"]),
 
     showDetail(isShow) {
       this.isShowDetail = isShow;
+    },
+
+    formatOrderTime(dateString) {
+      if (dateString) {
+        const date = new Date(dateString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0, nên cần +1
+        const year = date.getFullYear();
+        const formattedDate = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+        return formattedDate;
+      }
+      return "";
+    },
+    changeOrderStatus(e) {
+      this.oStatus = e.value;
+    },
+    changeOrderStatusOnClick(id) {
+      this.updateOrder({ id: id, status: this.oStatus });
+    },
+    /**
+     * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
+     */
+    getTextSearch(data) {
+      clearTimeout(this.timeout);
+      var self = this;
+      this.timeout = setTimeout(function () {
+        self.textSearch = data.value;
+      }, 500);
     },
   },
 };
@@ -120,7 +214,7 @@ th.th-checkbox {
   margin: 0 4px;
 }
 tbody tr {
-  height: 56px;
+  min-height: 100px;
 }
 tr:nth-child(odd) {
   background-color: var(--primary-bg);
@@ -132,7 +226,7 @@ tr:nth-child(odd) {
 }
 .search-input {
   width: 240px;
-  margin-right: 24px;
+  margin: 0 24px;
 }
 .main-table {
   width: 100%;
@@ -162,5 +256,39 @@ tr:nth-child(odd) {
 .top-button {
   min-width: 96px;
   margin-right: 8px;
+}
+.pdh-4 {
+  padding: 6px 8px;
+}
+.text-bold {
+  font-family: Font Bold;
+}
+.td-selectbox-flex {
+  width: 100%;
+  justify-content: center;
+}
+.td-selectbox {
+  width: 180px;
+}
+.td-user {
+  width: 240px;
+}
+.td-product {
+  width: 240px;
+}
+.td-time {
+  width: 160px;
+}
+.td-id {
+  width: 120px;
+}
+.td-total-money {
+  width: 160px;
+}
+.td-status {
+  width: 240px;
+}
+.th-left {
+  padding-left: 14px;
 }
 </style>

@@ -52,6 +52,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 2;
 }
 .content-container {
     min-height: calc(100vh - 65px);
@@ -59,6 +60,7 @@ export default {
     box-sizing: border-box;
     margin-top: 65px;
     padding-top: 32px;
+    z-index: 1;
 }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="menu-page flex">
     <div class="category-page">
-      <div class="category-item" v-for="article in articles" :key="article.id">
+      <div class="category-item" v-for="article in showArticles" :key="article.id">
         <div class="news-day">
           <div class="day-text bold-text">{{convertDate(article.created_at)[0]}}</div>
           <div class="day-text">TH{{convertDate(article.created_at)[1]}}</div>
@@ -22,7 +22,7 @@
       <div class="menu-selection">
         <div class="menu-header-text selection-header">Tin tức Foodie</div>
         <div class="space-border"></div>
-        <div class="article-item flex" v-for="article in articles" :key="article.id">
+        <div class="article-item flex" v-for="article in showArticles" :key="article.id">
           <div class="article-item-image" @click="viewArticle(article.id)">
             <img class="article-img" :src="article.media" alt="" />
           </div>
@@ -89,13 +89,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["articles"]),
+    ...mapGetters(["showArticles"]),
   },
   created(){
-    this.getArticleList('');
+    this.getShowArticles();
   },
   methods: {
-    ...mapActions(["getArticleList"]),
+    ...mapActions(["getShowArticles"]),
     convertDate(dateString) {
       const date = new Date(dateString);
       const day = date.getDate();
@@ -150,7 +150,7 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   padding-right: 24px;
   border-right: 1px solid var(--input-normal-border-color);
 }

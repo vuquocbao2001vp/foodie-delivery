@@ -1,18 +1,32 @@
 import { guestAxios } from "../../constants/api/axiosInstance";
-import router from "@/router/router";
+// import router from "@/router/router";
 
 const state = {
   order: {},
-  orderlist: [],
+  orderList: {},
+  checkout: null,
+  userOrderList: null,
 };
 
 const getters = {
   order: (state) => state.order,
+  orderList: (state) => state.orderList,
+  checkout: (state) => state.checkout,
+  userOrderList: (state) => state.userOrderList,
 };
 const mutations = {
   setOrder(state, data) {
     state.order = data;
   },
+  setOrderList(state, data) {
+    state.orderList = data;
+  },
+  setCheckout(state, data){
+    state.checkout = data
+  },
+  setUserOrderList(state, data){
+    state.userOrderList = data
+  }
 };
 const actions = {
   async createOrder(
@@ -40,10 +54,11 @@ const actions = {
       console.log(key, value);
     }
     try {
-      await guestAxios.post("/order/create", formData).then(() => {
+      await guestAxios.post("/order/create", formData).then((response) => {
         commit("setLoading", false);
         commit("setCart", [])
-        router.push({ path: "/checkout" });
+        commit("setCheckout", response.data.order)
+        // router.push({ path: "/checkout" });
       });
     } catch (error) {
       commit("setLoading", false);

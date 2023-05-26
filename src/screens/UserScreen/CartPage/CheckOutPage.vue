@@ -1,106 +1,127 @@
 <template>
   <div class="payment-page">
-    <div class="payment-container flex">
-      <div class="user-payment-info">
-        <div class="user-payment-title">CHI TIẾT ĐƠN HÀNG</div>
-        <div class="user-payment-container">
+    <div class="payment-order" v-for="order in userOrderList" :key="order">
+      <div class="payment-order-title">Đơn hàng {{order.id}}</div>
+      <div class="flex flex-order">
+        <div class="order-left">
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Ngày: <span class="bold">{{formatDate(order.created_at)}}</span></span
+              >
+            </div>
+          </div>
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Tên người nhận: <span class="bold">{{order.last_name +' '+ order.last_name}}</span></span
+              >
+            </div>
+          </div>
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Số điện thoại: <span class="bold">{{order.phone}}</span></span
+              >
+            </div>
+          </div>
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Địa chỉ: <span class="bold">{{order.address}}</span></span
+              >
+            </div>
+          </div>
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Tổng thanh toán:
+                <span class="bold text-primary">{{order.total_price.toLocaleString()}}đ</span></span
+              >
+            </div>
+          </div>
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Phương thức thanh toán:
+                <span class="bold">Thanh toán khi nhận hàng</span></span
+              >
+            </div>
+          </div>
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Trạng thái: <span class="bold text-blue" :class="(order.status == 4) ? 'text-green' : ''">{{statusString[order.status - 1]}}</span></span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="order-right">
+          <div class="payment-order-contaner">
             <table>
-            <thead>
-              <tr>
-                <th>SẢN PHẨM</th>
-                <th>TỔNG</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="td-product">
-                    <div @click="linkToDetail" class="text-red bold flex">Pizza xúc xích phô mai nướng</div>
-                    <div class="text-grey flex">Size: M</div>
-                    <div class="text-grey flex">Số lượng: 1</div>
-                </td>
-                <td class="bold text-right">300,000đ</td>
-              </tr>
-              <tr>
-                <td>Phương thức thanh toán</td>
-                <td class="text-right">Trả tiền mặt khi nhận hàng</td>
-              </tr>
-              <tr>
-                <td>Phí giao hàng</td>
-                <td class="bold text-right">20,000đ</td>
-              </tr>
-              <tr>
-                <td>Tổng cộng</td>
-                <td class="bold text-right">320,000đ</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="user-payment-title mgt-24">THÔNG TIN THANH TOÁN</div>
-        <div class="user-payment-container payment-info">
-            <div>Vũ Huy Hoàng</div>
-            <div>0975222888</div>
-            <div>vuhuyhoang2001vjpro@gmail.com</div>
-            <div></div>
-            <div>130 Xuân Thủy - Hà Nội</div>
-        </div>
-      </div>
-      <div class="payment-order">
-        <div class="payment-order-title">Cảm ơn bạn. Đơn hàng của bạn đã được nhận.</div>
-        <div class="payment-order-row flex">
-          <div class="row-dot"></div>
-          <div class="row-text">
-            <span class="text-grey">Mã đơn hàng: <span class="bold">22022202</span></span>
-          </div>
-        </div>
-        <div class="payment-order-row flex">
-          <div class="row-dot"></div>
-          <div class="row-text">
-            <span class="text-grey">Ngày: <span class="bold">1/1/2023</span></span>
-          </div>
-        </div>
-        <div class="payment-order-row flex">
-          <div class="row-dot"></div>
-          <div class="row-text">
-            <span class="text-grey">Tên khách hàng: <span class="bold">Vũ Huy Hoàng</span></span>
-          </div>
-        </div>
-        <div class="payment-order-row flex">
-          <div class="row-dot"></div>
-          <div class="row-text">
-            <span class="text-grey">Số điện thoại: <span class="bold">0975222888</span></span>
-          </div>
-        </div>
-        <div class="payment-order-row flex">
-          <div class="row-dot"></div>
-          <div class="row-text">
-            <span class="text-grey">Tổng cộng: <span class="bold text-primary">320,000đ</span></span>
-          </div>
-        </div>
-        <div class="payment-order-row flex">
-          <div class="row-dot"></div>
-          <div class="row-text">
-            <span class="text-grey">Phương thức thanh toán: <span class="bold">Thanh toán khi nhận hàng</span></span>
+              <thead>
+                <tr>
+                  <th>SẢN PHẨM</th>
+                  <th class="text-right">ĐƠN GIÁ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="product in order.detail" :key="product">
+                  <td class="td-product flex">
+                    <img class="td-img" :src="product.product.image" alt="" />
+                    <div class="td-product-info">
+                      <div class="bold" @click="viewProduct(product.product.id)">{{product.product.name}}</div>
+                      <div class="text-grey">Số lượng: {{product.amount}}</div>
+                    </div>
+                  </td>
+                  <td class="bold text-right">{{product.product.price.toLocaleString()}}đ</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="note-text">Ghi chú: <span class="text-grey">{{order.note}}</span> </div>
           </div>
         </div>
       </div>
     </div>
+    
   </div>
 </template>
-
 <script>
+import formatDate from "@/constants/functions/formatDate.js";
+import { mapGetters, mapActions } from "vuex";
 export default {
-    methods: {
-        linkToDetail(){
-            this.$router.push({path:'/detail'})
-        }
+  data() {
+    return {
+      statusString: ['Đã nhận đơn', 'Đang xử lý', 'Đang vận chuyển', 'Đã hoàn thành']
     }
+  },
+  computed: {
+    ...mapGetters(["userOrderList"]),
+  },
+  created(){
+    this.getUserOrderList();
+  },
+  methods: {
+    ...mapActions(["getUserOrderList"]),
+    formatDate,
+    viewProduct(id) {
+      this.$router.push({ name: "detail", query: { id: id }});
+    },
+  },
 };
 </script>
 
 <style scoped>
 .payment-page {
   width: 100%;
-  padding: 32px 0 0 6%;
+  padding: 32px 10% 0 10%;
   box-sizing: border-box;
   position: relative;
 }
@@ -118,37 +139,77 @@ export default {
 .text-primary {
   color: var(--text-primary-color);
 }
-.payment-container {
-  width: 100%;
-  align-items: flex-start;
-  box-sizing: border-box;
+.text-blue {
+  color: var(--text-blue-color);
 }
-.user-payment-info {
-  width: 55%;
-  box-sizing: border-box;
-  padding-right: 12px;
-  margin-right: 36px;
-}
-.user-payment-title {
-  font-size: 1.25rem;
-  font-family: Font Bold;
-  color: #555;
+.text-green{
+  color: var(--text-green-color) !important;
 }
 .payment-order {
-  width: 36%;
+  width: 100%;
   box-sizing: border-box;
-  padding: 32px 24px;
+  padding: 28px 0;
   background-color: var(--grey-bg);
   border-radius: 4px;
-  box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%), inset 0 0 0 1px rgb(0 0 0 / 5%);
+  margin-bottom: 36px;
+  box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%),
+    inset 0 0 0 1px rgb(0 0 0 / 5%);
 }
-.user-payment-container {
-    width: 100%;
-    margin-top: 12px;
+.flex-order {
+  align-items: flex-start;
 }
-
 .mgt-24 {
   margin-top: 24px;
+}
+
+.bold {
+  font-family: Font SemiBold;
+  font-size: 0.875rem;
+}
+.td-product {
+  padding: 12px 0;
+}
+.td-product div {
+  padding: 2px 0;
+}
+.payment-order-title {
+  color: var(--text-second-primary-color);
+  font-size: 1.25rem;
+  font-family: Font SemiBold;
+  margin-bottom: 16px;
+  margin-left: 32px;
+}
+.payment-order-row {
+  height: 36px;
+}
+.row-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--button-primary-grey-bg-color);
+}
+.row-text {
+  font-size: 1rem;
+  margin-left: 12px;
+}
+.row-text .bold {
+  font-size: 1.025rem;
+}
+.order-right,
+.order-left {
+  width: 50%;
+  padding-left: 32px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+.order-right {
+  background-color: #fff;
+  margin-right: 32px;
+}
+.payment-order-contaner {
+  width: 100%;
+  margin: 24px 0;
+  box-sizing: border-box;
 }
 
 /* css table */
@@ -199,40 +260,22 @@ td {
   font-family: Font SemiBold;
   font-size: 0.875rem;
 }
-.td-product {
-  padding: 12px 0;
+
+.td-img {
+  width: 64px;
+  height: 64px;
+  box-sizing: border-box;
 }
-.td-product div{
-    height: 24px;
+.td-product-info {
+  margin-left: 16px;
+  font-size: 0.825rem;
+  cursor: pointer;
+  color: var(--text-red-color);
 }
-.payment-info div {
-  height: 28px;
-  font-size: 1rem;
-  color: var(--text-secondary-color);
-  font-family: Font Italic;
-  display: flex;
-  align-items: center;
+.td-product-info:hover{
+  color: var(--text-primary-color);
 }
-.payment-order-title {
-  color: var(--text-green-color);
-  font-size: 1.025rem;
-  font-family: Font SemiBold;
-  margin-bottom: 16px;
-}
-.payment-order-row {
-  height: 36px;
-}
-.row-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--button-primary-grey-bg-color);
-}
-.row-text {
-  font-size: 1rem;
-  margin-left: 12px;
-}
-.row-text .bold {
-  font-size: 1.025rem;
+.note-text{
+  padding-top: 16px;
 }
 </style>

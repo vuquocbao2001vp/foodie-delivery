@@ -57,6 +57,9 @@ textarea:focus {
 .ql-align-right {
   text-align: right;
 }
+.ql-align-justify {
+  text-align: justify;
+}
 ::placeholder {
   font-style: italic;
   color: var(--text-placeholder-color);

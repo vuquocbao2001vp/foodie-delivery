@@ -135,6 +135,12 @@
     background-color: var(--text-blue-color);
 }
 
+.icon-down-2 {
+    mask: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat no-repeat -564px -365px;
+	width: 8px;
+	height: 5px;
+    background-color: #000;
+}
 
 
 .icon-center {

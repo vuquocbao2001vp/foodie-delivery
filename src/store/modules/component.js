@@ -14,6 +14,8 @@ const state = {
   productDetail: null,
   articleSelected: null,
   articles: null,
+  showArticles: null,
+  showArticleSelected: null,
 };
 
 const getters = {
@@ -26,6 +28,8 @@ const getters = {
   productDetail: (state) => state.productDetail,
   articleSelected: (state) => state.articleSelected,
   articles: (state) => state.articles,
+  showArticleSelected: (state) => state.showArticleSelected,
+  showArticles: (state) => state.showArticles,
 };
 const mutations = {
   /**
@@ -71,6 +75,12 @@ const mutations = {
   },
   setArticles(state, articles){
     state.articles = articles
+  },
+  setShowArticle(state, article){
+    state.showArticleSelected = article
+  },
+  setShowArticles(state, articles){
+    state.showArticles = articles
   }
 };
 const actions = {

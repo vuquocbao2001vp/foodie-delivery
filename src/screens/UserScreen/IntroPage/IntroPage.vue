@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import { mapMutations, mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import Delta from "quill-delta";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 
@@ -15,13 +15,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["articleSelected"]),
+    ...mapGetters(["showArticleSelected"]),
   },
   created() {
-    this.getArticle(29);
+    this.getShowArticleSelected(29);
   },
   watch: {
-    articleSelected: function (value) {
+    showArticleSelected: function (value) {
       let delta = new Delta(JSON.parse(value[0].content));
       const converter = new QuillDeltaToHtmlConverter(delta.ops, {});
       const html = converter.convert();
@@ -29,8 +29,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setArticle"]),
-    ...mapActions(["getArticle"]),
+    ...mapActions(["getShowArticleSelected"]),
   },
 };
 </script>

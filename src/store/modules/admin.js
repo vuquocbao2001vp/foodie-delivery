@@ -89,7 +89,23 @@ const actions = {
     }
   },
 
-
+  async updateAdmin({ commit }, admin) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('first_name', admin.first_name);
+    formData.append('last_name', admin.last_name);
+    formData.append('phone', admin.phone);
+    formData.append('address', admin.address);
+    try {
+      await adminAxios.post("/user/update", formData).then(() => {
+        commit("setLoading", false);
+        commit("setAdmin", admin)
+      });
+    } catch(error) {
+      console.log(error);
+      commit("setLoading", false);
+    }
+  },
   /**
    * Api lấy tất cả danh mục
    */
@@ -353,6 +369,47 @@ const actions = {
         dispatch("showToastMessage", "Xóa bài viết thành công.");
         dispatch("getArticleList", '')
       });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getOrderList({ commit }, { page, per_page, search, status }) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('search', search);
+    formData.append('status', status);
+    try {
+      await adminAxios
+        .post("/orders", formData, {
+          params: {
+            page: page,
+            per_page: per_page,
+          }
+        })
+        .then((response) => {
+          commit("setOrderList", response.data.data);
+          commit("setLoading", false);
+        });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async updateOrder({ commit }, { id, status }) {
+    commit("setLoading", true);
+    try {
+      await adminAxios
+        .put("admin/order/update", {
+            id: id,
+            status: status,
+          }
+        )
+        .then(() => {
+          commit("setLoading", false);
+        });
     } catch (error) {
       commit("setLoading", false);
       console.log(error);

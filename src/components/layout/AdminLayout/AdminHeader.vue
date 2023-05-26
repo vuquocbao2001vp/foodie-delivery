@@ -37,6 +37,7 @@ export default {
     } else {
       this.getAdminDetail();
     }
+    this.headerTitle = this.$route.name
   },
   watch: {
     "$route.name": function (value) {
@@ -118,7 +119,6 @@ export default {
   position: relative;
   min-width: 160px;
   height: 36px;
-  /* background-color: #4ea344; */
   justify-content: center;
   background-color: var(--primary-bg);
   border: 2px solid var(--input-normal-border-color);

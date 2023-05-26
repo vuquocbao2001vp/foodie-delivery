@@ -37,17 +37,27 @@
         class="icon-cart icon-center navbar-icon flex"
         title="Giỏ hàng"
       ></router-link>
-      <!-- <router-link to="/auth" class="navbar-item-login flex"
-        >Đăng nhập</router-link
-      > -->
       <div class="flex account">
         <div class="default-avatar flex">
           <img src="@/assets/Icons/default-avatar.jpg" alt="" />
         </div>
         <div class="account-main">
-          <div class="account-text">Tài khoản</div>
-          <div v-if="isLogin">{{user? user.email: ''}}</div>
-          <router-link to="/auth/login" v-if="!isLogin" class="login-text">Đăng nhập</router-link>
+          <div class="account-text flex">
+            <div class="user-header-selection" v-if="isUserOptionExpand && isLogin">
+              <div @click="linkToUserOption('/user')" class="user-selection-item">Thông tin người dùng</div>
+              <div @click="linkToUserOption('/cart')" class="user-selection-item">Giỏ hàng của tôi</div>
+              <div @click="linkToUserOption('/checkout')" class="user-selection-item">Lịch sử mua hàng</div>
+              <div @click="userLogoutOnClick" class="user-selection-item logout-item flex">Đăng xuất</div>
+            </div>
+            Tài khoản
+            <div class="icon-user-down flex" @click="expandUserOption">
+              <div class="icon-center icon-down-2"></div>
+            </div>
+          </div>
+          <div v-if="isLogin">{{ user ? user.email : "" }}</div>
+          <router-link to="/auth/login" v-if="!isLogin" class="login-text"
+            >Đăng nhập</router-link
+          >
         </div>
       </div>
     </div>
@@ -61,6 +71,7 @@ export default {
     return {
       isMenuExpand: false,
       isLogin: false,
+      isUserOptionExpand: false,
     };
   },
   computed: {
@@ -68,21 +79,13 @@ export default {
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
-    // this.getListCategories();
     if (vuex) {
-      // const categories = vuex.user.listCategories;
-      // if (categories != null) {
-      //   this.setListCategories(categories);
-      // } else {
-        // this.getListCategories();
-      // }
       const user = vuex.user.user;
       const userToken = vuex.user.userToken;
-      if(user !== null){
+      if (user !== null) {
         this.setUser(user);
         this.isLogin = true;
-      } 
-      else if(userToken !== null){
+      } else if (userToken !== null) {
         this.getUserDetail();
         this.isLogin = true;
       }
@@ -90,7 +93,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setListCategories", "setUser"]),
-    ...mapActions(["getListCategories", "getUserDetail"]),
+    ...mapActions(["getListCategories", "getUserDetail", "userLogout"]),
 
     expandMenu(isExpand) {
       this.isMenuExpand = isExpand;
@@ -102,6 +105,25 @@ export default {
       let router = str.replace(/\s+/g, "-");
       return router;
     },
+    expandUserOption(){
+      this.isUserOptionExpand = !this.isUserOptionExpand;
+      if (this.isUserOptionExpand == true) {
+        setTimeout(() => {
+          this.isUserOptionExpand = false;
+        }, 5000);
+      }
+    },
+    linkToUserOption(path){
+      this.$router.push({ path: path});
+      this.isUserOptionExpand = false
+    },
+    userLogoutOnClick(){
+      if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+        this.userLogout();
+      } else {
+        this.isUserOptionExpand = false;
+      }
+    }
   },
 };
 </script>
@@ -113,6 +135,7 @@ export default {
   box-sizing: border-box;
   background-color: #fff;
   z-index: 100;
+  position: relative;
 }
 
 .logo {
@@ -133,14 +156,15 @@ export default {
 .header-navbar {
   height: 65px;
   width: 100%;
-  margin-left: 30%;
+  margin-left: 24%;
+  position: relative;
 }
 .navbar-item {
   height: 65px;
   width: fit-content;
   justify-content: center;
   cursor: pointer;
-  margin-right: 6%;
+  margin-right: 4%;
   display: flex;
   align-items: center;
   font-size: 1.25rem;
@@ -237,6 +261,7 @@ export default {
 .account-text {
   font-family: Font SemiBold;
   white-space: nowrap;
+  position: relative;
 }
 .account-main {
   margin-left: 8px;
@@ -245,7 +270,44 @@ export default {
 .account {
   align-items: flex-end;
 }
-.login-text:hover{
+.login-text:hover {
   color: var(--text-red-color) !important;
+}
+.icon-user-down {
+  width: 18px;
+  height: 18px;
+  justify-content: center;
+  position: relative;
+  margin-left: 2px;
+}
+.icon-user-down:hover{
+  background-color: var(--grid-row-hover-bg);
+  cursor: pointer;
+}
+.user-header-selection{
+  position: absolute;
+  left: 0px;
+  padding: 8px 8px;
+  top: 20px;
+  width: 240px;
+  box-sizing: border-box;
+  border: 1px solid var(--input-normal-border-color);
+  background-color: var(--grid-row-hover-bg);
+}
+.user-selection-item{
+  width: 100%;
+  padding: 8px 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  border-radius: 2px;
+}
+.user-selection-item:hover{
+  cursor: pointer;
+  background-color: #fff;
+}
+.logout-item{
+  margin-top: 4px;
+  border-top: 1px solid var(--input-normal-border-color);
+  justify-content: center;
 }
 </style>

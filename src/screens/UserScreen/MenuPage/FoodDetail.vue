@@ -116,15 +116,15 @@ export default {
   methods: {
     ...mapMutations(["setProductDetail", "addToCart"]),
     ...mapActions(["getProductDetail", "addProductToCart"]),
-    addProductToCartOnClick() {
+    async addProductToCartOnClick() {
       if (this.isLogin) {
-        this.addProductToCart({
+        await this.addProductToCart({
           product_id: this.productDetail.id,
           amount: this.quantity,
         });
         this.$router.push({ path: "/cart" });
       } else {
-        this.addToCart({ product: this.productDetail, amount: this.quantity });
+        await this.addToCart({ product: this.productDetail, amount: this.quantity });
         this.$router.push({ path: "/cart" });
       }
     },

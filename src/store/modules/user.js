@@ -120,6 +120,24 @@ const actions = {
     }
   },
 
+  async updateUser({ commit }, user) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('first_name', user.first_name);
+    formData.append('last_name', user.last_name);
+    formData.append('phone', user.phone);
+    formData.append('address', user.address);
+    try {
+      await userAxios.post("/user/update", formData).then(() => {
+        commit("setLoading", false);
+        commit("setUser", user)
+      });
+    } catch(error) {
+      console.log(error);
+      commit("setLoading", false);
+    }
+  },
+
   async getListCategories({ commit }) {
     commit("setLoading", true);
     try {
@@ -186,6 +204,52 @@ const actions = {
         commit("setLoading", false);
         commit("setCart", response.data.data);
       });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getShowArticles({ commit }) {
+    commit("setLoading", true);
+    try {
+      await guestAxios.get("/article").then((response) => {
+        commit("setLoading", false);
+        commit("setShowArticles", response.data.data);
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getShowArticleSelected({ commit }, id) {
+    commit("setLoading", true);
+    try {
+      await guestAxios.get(`/article/${id}`).then((response) => {
+        commit("setLoading", false);
+        commit("setShowArticle", response.data.data);
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getUserOrderList({ commit }) {
+    commit("setLoading", true);
+    try {
+      await userAxios
+        .post("/orders", {
+          params: {
+            page: 1,
+            per_page: 100,
+          }
+        })
+        .then((response) => {
+          commit("setUserOrderList", response.data.data.data);
+          commit("setLoading", false);
+        });
     } catch (error) {
       commit("setLoading", false);
       console.log(error);

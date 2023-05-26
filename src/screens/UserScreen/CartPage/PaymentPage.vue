@@ -1,105 +1,106 @@
 <template>
-  <div class="payment-page">
-    <div v-if="screen == 2">
-      <div class="code-title">
-        <div>
-          Mã xác nhận đã được gửi tới email {{ emailInput }}. Vui lòng nhập mã
-          vào ô bên dưới để tiếp tục.
+  <div v-if="isCheckout == false">
+    <div class="payment-page" v-if="!emptyCart">
+      <div v-if="screen == 2">
+        <div class="code-title">
+          <div>
+            Mã xác nhận đã được gửi tới email {{ emailInput }}. Vui lòng nhập mã
+            vào ô bên dưới để tiếp tục.
+          </div>
+        </div>
+        <div class="code-input">
+          <DxTextBox
+            v-model="codeInput"
+            :on-initialized="onInitialized"
+            value-change-event="focusout"
+            max-length="100"
+          >
+            <DxValidator>
+              <DxRequiredRule message="Mã xác nhận không được để trống." />
+            </DxValidator>
+          </DxTextBox>
         </div>
       </div>
-      <div class="code-input">
-        <DxTextBox
-          v-model="codeInput"
-          :on-initialized="onInitialized"
-          value-change-event="focusout"
-          max-length="100"
-        >
-          <DxValidator>
-            <DxRequiredRule message="Mã xác nhận không được để trống." />
-          </DxValidator>
-        </DxTextBox>
-      </div>
-    </div>
-    <div v-else>
-      <div v-if="!isLogin" class="payment-login-header">
-        <span class="text-grey">Bạn đã có tài khoản?</span>
-        <router-link to="/auth/login"
-          ><span class="text-red">Bấm vào đây để đăng nhập</span></router-link
-        >
-      </div>
-      <div class="payment-container flex">
-        <form @submit.prevent="submitForm" class="user-payment-info">
-          <div class="user-payment-title">THÔNG TIN THANH TOÁN</div>
-          <div class="user-payment-container">
-            <div class="row-container flex">
-              <div class="input-item left-input">
-                <span class="input-title">Tên *</span>
-                <div class="input-box">
-                  <DxTextBox
-                    v-model="payUser.first_name"
-                    value-change-event="focusout"
-                    :on-initialized="onInitialized"
-                    max-length="100"
-                  >
-                    <DxValidator>
-                      <DxRequiredRule message="Tên không được để trống." />
-                    </DxValidator>
-                  </DxTextBox>
+      <div v-else>
+        <div v-if="!isLogin" class="payment-login-header">
+          <span class="text-grey">Bạn đã có tài khoản?</span>
+          <router-link to="/auth/login"
+            ><span class="text-red">Bấm vào đây để đăng nhập</span></router-link
+          >
+        </div>
+        <div class="payment-container flex">
+          <form @submit.prevent="submitForm" class="user-payment-info">
+            <div class="user-payment-title">THÔNG TIN THANH TOÁN</div>
+            <div class="user-payment-container">
+              <div class="row-container flex">
+                <div class="input-item left-input">
+                  <span class="input-title">Tên *</span>
+                  <div class="input-box">
+                    <DxTextBox
+                      v-model="payUser.first_name"
+                      value-change-event="focusout"
+                      :on-initialized="onInitialized"
+                      max-length="100"
+                    >
+                      <DxValidator>
+                        <DxRequiredRule message="Tên không được để trống." />
+                      </DxValidator>
+                    </DxTextBox>
+                  </div>
+                </div>
+                <div class="input-item right-input">
+                  <span class="input-title">Họ *</span>
+                  <div class="input-box">
+                    <DxTextBox
+                      v-model="payUser.last_name"
+                      value-change-event="focusout"
+                      max-length="100"
+                    >
+                      <DxValidator>
+                        <DxRequiredRule message="Họ không được để trống." />
+                      </DxValidator>
+                    </DxTextBox>
+                  </div>
                 </div>
               </div>
-              <div class="input-item right-input">
-                <span class="input-title">Họ *</span>
-                <div class="input-box">
-                  <DxTextBox
-                    v-model="payUser.last_name"
-                    value-change-event="focusout"
-                    max-length="100"
-                  >
-                    <DxValidator>
-                      <DxRequiredRule message="Họ không được để trống." />
-                    </DxValidator>
-                  </DxTextBox>
+              <div class="row-container flex">
+                <div class="input-item left-input">
+                  <span class="input-title">Số điện thoại *</span>
+                  <div class="input-box">
+                    <DxTextBox
+                      v-model="payUser.phone"
+                      value-change-event="focusout"
+                      max-length="100"
+                    >
+                      <DxValidator>
+                        <DxRequiredRule
+                          message="Số điện thoại không được để trống."
+                        />
+                      </DxValidator>
+                    </DxTextBox>
+                  </div>
+                </div>
+                <div class="input-item right-input">
+                  <span class="input-title">Email *</span>
+                  <div class="input-box">
+                    <DxTextBox
+                      v-model="payUser.email"
+                      value-change-event="focusout"
+                      max-length="100"
+                    >
+                      <DxValidator>
+                        <DxRequiredRule message="Email không được để trống." />
+                        <DxEmailRule message="Email không đúng định dạng." />
+                      </DxValidator>
+                    </DxTextBox>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row-container flex">
-              <div class="input-item left-input">
-                <span class="input-title">Số điện thoại *</span>
-                <div class="input-box">
-                  <DxTextBox
-                    v-model="payUser.phone"
-                    value-change-event="focusout"
-                    max-length="100"
-                  >
-                    <DxValidator>
-                      <DxRequiredRule
-                        message="Số điện thoại không được để trống."
-                      />
-                    </DxValidator>
-                  </DxTextBox>
-                </div>
-              </div>
-              <div class="input-item right-input">
-                <span class="input-title">Email *</span>
-                <div class="input-box">
-                  <DxTextBox
-                    v-model="payUser.email"
-                    value-change-event="focusout"
-                    max-length="100"
-                  >
-                    <DxValidator>
-                      <DxRequiredRule message="Email không được để trống." />
-                      <DxEmailRule message="Email không đúng định dạng." />
-                    </DxValidator>
-                  </DxTextBox>
-                </div>
-              </div>
-            </div>
-            <div class="row-container flex">
-              <div class="input-item">
-                <span class="input-title">Địa chỉ *</span>
-                <div class="input-box">
-                  <!-- <vue-google-autocomplete
+              <div class="row-container flex">
+                <div class="input-item">
+                  <span class="input-title">Địa chỉ *</span>
+                  <div class="input-box">
+                    <!-- <vue-google-autocomplete
                   ref="address"
                   id="map"
                   classname="form-control"
@@ -108,152 +109,243 @@
                   country="vn"
                 >
                 </vue-google-autocomplete> -->
-                  <DxTextBox v-model="address" />
-                  <span v-if="isEmptyAddress" class="error-text-address"
-                    >Địa chỉ không được để trống.</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="row-container flex" v-if="!isLogin">
-              <div>
-                <DxCheckBox v-model="isRegister" text="Tạo tài khoản mới" />
-              </div>
-            </div>
-            <div v-if="isRegister">
-              <div class="row-container flex">
-                <div class="input-item">
-                  <span class="input-title">Tạo mật khẩu của bạn *</span>
-                  <div class="input-box">
-                    <DxTextBox
-                      :mode="'password'"
-                      :passwordChar="'*'"
-                      v-model="passwordInput"
-                      max-length="100"
+                    <DxTextBox v-model="address" />
+                    <span v-if="isEmptyAddress" class="error-text-address"
+                      >Địa chỉ không được để trống.</span
                     >
-                      <DxValidator>
-                        <DxRequiredRule
-                          message="Mật khẩu không được để trống."
-                        />
-                        <DxStringLengthRule
-                          min="6"
-                          message="Mật khẩu phải nhiều hơn 6 kí tự."
-                        />
-                      </DxValidator>
-                    </DxTextBox>
                   </div>
                 </div>
               </div>
+              <div class="row-container flex" v-if="!isLogin">
+                <div>
+                  <DxCheckBox v-model="isRegister" text="Tạo tài khoản mới" />
+                </div>
+              </div>
+              <div v-if="isRegister">
+                <div class="row-container flex">
+                  <div class="input-item">
+                    <span class="input-title">Tạo mật khẩu của bạn *</span>
+                    <div class="input-box">
+                      <DxTextBox
+                        :mode="'password'"
+                        :passwordChar="'*'"
+                        v-model="passwordInput"
+                        max-length="100"
+                      >
+                        <DxValidator>
+                          <DxRequiredRule
+                            message="Mật khẩu không được để trống."
+                          />
+                          <DxStringLengthRule
+                            min="6"
+                            message="Mật khẩu phải nhiều hơn 6 kí tự."
+                          />
+                        </DxValidator>
+                      </DxTextBox>
+                    </div>
+                  </div>
+                </div>
+                <div class="row-container flex">
+                  <div class="input-item">
+                    <span class="input-title">Nhập lại mật khẩu *</span>
+                    <div class="input-box">
+                      <DxTextBox :mode="'password'" :passwordChar="'*'">
+                        <DxValidator>
+                          <DxRequiredRule
+                            message="Nhập lại mật khẩu không được để trống."
+                          />
+                          <DxCompareRule
+                            :comparison-target="passwordComparison"
+                            message="Mật khẩu không khớp."
+                          />
+                        </DxValidator>
+                      </DxTextBox>
+                    </div>
+                  </div>
+                </div>
+                <div class="row-container flex flex-end">
+                  <div class="create-new-account" @click="createAccount">
+                    <BaseButton
+                      buttonName="Tạo tài khoản"
+                      buttonType="regular-square"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div v-show="false">
+                <DxButton
+                  ref="submitButton"
+                  width="100%"
+                  :use-submit-behavior="true"
+                  text="Register"
+                  type="success"
+                />
+              </div>
+              <div class="user-payment-title mgt-24">THÔNG TIN BỔ SUNG</div>
               <div class="row-container flex">
                 <div class="input-item">
-                  <span class="input-title">Nhập lại mật khẩu *</span>
+                  <span class="input-title">Ghi chú</span>
                   <div class="input-box">
-                    <DxTextBox :mode="'password'" :passwordChar="'*'">
-                      <DxValidator>
-                        <DxRequiredRule
-                          message="Nhập lại mật khẩu không được để trống."
-                        />
-                        <DxCompareRule
-                          :comparison-target="passwordComparison"
-                          message="Mật khẩu không khớp."
-                        />
-                      </DxValidator>
-                    </DxTextBox>
+                    <textarea
+                      v-model="payUser.note"
+                      rows="3"
+                      placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                    ></textarea>
                   </div>
                 </div>
               </div>
-              <div class="row-container flex flex-end">
-                <div class="create-new-account" @click="createAccount">
-                  <BaseButton
-                    buttonName="Tạo tài khoản"
-                    buttonType="regular-square"
-                  />
+            </div>
+          </form>
+          <div class="payment-order">
+            <div class="user-payment-title">ĐƠN HÀNG CỦA BẠN</div>
+            <div class="payment-order-contaner">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SẢN PHẨM</th>
+                    <th>SỐ TIỀN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in cart" :key="item">
+                    <td class="td-product flex">
+                      <img class="td-img" :src="item.product.image" alt="" />
+                      <div class="td-product-info">
+                        <div class="bold">{{ item.product.name }}</div>
+                        <div class="text-grey">Số lượng: {{ item.amount }}</div>
+                      </div>
+                    </td>
+                    <td class="bold text-right">
+                      {{ (item.product.price * item.amount).toLocaleString() }}đ
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tạm tính</td>
+                    <td class="bold text-right">
+                      {{ total.toLocaleString() }}đ
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Phí giao hàng</td>
+                    <td class="bold text-right">
+                      {{ shippingFee.toLocaleString() }}đ
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tổng</td>
+                    <td class="bold text-right">
+                      {{ (total + shippingFee).toLocaleString() }}đ
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="payment-method mgt-24">
+                <div class="bold">Trả tiền mặt khi nhận hàng</div>
+                <div class="text-grey">Trả tiền mặt khi giao hàng.</div>
+              </div>
+              <div class="term-of-use mgt-24 flex">
+                <DxCheckBox v-model="isAgreeRule" />
+                <div class="term-text">
+                  Tôi đã đọc và đồng ý với
+                  <span class="text-red">điều khoản và điều kiện </span>của
+                  website*
                 </div>
               </div>
             </div>
-
-            <div v-show="false">
-              <DxButton
-                ref="submitButton"
-                width="100%"
-                :use-submit-behavior="true"
-                text="Register"
-                type="success"
-              />
-            </div>
-            <div class="user-payment-title mgt-24">THÔNG TIN BỔ SUNG</div>
-            <div class="row-container flex">
-              <div class="input-item">
-                <span class="input-title">Ghi chú</span>
-                <div class="input-box">
-                  <textarea
-                    v-model="payUser.note"
-                    rows="3"
-                    placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
-                  ></textarea>
-                </div>
+            <div class="order-button mgt-24">
+              <div @click="createOrderOnClick">
+                <BaseButton buttonName="ĐẶT HÀNG" buttonType="regular-square" />
               </div>
             </div>
           </div>
-        </form>
-        <div class="payment-order">
-          <div class="user-payment-title">ĐƠN HÀNG CỦA BẠN</div>
-          <div class="payment-order-contaner">
+        </div>
+      </div>
+    </div>
+    <div v-if="emptyCart == true" class="empty-cart-container flex">
+      <span class="empty-cart-text"
+        >Vui lòng chọn sản phẩm trong giỏ hàng để thanh toán.</span
+      >
+      <router-link to="/menu">
+        <BaseButton
+          buttonType="regular-square"
+          buttonName="QUAY TRỞ LẠI CỬA HÀNG"
+        />
+      </router-link>
+    </div>
+  </div>
+  <div v-if="isCheckout" class="payment-page">
+    <div class="payment-container flex">
+      <div class="user-payment-info user-checkout-info">
+        <div class="user-payment-title user-checkout-title">CHI TIẾT ĐƠN HÀNG</div>
+        <div class="user-payment-container">
             <table>
-              <thead>
-                <tr>
-                  <th>SẢN PHẨM</th>
-                  <th>SỐ TIỀN</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in cart" :key="item">
-                  <td class="td-product flex">
-                    <img class="td-img" :src="item.product.image" alt="" />
-                    <div class="td-product-info">
-                      <div class="bold">{{ item.product.name }}</div>
-                      <div class="text-grey">Số lượng: {{ item.amount }}</div>
-                    </div>
-                  </td>
-                  <td class="bold text-right">
-                    {{ (item.product.price * item.amount).toLocaleString() }}đ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tạm tính</td>
-                  <td class="bold text-right">{{ total.toLocaleString() }}đ</td>
-                </tr>
-                <tr>
-                  <td>Phí giao hàng</td>
-                  <td class="bold text-right">
-                    {{ shippingFee.toLocaleString() }}đ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tổng</td>
-                  <td class="bold text-right">
-                    {{ (total + shippingFee).toLocaleString() }}đ
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="payment-method mgt-24">
-              <div class="bold">Trả tiền mặt khi nhận hàng</div>
-              <div class="text-grey">Trả tiền mặt khi giao hàng.</div>
-            </div>
-            <div class="term-of-use mgt-24 flex">
-              <DxCheckBox v-model="isAgreeRule" />
-              <div class="term-text">
-                Tôi đã đọc và đồng ý với
-                <span class="text-red">điều khoản và điều kiện </span>của
-                website*
-              </div>
-            </div>
+            <thead>
+              <tr>
+                <th>SẢN PHẨM</th>
+                <th class="text-right">TỔNG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in productsPayment" :key="item">
+                <td class="td-product">
+                  <div @click="linkToDetail" class="text-red ph4 bold flex">{{item.product.name}}</div>
+                  <div class="text-grey ph4 flex">Số lượng: {{item.amount}}</div>
+                </td>
+                <td class="bold text-right">{{(item.product.price * item.amount).toLocaleString()}}đ</td>
+              </tr>
+              <tr>
+                <td>Phương thức thanh toán</td>
+                <td class="text-right">Trả tiền mặt khi nhận hàng</td>
+              </tr>
+              <tr>
+                <td>Phí giao hàng</td>
+                <td class="bold text-right">{{ shippingFee.toLocaleString() }}đ</td>
+              </tr>
+              <tr>
+                <td>Tổng cộng</td>
+                <td class="bold text-right">{{ (total + shippingFee).toLocaleString() }}đ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="checkout-order">
+        <div class="checkout-order-title">Đặt đơn hàng thành công.</div>
+        <div class="checkout-order-row flex">
+          <div class="row-dot"></div>
+          <div class="row-text">
+            <span class="text-grey">Mã đơn hàng: <span class="bold">{{checkoutInfo.id}}</span></span>
           </div>
-          <div class="order-button mgt-24">
-            <div @click="createOrderOnClick">
-              <BaseButton buttonName="ĐẶT HÀNG" buttonType="regular-square" />
-            </div>
+        </div>
+        <div class="checkout-order-row flex">
+          <div class="row-dot"></div>
+          <div class="row-text">
+            <span class="text-grey">Ngày: <span class="bold">{{formatDate(checkoutInfo.created_at)}}</span></span>
+          </div>
+        </div>
+        <div class="checkout-order-row flex">
+          <div class="row-dot"></div>
+          <div class="row-text">
+            <span class="text-grey">Tên khách hàng: <span class="bold">{{checkoutInfo.last_name + ' '+ checkoutInfo.first_name}}</span></span>
+          </div>
+        </div>
+        <div class="checkout-order-row flex">
+          <div class="row-dot"></div>
+          <div class="row-text">
+            <span class="text-grey">Số điện thoại: <span class="bold">{{checkoutInfo.phone}}</span></span>
+          </div>
+        </div>
+        <div class="checkout-order-row flex">
+          <div class="row-dot"></div>
+          <div class="row-text">
+            <span class="text-grey">Tổng cộng: <span class="bold text-primary">{{(checkoutInfo.total_price) ? checkoutInfo.total_price.toLocaleString() : ''}}đ</span></span>
+          </div>
+        </div>
+        <div class="checkout-order-row flex">
+          <div class="row-dot"></div>
+          <div class="row-text">
+            <span class="text-grey">Phương thức thanh toán: <span class="bold">Thanh toán khi nhận hàng</span></span>
           </div>
         </div>
       </div>
@@ -262,6 +354,7 @@
 </template>
 
 <script>
+import formatDate from "@/constants/functions/formatDate.js";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 // import VueGoogleAutocomplete from "vue-google-autocomplete";
 
@@ -284,10 +377,14 @@ export default {
       total: 0,
       shippingFee: 20000,
       isAgreeRule: null,
+      emptyCart: null,
+      isCheckout: false,
+      productsPayment: null,
+      checkoutInfo: {},
     };
   },
   computed: {
-    ...mapGetters(["user", "cart"]),
+    ...mapGetters(["user", "cart", "checkout"]),
   },
   watch: {
     cart: {
@@ -301,6 +398,9 @@ export default {
       },
       deep: true,
     },
+    checkout: function(value){
+      this.checkoutInfo = {...value}
+    }
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
@@ -311,14 +411,23 @@ export default {
         this.isLogin = true;
       }
       const cart = vuex.user.cart;
-      if (cart.length > 0) {
-        this.setCart(cart);
+      if (cart) {
+        if (cart.length > 0) {
+          this.setCart(cart);
+          this.emptyCart = false;
+          this.productsPayment = {...this.cart}
+        } else {
+          this.emptyCart = true;
+        }
+      } else {
+        this.emptyCart = true;
       }
     }
   },
   methods: {
     ...mapMutations(["setUser", "setCart"]),
     ...mapActions(["getUserDetail", "createOrder"]),
+    formatDate,
 
     onInitialized: function (e) {
       this.elementFocus = e;
@@ -383,16 +492,16 @@ export default {
             is_user = 2;
             user_id = null;
           }
-          console.log(products_amount, products_id);
           try {
             this.createOrder({
               is_user: is_user,
               user_id: user_id,
               products_id: products_id,
               products_amount: products_amount,
-              note: this.payUser.note,
+              note: this.payUser.note ? this.payUser.note : "",
               user: this.payUser,
             });
+            this.isCheckout = true;
           } catch (error) {
             console.log(error);
           }
@@ -433,15 +542,20 @@ export default {
   width: 55%;
   box-sizing: border-box;
   padding-right: 12px;
-  padding: 32px 0;
+  padding: 28px 0;
   margin-right: 36px;
   border-top: 2px solid var(--grid-border);
 }
+.user-checkout-info{
+  padding: 0;
+  border: none;
+}
 .user-payment-title {
-  font-size: 1.125rem;
+  font-size: 1.15rem;
   font-family: Font Bold;
   color: #555;
 }
+
 .payment-order {
   width: 36%;
   box-sizing: border-box;
@@ -585,5 +699,90 @@ td {
 }
 .create-new-account {
   width: fit-content;
+}
+.empty-cart-container {
+  width: 100%;
+  height: 480px;
+  flex-direction: column;
+  justify-content: center;
+}
+.empty-cart-text {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: var(--text-secondary-color);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.text-grey {
+  color: var(--text-secondary-color);
+  margin-right: 8px;
+}
+.text-red {
+  color: var(--text-red-color);
+  cursor: pointer;
+}
+.text-red:hover {
+  color: var(--text-primary-color);
+}
+.text-primary {
+  color: var(--text-primary-color);
+}
+
+.checkout-order {
+  width: 36%;
+  box-sizing: border-box;
+  padding: 32px 24px;
+  background-color: var(--grey-bg);
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%), inset 0 0 0 1px rgb(0 0 0 / 5%);
+}
+.user-payment-container {
+    width: 100%;
+    margin-top: 12px;
+}
+.payment-info div {
+  height: 28px;
+  font-size: 1rem;
+  color: var(--text-secondary-color);
+  font-family: Font Italic;
+  display: flex;
+  align-items: center;
+}
+.checkout-order-title {
+  color: var(--text-green-color);
+  font-size: 1.025rem;
+  font-family: Font SemiBold;
+  margin-bottom: 16px;
+}
+.checkout-order-row {
+  height: 36px;
+}
+.row-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--button-primary-grey-bg-color);
+}
+.row-text {
+  font-size: 1rem;
+  margin-left: 12px;
+}
+.row-text .bold {
+  font-size: 1.025rem;
+}
+.ph4{
+  padding: 4px 0;
 }
 </style>
