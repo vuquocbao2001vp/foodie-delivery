@@ -94,7 +94,7 @@
     </template>
     <template #control>
       <div class="control-flex flex">
-        <div class="control-button" @click="confirmPopupAction">
+        <div class="control-button" @click="confirmPopupAction(popupAction)">
           <BaseButton buttonType="regular-square" buttonName="Đồng ý" />
         </div>
         <div class="control-button" @click="showPopup(false)">
@@ -128,6 +128,7 @@ export default {
       popupMessage: "",
       timeout: null,
       textSearch: "",
+      popupAction: null,
     };
   },
   computed: {
@@ -179,13 +180,22 @@ export default {
         true,
         "Bạn có chắc chắn muốn xóa bài viết " + article.title + " không?"
       );
+      this.popupAction = "delete";
     },
 
     /**
      * sự kiện click xác nhận ở popup
      */
-    confirmPopupAction() {
-      this.deleteArticle(this.deleteToArticle.id);
+    confirmPopupAction(action) {
+      
+      if(action == "delete"){
+        this.deleteArticle(this.deleteToArticle.id);
+      }
+      else if(action == "deleteMulti"){
+        console.log(this.selectedArticles);
+      }
+      this.selectedArticles = [];
+      this.isSelectAll = false;
       this.showPopup(false);
     },
     /**
@@ -219,8 +229,8 @@ export default {
     },
     deleteMultiArticleOnClick() {
       console.log(this.selectedArticles);
-      // this.showPopup(true, "Bạn có chắc chắn muốn xóa những danh mục đã chọn không?")
-      // this.popupAction = "deleteMultiCategory";
+      this.showPopup(true, "Bạn có chắc chắn muốn xóa những bài viết đã chọn không?")
+      this.popupAction = "deleteMulti";
     },
     /**
      * Lấy ra từ khóa tìm kiếm sau khi nhập xong input

@@ -168,6 +168,8 @@ export default {
       else if(action == "deleteMultiCategory"){
         this.deleteMultiCategory(this.selectedCategories)
       }
+      this.selectedCategories = [];
+      this.isSelectAll = false;
       this.showPopup(false);
     },
     /**
@@ -202,7 +204,6 @@ export default {
       }
     },
     deleteMultiCategoryOnClick(){
-      console.log(this.selectedCategories);
       this.showPopup(true, "Bạn có chắc chắn muốn xóa những danh mục đã chọn không?")
       this.popupAction = "deleteMultiCategory";
     }

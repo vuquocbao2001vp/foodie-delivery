@@ -79,15 +79,7 @@ export default {
     ...mapGetters(["listCategories"]),
   },
   created() {
-    // const vuex = JSON.parse(localStorage.getItem("vuex"));
-    // if (vuex) {
-    //   const categories = vuex.user.listCategories;
-    //   if (categories != null) {
-    //     this.setListCategories(categories);
-    //   } else {
-        this.getListCategories();
-    //   }
-    // }
+    this.getListCategories();
     this.priceStart = 0;
     this.priceEnd = 100000;
   },
@@ -135,8 +127,9 @@ export default {
   width: 100%;
   padding-left: 10%;
   box-sizing: border-box;
-  align-items: baseline;
+  align-items: flex-start;
   position: relative;
+  min-height: 100vh;
 }
 .menu-navbar {
   width: 18%;

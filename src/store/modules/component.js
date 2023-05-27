@@ -16,6 +16,8 @@ const state = {
   articles: null,
   showArticles: null,
   showArticleSelected: null,
+  overview: null,
+  userList: null,
 };
 
 const getters = {
@@ -30,6 +32,8 @@ const getters = {
   articles: (state) => state.articles,
   showArticleSelected: (state) => state.showArticleSelected,
   showArticles: (state) => state.showArticles,
+  overview: (state) => state.overview,
+  userList: (state) => state.userList,
 };
 const mutations = {
   /**
@@ -81,7 +85,13 @@ const mutations = {
   },
   setShowArticles(state, articles){
     state.showArticles = articles
-  }
+  },
+  setOverview(state, overview){
+    state.overview = overview
+  },
+  setUserList(state, list){
+    state.userList = list
+  },
 };
 const actions = {
   /**

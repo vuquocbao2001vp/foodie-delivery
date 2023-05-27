@@ -32,7 +32,7 @@
       <div class="menu-selection">
         <div class="menu-header-text selection-header">Sản phẩm nổi bật</div>
         <div class="space-border"></div>
-        <div class="article-item flex" v-for="product in products" :key="product.id">
+        <div class="article-item flex" v-for="product in listProducts" :key="product.id">
           <div class="article-item-image">
             <img class="article-img" :src="product.image" alt="" />
           </div>
@@ -50,52 +50,25 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      products: [
-            {
-                "id": 15,
-                "name": "Pizza hải sản Pesto xanh",
-                "price": 54000,
-                "image": "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1684679563_1_pizza.png",
-            },
-            {
-                "id": 17,
-                "name": "Pizza Hải Sản Cocktail",
-                "category_id": 15,
-                "price": 55000,
-                "image": "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1684679810_2_pizza.png",
-            },
-            {
-                "id": 18,
-                "name": "Pizza Hải Sản Cao Cấp",
-                "category_id": 15,
-                "price": 53000,
-                "image": "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1684679867_3_pizza.png",
-            },
-            {
-                "id": 34,
-                "name": "Pizza Hải Sản Nhiệt Đới",
-                "category_id": 15,
-                "price": 56000,
-                "image": "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1684679895_4_pizza.png",
-            },
-            {
-                "id": 35,
-                "name": "Pizza Tôm Cocktail",
-                "category_id": 15,
-                "price": 54000,
-                "image": "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1684679937_5_pizza.png",
-            }
-        ],
     };
   },
   computed: {
-    ...mapGetters(["showArticles"]),
+    ...mapGetters(["showArticles", "listProducts"]),
   },
   created(){
     this.getShowArticles();
+    this.getListProducts({
+      page: 1,
+      per_page: 5,
+      category_id: "",
+      name: "",
+      min_price: "",
+      max_price: "",
+      highlight: 1,
+    });
   },
   methods: {
-    ...mapActions(["getShowArticles"]),
+    ...mapActions(["getShowArticles", "getListProducts"]),
     convertDate(dateString) {
       const date = new Date(dateString);
       const day = date.getDate();
@@ -115,6 +88,7 @@ export default {
   box-sizing: border-box;
   align-items: flex-start;
   position: relative;
+  padding-bottom: 64px;
 }
 .menu-navbar {
   width: 28%;
@@ -167,7 +141,6 @@ export default {
 .item-image {
   position: relative;
   width: 100%;
-  min-height: 200px;
   cursor: pointer;
   box-sizing: border-box;
 }
@@ -180,9 +153,6 @@ export default {
   width: 100%;
   font-size: 1.2rem;
   cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .news-day {
   position: absolute;

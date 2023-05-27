@@ -6,15 +6,21 @@
           <DxTextBox
             mode="search"
             placeholder="Tìm kiếm"
+            value-change-event="keyup"
+            v-model="textSearch"
+            @value-changed="getTextSearch"
           />
         </div>
-        <div class="paging-icon flex" title="Trang trước">
+        <div @click="previousPage" class="paging-icon flex" title="Trang trước">
           <div class="icon-prev icon-center"></div>
         </div>
         <span class="paging-number"
-          >10 <span class="font-semibold">of</span> 50</span
+          ><span class="font-semibold"
+            >{{ paging.from }}-{{ paging.to }}
+          </span>
+          trong số <span class="font-semibold">{{ paging.total }}</span></span
         >
-        <div class="paging-icon flex" title="Trang sau">
+        <div @click="nextPage" class="paging-icon flex" title="Trang sau">
           <div class="icon-next icon-center"></div>
         </div>
       </div>
@@ -23,55 +29,84 @@
       <BaseTable>
         <template #table-header>
           <tr>
-            <th>Họ tên</th>
-            <th class="td-text-center">Giới tính</th>
-            <th class="td-text-center">Ngày sinh</th>
-            <th>Số điện thoại</th>
+            <th class="w120">Họ </th>
+            <th>Tên</th>
+            <th>Điện thoại</th>
             <th>Email</th>
             <th>Địa chỉ</th>
+            <th>Trạng thái</th>
             <th class="td-text-center">Ngày tạo</th>
-            <th class="td-text-center">Chi tiết</th>
           </tr>
         </template>
         <template #table-body>
-          <tr>
-            <td>Tào Tháo</td>
-            <td class="td-text-center">Nam</td>
-            <td class="td-text-center">4/4/186</td>
-            <td>0912345678</td>
-            <td>taothao@tamquoc.com</td>
-            <td>Khu 3 Hoàng Cương, Thanh Ba, Phú Thọ</td>
-            <td class="td-text-center">4/4/1866</td>
-            <td>
-              <div class="flex flex-icon">
-                <div @click="showDetail(true)" class="flex function-icon">
-                  <div class="icon-detail icon-center" title="Chi tiết"></div>
-                </div>
-              </div>
-            </td>
+          <tr v-for="user in listUsers" :key="user">
+            <td class="w120">{{user.last_name}}</td>
+            <td>{{user.first_name}}</td>
+            <td>{{user.phone}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.address}}</td>
+            <td>{{user.status}}</td>
+            <td class="td-text-center">{{formatDate(user.created_at)}}</td>
           </tr>
         </template>
       </BaseTable>
     </div>
   </div>
-  <UserDetail :isShowDetail="isShowDetail" @showDetail="showDetail" />
 </template>
 
 <script>
-import UserDetail from "./UserDetail.vue";
+import { mapMutations, mapActions, mapGetters } from "vuex";
+import formatDate from "@/constants/functions/formatDate.js";
 
 export default {
-  components: {
-    UserDetail,
-  },
   data() {
     return {
-      isShowDetail: false,
+      listUsers: null,
+      timeout: null,
+      textSearch: "",
+      paging: {},
     };
   },
+  computed: {
+    ...mapGetters(["userList"]),
+  },
+  watch: {
+    userList: function(value){
+      if(value){
+        this.listUsers = value.data;
+        this.paging = {from: value.from, to: value.to, total: value.total}
+      }
+    },
+    textSearch: function (value) {
+      this.getUserList({page: 1, per_page: 10, search: value})
+    },
+  },
+  created(){
+    this.getUserList({page: 1, per_page: 10, search: ''})
+  },
   methods: {
-    showDetail(isShow) {
-      this.isShowDetail = isShow;
+    ...mapMutations(["setUserList"]),
+    ...mapActions(["getUserList"]),
+    formatDate,
+    /**
+     * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
+     */
+    getTextSearch(data) {
+      clearTimeout(this.timeout);
+      var self = this;
+      this.timeout = setTimeout(function () {
+        self.textSearch = data.value;
+      }, 500);
+    },
+    previousPage() {
+      if (this.userList.current_page > 1) {
+        this.getUserList({page: this.userList.current_page - 1, per_page: 10, search: this.textSearch})
+      }
+    },
+    nextPage() {
+      if (this.userList.current_page < this.userList.last_page) {
+        this.getUserList({page: this.userList.current_page + 1, per_page: 10, search: this.textSearch})
+      }
     },
   },
 };
@@ -116,7 +151,7 @@ tr:nth-child(odd) {
   background-color: var(--primary-bg);
 }
 tbody tr {
-  height: 48px;
+  height: 56px;
 }
 .top-control {
   height: 60px;
@@ -150,5 +185,8 @@ tbody tr {
 .top-button {
   margin-right: 8px;
   min-width: 96px;
+}
+.w120{
+  padding-left: 8px;
 }
 </style>

@@ -17,7 +17,7 @@ import ForgetPwPage from "../screens/LoginScreen/ForgetPwPage.vue";
 import RegisterPage from "../screens/LoginScreen/RegisterPage.vue";
 import FoodDetail from "../screens/UserScreen/MenuPage/FoodDetail.vue";
 import CheckOutPage from "../screens/UserScreen/CartPage/CheckOutPage.vue";
-import AdminManagement from "../screens/AdminScreen/AdminManagement/AdminManagement.vue";
+// import AdminManagement from "../screens/AdminScreen/AdminManagement/AdminManagement.vue";
 import ArticleManagement from "../screens/AdminScreen/ArticleManagement/ArticleManagement.vue";
 import CategoryManagement from "../screens/AdminScreen/CategoryManagement/CategoryManagement.vue";
 import OrderManagement from "../screens/AdminScreen/OrderManagement/OrderManagement.vue";
@@ -74,12 +74,7 @@ const routers = [
     name: "admin",
     redirect: "/admin/overview",
     children: [
-      { path: "overview", name: "Tổng quan", component: OverviewManagement },
-      {
-        path: "admin-management",
-        name: "Quản trị viên",
-        component: AdminManagement,
-      },
+      { path: "overview", name: "Quản trị viên", component: OverviewManagement },
       {
         path: "category-management",
         name: "Danh mục",
@@ -87,7 +82,7 @@ const routers = [
       },
       {
         path: "order-management",
-        name: "Quản lý đơn hàng",
+        name: "Xử lý đơn hàng",
         component: OrderManagement,
       },
       {
@@ -97,7 +92,7 @@ const routers = [
       },
       {
         path: "article-management",
-        name: "Bài viết",
+        name: "Danh mục bài viết",
         component: ArticleManagement,
       },
       {

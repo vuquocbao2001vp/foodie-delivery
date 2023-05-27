@@ -1,9 +1,17 @@
 <template>
-  <div class="payment-page">
+  <div class="payment-page mgb64">
     <div class="payment-order" v-for="order in userOrderList" :key="order">
       <div class="payment-order-title">Đơn hàng {{order.id}}</div>
       <div class="flex flex-order">
         <div class="order-left">
+          <div class="payment-order-row flex">
+            <div class="row-dot"></div>
+            <div class="row-text">
+              <span class="text-grey"
+                >Trạng thái: <span class="bold text-blue" :class="(order.status == 4) ? 'text-green' : ''">{{statusString[order.status - 1]}}</span></span
+              >
+            </div>
+          </div>
           <div class="payment-order-row flex">
             <div class="row-dot"></div>
             <div class="row-text">
@@ -16,7 +24,7 @@
             <div class="row-dot"></div>
             <div class="row-text">
               <span class="text-grey"
-                >Tên người nhận: <span class="bold">{{order.last_name +' '+ order.last_name}}</span></span
+                >Tên người nhận: <span class="bold">{{order.last_name +' '+ order.first_name}}</span></span
               >
             </div>
           </div>
@@ -54,14 +62,7 @@
               >
             </div>
           </div>
-          <div class="payment-order-row flex">
-            <div class="row-dot"></div>
-            <div class="row-text">
-              <span class="text-grey"
-                >Trạng thái: <span class="bold text-blue" :class="(order.status == 4) ? 'text-green' : ''">{{statusString[order.status - 1]}}</span></span
-              >
-            </div>
-          </div>
+          
         </div>
         <div class="order-right">
           <div class="payment-order-contaner">
@@ -124,6 +125,9 @@ export default {
   padding: 32px 10% 0 10%;
   box-sizing: border-box;
   position: relative;
+}
+.mgb64{
+  margin-bottom: 64px;
 }
 .text-grey {
   color: var(--text-secondary-color);

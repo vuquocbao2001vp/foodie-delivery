@@ -153,7 +153,7 @@ const actions = {
 
   async getListProducts(
     { commit },
-    {page, per_page, category_id, name, min_price, max_price }
+    {page, per_page, category_id, name, min_price, max_price, highlight }
   ) {
     commit("setLoading", true);
     const formData = new FormData();
@@ -161,6 +161,7 @@ const actions = {
     formData.append('name', name);
     formData.append('min_price', min_price);
     formData.append('max_price', max_price);
+    if(highlight) formData.append('highlight', highlight);
     try {
       await guestAxios
         .post("/product/list", formData, {

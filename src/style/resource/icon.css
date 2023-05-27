@@ -142,6 +142,26 @@
     background-color: #000;
 }
 
+.icon-total-order {
+    background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -1184px -1240px;
+	width: 64px;
+	height: 64px;
+}
+.icon-total-user {
+    background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -1088px -1240px;
+	width: 64px;
+	height: 64px;
+}
+.icon-total-product {
+    background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -1088px -1136px;
+	width: 64px;
+	height: 64px;
+}
+.icon-total-money {
+    background: url(@/assets/Icons/Sprites.64af8f61.svg) no-repeat -1280px -1136px;
+	width: 64px;
+	height: 64px;
+}
 
 .icon-center {
     background-repeat: no-repeat;

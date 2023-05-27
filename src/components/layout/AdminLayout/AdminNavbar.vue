@@ -26,8 +26,13 @@ export default {
       navbars: [
         {
           routerLink: "/admin/overview",
-          title: "Tổng quan",
+          title: "Quản trị viên",
           icon: "icon-dashboard",
+        },
+        {
+          routerLink: "/admin/order-management",
+          title: "Xử lý đơn hàng",
+          icon: "icon-bank",
         },
         {
           routerLink: "/admin/category-management",
@@ -41,24 +46,19 @@ export default {
         },
         {
           routerLink: "/admin/article-management",
-          title: "Bài viết",
+          title: "Danh mục bài viết",
           icon: "icon-money",
-        },
-        {
-          routerLink: "/admin/order-management",
-          title: "Danh sách đơn hàng",
-          icon: "icon-bank",
         },
         {
           routerLink: "/admin/user-management",
           title: "Danh sách người dùng",
           icon: "icon-cart",
         },
-        {
-          routerLink: "/admin/admin-management",
-          title: "Quản trị viên",
-          icon: "icon-sale",
-        }
+        // {
+        //   routerLink: "/admin/admin-management",
+        //   title: "Quản trị viên",
+        //   icon: "icon-sale",
+        // }
       ],
     };
   },

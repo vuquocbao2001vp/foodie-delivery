@@ -20,13 +20,16 @@
             @value-changed="getTextSearch"
           />
         </div>
-        <div class="paging-icon flex" title="Trang trước">
+        <div @click="previousPage" class="paging-icon flex" title="Trang trước">
           <div class="icon-prev icon-center"></div>
         </div>
         <span class="paging-number"
-          >10 <span class="font-semibold">of</span> 50</span
+          ><span class="font-semibold"
+            >{{ orderList.from }}-{{ orderList.to }}
+          </span>
+          trong số <span class="font-semibold">{{ orderList.total }}</span></span
         >
-        <div class="paging-icon flex" title="Trang sau">
+        <div @click="nextPage" class="paging-icon flex" title="Trang sau">
           <div class="icon-next icon-center"></div>
         </div>
       </div>
@@ -79,6 +82,7 @@
                     placeholder=""
                     @value-changed="changeOrderStatus"
                     @item-click="changeOrderStatusOnClick(order.id)"
+                    :disabled="(order.status == 4) ? true: false"
                   />
                 </div>
               </div>
@@ -88,21 +92,16 @@
       </BaseTable>
     </div>
   </div>
-  <OrderDetail :isShowDetail="isShowDetail" @showDetail="showDetail" />
 </template>
 
 <script>
-import OrderDetail from "./OrderDetail.vue";
 import { mapMutations, mapActions, mapGetters } from "vuex";
 
 export default {
-  components: {
-    OrderDetail,
-  },
   data() {
     return {
       isShowDetail: false,
-      statusSearch: null,
+      statusSearch: "",
       listStatus: [
         { id: 1, value: "Đơn hàng mới" },
         { id: 2, value: "Đang xử lý" },
@@ -126,15 +125,14 @@ export default {
   },
   watch: {
     statusSearch: function (value) {
-      this.getOrderList({ page: 1, per_page: 3, search: "", status: value });
+      this.getOrderList({ page: 1, per_page: 10, search: this.textSearch, status: value });
     },
     textSearch: function (value) {
-      console.log(value);
-      this.getOrderList({ page: 1, per_page: 5, search: value, status: "" });
+      this.getOrderList({ page: 1, per_page: 10, search: value, status: this.statusSearch });
     },
   },
   created() {
-    this.getOrderList({ page: 1, per_page: 5, search: "", status: "" });
+    this.getOrderList({ page: 1, per_page: 10, search: "", status: "" });
   },
   methods: {
     ...mapMutations(["setOrderList"]),
@@ -173,6 +171,27 @@ export default {
       this.timeout = setTimeout(function () {
         self.textSearch = data.value;
       }, 500);
+    },
+
+    previousPage() {
+      if (this.orderList.current_page > 1) {
+        this.getOrderList({
+          page: this.orderList.current_page - 1,
+          per_page: 10,
+          search: this.textSearch,
+          status: this.statusSearch,
+        });
+      }
+    },
+    nextPage() {
+      if (this.orderList.current_page < this.orderList.last_page) {
+        this.getOrderList({
+          page: this.orderList.current_page + 1,
+          per_page: 10,
+          search: this.textSearch,
+          status: this.statusSearch,
+        });
+      }
     },
   },
 };

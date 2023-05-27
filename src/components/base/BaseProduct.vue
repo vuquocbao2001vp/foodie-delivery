@@ -37,7 +37,7 @@ export default {
 <style scoped>
 .category-item {
   width: 200px;
-  margin-right: 36px;
+  margin: 0 24px;
   margin-bottom: 24px;
   box-sizing: border-box;
 }

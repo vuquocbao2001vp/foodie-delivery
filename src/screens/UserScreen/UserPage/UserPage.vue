@@ -1,5 +1,5 @@
 <template>
-  <div class="payment-page">
+  <div class="payment-page user-page">
     <div v-if="isLogin == false" class="empty-cart-container flex">
       <span class="empty-cart-text"
         >Yêu cầu đăng nhập để xem thông tin người dùng.</span
@@ -273,5 +273,9 @@ export default {
 }
 .change-info-button {
   flex-direction: row-reverse;
+}
+.user-page{
+  padding-top: 24px;
+  padding-bottom: 64px;
 }
 </style>

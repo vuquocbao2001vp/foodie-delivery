@@ -8,6 +8,7 @@
       <TheHeader/>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -18,7 +19,7 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     TheHeader,
-    TheContent
+    TheContent,
   },
   created(){
     const vuex = JSON.parse(localStorage.getItem("vuex"));

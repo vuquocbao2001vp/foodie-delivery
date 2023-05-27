@@ -28,6 +28,7 @@
             mode="search"
             placeholder="Tìm kiếm"
             value-change-event="keyup"
+            v-model="textSearch"
             @value-changed="getTextSearch"
           />
         </div>
@@ -137,7 +138,7 @@
     </template>
     <template #control>
       <div class="control-flex flex">
-        <div class="control-button" @click="confirmPopupAction">
+        <div class="control-button" @click="confirmPopupAction(popupAction)">
           <BaseButton buttonType="regular-square" buttonName="Đồng ý" />
         </div>
         <div class="control-button" @click="showPopup(false)">
@@ -170,13 +171,11 @@ export default {
       timeout: null,
       textSearch: "",
       categorySearch: "",
+      popupAction: null,
     };
   },
   computed: {
     ...mapGetters(["products", "categories"]),
-    // showProducts(){
-    //   return this.products;
-    // },
 
     SAVE_MODE() {
       return this.Enum.SAVE_MODE;
@@ -196,7 +195,7 @@ export default {
   watch: {
     textSearch: function (value) {
       this.getProducts({
-        page: this.products.current_page,
+        page: 1,
         per_page: 10,
         name: value,
         category_id: this.categorySearch,
@@ -204,7 +203,7 @@ export default {
     },
     categorySearch: function (value) {
       this.getProducts({
-        page: this.products.current_page,
+        page: 1,
         per_page: 10,
         name: this.textSearch,
         category_id: value,
@@ -223,7 +222,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setProducts", "setCategories"]),
-    ...mapActions(["getProducts", "deleteProduct", "getCategories"]),
+    ...mapActions(["getProducts", "deleteProduct", "getCategories", "deleteMultiProducts"]),
 
     /**
      * Hiển thị chi tiết sản phẩm
@@ -251,13 +250,23 @@ export default {
         true,
         "Bạn có chắc chắn muốn xóa sản phẩm " + product.name + " không?"
       );
+      this.popupAction = "deleteProduct";
     },
 
     /**
      * sự kiện click xác nhận ở popup
      */
-    confirmPopupAction() {
-      this.deleteProduct(this.selectedProduct.id);
+    confirmPopupAction(action) {
+      if(action == "deleteProduct"){
+        this.deleteProduct(this.selectedProduct.id);
+      }
+      else if(action == "deleteMultiProduct"){
+        this.deleteMultiProducts(this.selectedProducts)
+      }
+      this.textSearch = "";
+      this.categorySearch = "";
+      this.selectedProducts = [];
+      this.isSelectAll = false;
       this.showPopup(false);
     },
     /**
@@ -270,7 +279,7 @@ export default {
         this.selectedProducts.splice(id, 1);
       } else {
         this.selectedProducts.push(productId);
-        if (this.selectedProducts.length == this.products.length) {
+        if (this.selectedProducts.length == this.products.data.length) {
           this.isSelectAll = true;
         }
       }
@@ -280,19 +289,18 @@ export default {
      */
     checkAll() {
       if (this.isSelectAll) {
-        for (let i = 0; i < this.products.length; i++) {
-          this.isCheck[this.products[i].id] = true;
+        for (let i = 0; i < this.products.data.length; i++) {
+          this.isCheck[this.products.data[i].id] = true;
         }
-        this.selectedProducts = this.products.map((product) => product.id);
+        this.selectedProducts = this.products.data.map((product) => product.id);
       } else {
         this.isCheck.fill(false);
         this.selectedProducts = [];
       }
     },
     deleteMultiProductOnClick() {
-      console.log(this.selectedProducts);
-      // this.showPopup(true, "Bạn có chắc chắn muốn xóa những danh mục đã chọn không?")
-      // this.popupAction = "deleteMultiCategory";
+      this.showPopup(true, "Bạn có chắc chắn muốn xóa những sản phẩm đã chọn không?")
+      this.popupAction = "deleteMultiProduct";
     },
     /**
      * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
@@ -306,15 +314,19 @@ export default {
     },
     previousPage() {
       if (this.products.current_page > 1) {
+        this.isCheck.fill(false);
         this.getProducts({
           page: this.products.current_page - 1,
           per_page: 10,
           name: this.textSearch,
           category_id: this.categorySearch,
         });
+        this.isSelectAll = false;
+        this.selectedProducts = [];
       }
     },
     nextPage() {
+      this.isCheck.fill(false);
       if (this.products.current_page < this.products.last_page) {
         this.getProducts({
           page: this.products.current_page + 1,
@@ -322,6 +334,8 @@ export default {
           name: this.textSearch,
           category_id: this.categorySearch,
         });
+        this.isSelectAll = false;
+        this.selectedProducts = [];
       }
     },
   },

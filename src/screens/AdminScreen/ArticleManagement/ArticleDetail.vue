@@ -166,7 +166,6 @@ export default {
   },
   watch: {
     articleSelected: function (value) {
-      console.log(this.content);
       if (this.saveMode == this.SAVE_MODE.Edit) {
         this.article = { ...value[0] };
         this.oldArticle = { ...value[0] };

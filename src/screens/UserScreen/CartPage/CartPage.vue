@@ -201,6 +201,7 @@ export default {
   padding: 32px 0 0 4%;
   box-sizing: border-box;
   position: relative;
+  min-height: 100vh;
 }
 .cart-container {
   width: 100%;

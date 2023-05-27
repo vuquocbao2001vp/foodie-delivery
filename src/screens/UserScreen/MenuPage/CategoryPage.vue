@@ -23,29 +23,14 @@ export default {
     ]),
   },
   created() {
-    // const vuex = JSON.parse(localStorage.getItem("vuex"));
-    // if (vuex) {
-      // const categories = vuex.user.listCategories;
-      // if (categories != null) {
-      //   this.setListCategories(categories);
-      // } else {
-        // this.getListCategories();
-      // }
-      // const products = vuex.user.listProducts;
-      // if (products != null) {
-      //   this.setListProducts(products);
-      // } else {
-        this.getListProducts({
-          page: 1,
-          per_page: 200,
-          category_id: "",
-          name: "",
-          min_price: "",
-          max_price: "",
-        });
-      // }
-    // }
-
+    this.getListProducts({
+      page: 1,
+      per_page: 200,
+      category_id: "",
+      name: "",
+      min_price: "",
+      max_price: "",
+    });
     this.getCategoryId(this.listCategories);
     if (this.categoryId != 0) {
       this.showProducts = this.listProducts.filter(
@@ -109,9 +94,9 @@ export default {
 </script>
 <style scoped>
 .category-page {
-  width: 70%;
-  position: absolute;
-  left: 30%;
+  width: 100%;
+  margin-left: 21%;
+  padding-left: 16px;
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;

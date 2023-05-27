@@ -77,18 +77,19 @@
         </div>
       </div>
     </div>
-
-    <div class="similar-product flex">
-      <div class="top-bar"></div>
-      <div class="similar-product-title">SẢN PHẨM TƯƠNG TỰ</div>
-      <div class="similar-product-main flex">
-        <BaseProduct />
-        <BaseProduct />
-        <BaseProduct />
-        <BaseProduct />
+  </div>
+  <div class="productshow slideshow flex">
+      <div class="productshow-title">SẢN PHẨM TƯƠNG TỰ</div>
+      <div class="space-border"></div>
+      <div class="productshow-content flex">
+        <div v-for="product in listProducts" :key="product.id">
+          <base-product :product="product" />
+        </div>
+      </div>
+      <div @click="linkToMenu" class="view-all-text">
+        XEM TẤT CẢ
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -101,7 +102,25 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["productDetail"]),
+    ...mapGetters(["productDetail", "listProducts"]),
+  },
+  watch: {
+    productDetail: function (value) {
+      if (value) {
+        this.getListProducts({
+          page: 1,
+          per_page: 100,
+          category_id: value.category_id,
+          name: "",
+          min_price: "",
+          max_price: "",
+          highlight: 1,
+        });
+      }
+    },
+    "$route.query": function(value){
+      if(value) this.getProductDetail(value.id);
+    }
   },
   created() {
     this.getProductDetail(this.$route.query.id);
@@ -115,7 +134,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setProductDetail", "addToCart"]),
-    ...mapActions(["getProductDetail", "addProductToCart"]),
+    ...mapActions(["getProductDetail", "addProductToCart", "getListProducts"]),
     async addProductToCartOnClick() {
       if (this.isLogin) {
         await this.addProductToCart({
@@ -124,10 +143,22 @@ export default {
         });
         this.$router.push({ path: "/cart" });
       } else {
-        await this.addToCart({ product: this.productDetail, amount: this.quantity });
+        await this.addToCart({
+          product: this.productDetail,
+          amount: this.quantity,
+        });
         this.$router.push({ path: "/cart" });
       }
     },
+    getRouterLink(){
+      const unidecode = require("unidecode");
+      let str = unidecode(this.productDetail.category_name.toLowerCase());
+      let router = str.replace(/\s+/g, "-");
+      return router;
+    },
+    linkToMenu(){
+      this.$router.push({ name: this.getRouterLink()});
+    }
   },
 };
 </script>
@@ -276,5 +307,56 @@ export default {
 .total-title {
   color: var(--text-secondary-color);
   width: 106px;
+}
+.slideshow {
+  width: 100%;
+  padding: 0 10%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+.productshow {
+  padding-top: 36px;
+  padding-bottom: 24px;
+  flex-direction: column;
+}
+
+.productshow-title {
+  font-family: Font Bold;
+  font-size: 2rem;
+  color: var(--text-secondary-color);
+}
+.productshow-content {
+  padding: 24px 24px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  max-height: 296px;
+  overflow-y: hidden;
+}
+.space-border {
+  width: 160px;
+  height: 5px;
+  border-radius: 4px;
+  background-color: var(--input-normal-border-color);
+}
+.view-all-text {
+  font-family: Font SemiBold;
+  font-size: 0.9rem;
+  margin: 12px 0;
+  padding: 6px 12px;
+  background-color: var(--button-primary-normal-bg-color);
+  border-radius: 20px;
+  color: #fff;
+}
+.view-all-text:hover {
+  background-color: var(--button-primary-hover-bg-color);
+  cursor: pointer;
+}
+.category-item{
+  display: flex ;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

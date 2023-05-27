@@ -240,6 +240,27 @@ const actions = {
   },
 
   /**
+   * Api xóa nhiều sản phẩm theo id
+   */
+  async deleteMultiProducts({ commit, dispatch }, ids) {
+    try {
+      commit("setLoading", true);
+      await adminAxios.delete('/admin/product/delete-many', {
+        data: {
+          ids: ids
+        }
+      }).then(() => {
+        dispatch("getProducts", { page: 1, per_page: 10, category_id: "", name: "" });
+        commit("setLoading", false);
+        dispatch("showToastMessage", "Xóa danh mục thành công.");
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  /**
    * Api thêm mới sản phẩm
    */
   async createProduct({ commit, dispatch }, {product, image}) {
@@ -364,7 +385,7 @@ const actions = {
   async deleteArticle({ commit, dispatch}, id) {
     commit("setLoading", true);
     try {
-      await adminAxios.delete(`/admin/article/${id}`).then(() => {
+      await adminAxios.delete(`/admin/article/delete/${id}`).then(() => {
         commit("setLoading", false);
         dispatch("showToastMessage", "Xóa bài viết thành công.");
         dispatch("getArticleList", '')
@@ -408,6 +429,43 @@ const actions = {
           }
         )
         .then(() => {
+          commit("setLoading", false);
+        });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getOverview({ commit }) {
+    commit("setLoading", true);
+    try {
+      await adminAxios
+        .get("admin/overview")
+        .then((response) => {
+          commit("setOverview", response.data)
+          commit("setLoading", false);
+        });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getUserList({ commit }, {page, per_page, search}) {
+    commit("setLoading", true);
+    const formData = new FormData();
+    formData.append('search', search);
+    try {
+      await adminAxios
+        .post("admin/users", formData, {
+          params: {
+            page: page,
+            per_page: per_page
+          }
+        })
+        .then((response) => {
+          commit("setUserList", response.data.data)
           commit("setLoading", false);
         });
     } catch (error) {

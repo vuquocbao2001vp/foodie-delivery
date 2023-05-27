@@ -42,6 +42,7 @@ export default {
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
+  padding-bottom: 64px;
 }
 #content {
   max-width: 100%;

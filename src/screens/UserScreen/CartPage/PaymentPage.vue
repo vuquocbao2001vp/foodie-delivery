@@ -1,6 +1,6 @@
 <template>
   <div v-if="isCheckout == false">
-    <div class="payment-page" v-if="!emptyCart">
+    <div class="payment-page pdb56" v-if="!emptyCart">
       <div v-if="screen == 2">
         <div class="code-title">
           <div>
@@ -116,7 +116,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row-container flex" v-if="!isLogin">
+              <!-- <div class="row-container flex" v-if="!isLogin">
                 <div>
                   <DxCheckBox v-model="isRegister" text="Tạo tài khoản mới" />
                 </div>
@@ -171,7 +171,7 @@
                     />
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <div v-show="false">
                 <DxButton
@@ -274,7 +274,7 @@
       </router-link>
     </div>
   </div>
-  <div v-if="isCheckout" class="payment-page">
+  <div v-if="isCheckout" class="payment-page pdb56">
     <div class="payment-container flex">
       <div class="user-payment-info user-checkout-info">
         <div class="user-payment-title user-checkout-title">CHI TIẾT ĐƠN HÀNG</div>
@@ -518,6 +518,9 @@ export default {
   padding: 32px 0 0 6%;
   box-sizing: border-box;
   position: relative;
+}
+.pdb56{
+  min-height: 100vh;
 }
 .payment-login-header {
   padding-bottom: 12px;
