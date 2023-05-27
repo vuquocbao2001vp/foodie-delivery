@@ -169,14 +169,21 @@ export default {
       }
     },
   },
+  watch: {
+    admin: function(value){
+        this.adminInfo = value;
+        this.address = this.adminInfo.address;
+        this.oldAdmin = {...this.adminInfo}
+    },
+  },
   created() {
     this.getOverview();
     const vuex = JSON.parse(localStorage.getItem("vuex"));
     if (vuex) {
       const admin = vuex.admin.admin;
       if (admin !== null) {
-        this.adminInfo = admin;
         this.setAdmin(admin);
+        this.adminInfo = admin;
         this.address = this.adminInfo.address;
         this.oldAdmin = {...this.adminInfo}
       }
