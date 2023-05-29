@@ -2,7 +2,7 @@
   <div class="slideshow flex">
     <DxGallery
         :data-source="dataSourse"
-        :loop="false"
+        :loop="true"
         :slideshow-delay="3000"
         :show-indicator="true"
       />
