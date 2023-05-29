@@ -24,8 +24,9 @@
           <router-link
             v-for="category in listCategories"
             :key="category.id"
-            :to="{ name: getRouterLink(category.category_name) }"
+            :to="{ name: 'menu-filter', query: { name: getRouterLink(category.category_name) } }"
             class="menu-item"
+            :class="{'active-router' : category.id == categoryId}"
             >{{ category.category_name }}</router-link
           >
         </div>
@@ -72,10 +73,16 @@ export default {
       isMenuExpand: false,
       isLogin: false,
       isUserOptionExpand: false,
+      categoryId: null,
     };
   },
   computed: {
     ...mapGetters(["listCategories", "user"]),
+  },
+  watch: {
+    "$route.query": function () {
+      this.getCategoryId(this.listCategories);
+    },
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
@@ -90,6 +97,7 @@ export default {
         this.isLogin = true;
       }
     }
+    this.getCategoryId(this.listCategories);
   },
   methods: {
     ...mapMutations(["setListCategories", "setUser"]),
@@ -123,7 +131,24 @@ export default {
       } else {
         this.isUserOptionExpand = false;
       }
-    }
+    },
+    linkToPage(categoryName){
+      this.$router.push({ name: "menu-filter", query: { name: this.getRouterLink(categoryName) } });
+    },
+    getCategoryId(categories) {
+      const unidecode = require("unidecode");
+      this.categoryId = 0;
+      if (categories) {
+        categories.forEach((category) => {
+          let str = unidecode(category.category_name.toLowerCase());
+          let router = str.replace(/\s+/g, "-");
+          if (this.$route.query.name == router) {
+            this.categoryId = category.id;
+            return;
+          }
+        });
+      }
+    },
   },
 };
 </script>
@@ -205,10 +230,10 @@ export default {
   cursor: pointer;
 }
 .navbar-item-login:hover {
-  color: var(--text-blue-color) !important;
+  color: var(--text-blue-color) ;
 }
 .navbar-item-login.router-link-active {
-  color: var(--text-blue-color) !important;
+  color: var(--text-blue-color) ;
 }
 .item-icon {
   width: 28px;
@@ -241,11 +266,20 @@ export default {
   box-sizing: border-box;
   margin-bottom: 2px;
 }
-.menu-item:hover,
-.menu-item.router-link-active {
+
+
+.menu-item.router-link-active{
+  color: var(--text-primary-color) !important;
+}
+.menu-item.active-router{
   color: var(--text-white-primary-color) !important;
   background-color: var(--primary);
 }
+.menu-item:hover{
+  color: var(--text-white-primary-color) !important;
+  background-color: var(--primary);
+}
+
 .default-avatar {
   width: 40px;
   height: 40px;

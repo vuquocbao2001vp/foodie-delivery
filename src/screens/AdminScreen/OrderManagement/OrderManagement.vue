@@ -27,7 +27,8 @@
           ><span class="font-semibold"
             >{{ orderList.from }}-{{ orderList.to }}
           </span>
-          trong số <span class="font-semibold">{{ orderList.total }}</span></span
+          trong số
+          <span class="font-semibold">{{ orderList.total }}</span></span
         >
         <div @click="nextPage" class="paging-icon flex" title="Trang sau">
           <div class="icon-next icon-center"></div>
@@ -69,7 +70,9 @@
                 <span class="text-bold">Ghi chú: </span>{{ order.note }}
               </div>
             </td>
-            <td class="td-total-money">{{ order.total_price.toLocaleString()}}đ</td>
+            <td class="td-total-money">
+              {{ order.total_price.toLocaleString() }}đ
+            </td>
             <td class="td-status">
               <div class="td-selectbox-flex flex">
                 <div class="td-selectbox">
@@ -82,8 +85,16 @@
                     placeholder=""
                     @value-changed="changeOrderStatus"
                     @item-click="changeOrderStatusOnClick(order.id)"
-                    :disabled="(order.status == 4) ? true: false"
-                  />
+                    :disabled="
+                      order.status == 4 || order.status == 5 ? true : false
+                    "
+                  >
+                    <template #item="{ data }">
+                      <div :class="{ 'disabled-item': data.id==5 }">
+                        {{ data.value }}
+                      </div>
+                    </template>
+                  </DxSelectBox>
                 </div>
               </div>
             </td>
@@ -107,10 +118,12 @@ export default {
         { id: 2, value: "Đang xử lý" },
         { id: 3, value: "Đang vận chuyển" },
         { id: 4, value: "Đã hoàn thành" },
+        { id: 5, value: "Đã hủy" },
       ],
       oStatus: null,
       timeout: null,
       textSearch: "",
+      timer: null,
     };
   },
   computed: {
@@ -125,14 +138,48 @@ export default {
   },
   watch: {
     statusSearch: function (value) {
-      this.getOrderList({ page: 1, per_page: 10, search: this.textSearch, status: value });
+      this.getOrderList({
+        page: 1,
+        per_page: 10,
+        search: this.textSearch,
+        status: value,
+      });
+      clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        this.getOrderList({
+          page: 1,
+          per_page: 10,
+          search: this.textSearch,
+          status: value,
+        });
+      }, 10000);
     },
     textSearch: function (value) {
-      this.getOrderList({ page: 1, per_page: 10, search: value, status: this.statusSearch });
+      this.getOrderList({
+        page: 1,
+        per_page: 10,
+        search: value,
+        status: this.statusSearch,
+      });
+      clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        this.getOrderList({
+          page: 1,
+          per_page: 10,
+          search: value,
+          status: this.statusSearch,
+        });
+      }, 10000);
     },
   },
   created() {
     this.getOrderList({ page: 1, per_page: 10, search: "", status: "" });
+    this.timer = setInterval(() => {
+      this.getOrderList({ page: 1, per_page: 10, search: "", status: "" });
+    }, 10000);
+  },
+  unmounted() {
+    clearInterval(this.timer);
   },
   methods: {
     ...mapMutations(["setOrderList"]),
@@ -161,6 +208,15 @@ export default {
     },
     changeOrderStatusOnClick(id) {
       this.updateOrder({ id: id, status: this.oStatus });
+      clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        this.getOrderList({
+          page: this.orderList.current_page,
+          per_page: 10,
+          search: this.textSearch,
+          status: this.statusSearch,
+        });
+      }, 10000);
     },
     /**
      * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
@@ -175,22 +231,42 @@ export default {
 
     previousPage() {
       if (this.orderList.current_page > 1) {
+        const page = this.orderList.current_page + 1;
         this.getOrderList({
           page: this.orderList.current_page - 1,
           per_page: 10,
           search: this.textSearch,
           status: this.statusSearch,
         });
+        clearInterval(this.timer);
+        this.timer = setInterval(() => {
+          this.getOrderList({
+            page: page,
+            per_page: 10,
+            search: this.textSearch,
+            status: this.statusSearch,
+          });
+        }, 10000);
       }
     },
     nextPage() {
       if (this.orderList.current_page < this.orderList.last_page) {
+        const page = this.orderList.current_page + 1;
         this.getOrderList({
           page: this.orderList.current_page + 1,
           per_page: 10,
           search: this.textSearch,
           status: this.statusSearch,
         });
+        clearInterval(this.timer);
+        this.timer = setInterval(() => {
+          this.getOrderList({
+            page: page,
+            per_page: 10,
+            search: this.textSearch,
+            status: this.statusSearch,
+          });
+        }, 10000);
       }
     },
   },
@@ -309,5 +385,8 @@ tr:nth-child(odd) {
 }
 .th-left {
   padding-left: 14px;
+}
+.disabled-item{
+  color: var(--text-red-color);
 }
 </style>

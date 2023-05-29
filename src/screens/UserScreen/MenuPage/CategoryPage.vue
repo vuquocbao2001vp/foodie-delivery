@@ -10,7 +10,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      categoryId: 0,
+      categoryId: null,
       showProducts: [],
     };
   },
@@ -31,23 +31,25 @@ export default {
       min_price: "",
       max_price: "",
     });
-    this.getCategoryId(this.listCategories);
-    if (this.categoryId != 0) {
-      this.showProducts = this.listProducts.filter(
-        (product) => product.category_id == this.categoryId
-      );
-    } else {
-      this.showProducts = [...this.listProducts];
-    }
+    if (this.$route.query.name) {
+      this.getCategoryId(this.listCategories);
+    } 
   },
   watch: {
-    "$route.path": function () {
+    listProducts: function(value){
+      if(this.$route.path == "/menu/all");
+      this.showProducts = [...value];
+    },
+    "$route.query": function () {
       this.getCategoryId(this.listCategories);
-      if (this.categoryId != 0) {
+    },
+    categoryId: function (value) {
+      if (value != 0) {
         this.showProducts = this.listProducts.filter(
-          (product) => product.category_id == this.categoryId
+          (product) => product.category_id == value
         );
-      } else {
+      } 
+      else {
         this.showProducts = [...this.listProducts];
       }
     },
@@ -59,7 +61,7 @@ export default {
           category_id: this.categoryId,
           name: value.name,
           min_price: value.minPrice,
-          max_price: value.maxPrice
+          max_price: value.maxPrice,
         });
       },
       deep: true,
@@ -74,15 +76,14 @@ export default {
   methods: {
     ...mapMutations(["setListProducts", "setListCategories"]),
     ...mapActions(["getListProducts", "getListCategories", "getProductFilter"]),
-
     getCategoryId(categories) {
       const unidecode = require("unidecode");
       this.categoryId = 0;
       if (categories) {
         categories.forEach((category) => {
           let str = unidecode(category.category_name.toLowerCase());
-          let router = "/menu/" + str.replace(/\s+/g, "-");
-          if (this.$route.path == router) {
+          let router = str.replace(/\s+/g, "-");
+          if (this.$route.query.name == router) {
             this.categoryId = category.id;
             return;
           }

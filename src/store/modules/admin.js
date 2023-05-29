@@ -396,8 +396,25 @@ const actions = {
     }
   },
 
-  async getOrderList({ commit }, { page, per_page, search, status }) {
+  async deleteMultiArticle({ commit, dispatch}, ids) {
     commit("setLoading", true);
+    try {
+      await adminAxios.delete('/admin/article/delete-many', {
+        data:{
+          ids: ids
+        }
+      }).then(() => {
+        commit("setLoading", false);
+        dispatch("showToastMessage", "Xóa bài viết thành công.");
+        dispatch("getArticleList", '')
+      });
+    } catch (error) {
+      commit("setLoading", false);
+      console.log(error);
+    }
+  },
+
+  async getOrderList({ commit }, { page, per_page, search, status }) {
     const formData = new FormData();
     formData.append('search', search);
     formData.append('status', status);
@@ -411,10 +428,8 @@ const actions = {
         })
         .then((response) => {
           commit("setOrderList", response.data.data);
-          commit("setLoading", false);
         });
     } catch (error) {
-      commit("setLoading", false);
       console.log(error);
     }
   },

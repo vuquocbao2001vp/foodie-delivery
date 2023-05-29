@@ -18,13 +18,11 @@
           <router-link
             v-for="category in listCategories"
             :key="category.id"
-            :to="{ name: getRouterLink(category.category_name) }"
+            :to="{ name: 'menu-filter', query: { name: getRouterLink(category.category_name) } }"
             class="selection-item"
+            :class="{'active-router' : category.id == categoryId}"
             >{{ category.category_name }}</router-link
           >
-        </div>
-        <div class="arrange-selection">
-          <DxSelectBox :items="arrangeSelection" :value="arrangeSelection[0]" />
         </div>
       </div>
       <div class="menu-filter">
@@ -64,15 +62,11 @@ export default {
   components: { BaseButton },
   data() {
     return {
-      arrangeSelection: [
-        "Thứ tự mặc định",
-        "Giá từ thấp tới cao",
-        "Giá từ cao xuống thấp",
-      ],
       priceStart: null,
       priceEnd: null,
       timeout: null,
       textSearch: null,
+      categoryId: null,
     };
   },
   computed: {
@@ -82,6 +76,7 @@ export default {
     this.getListCategories();
     this.priceStart = 0;
     this.priceEnd = 100000;
+    this.getCategoryId(this.listCategories);
   },
   watch: {
     textSearch: function (value) {
@@ -90,6 +85,9 @@ export default {
         minPrice: this.priceStart,
         maxPrice: this.priceEnd,
       });
+    },
+    "$route.query": function () {
+      this.getCategoryId(this.listCategories);
     },
   },
   methods: {
@@ -101,6 +99,9 @@ export default {
       let str = unidecode(categoryName.toLowerCase());
       let router = str.replace(/\s+/g, "-");
       return router;
+    },
+    linkToPage(categoryName){
+      this.$router.push({ name: "menu-filter", query: { name: this.getRouterLink(categoryName) } });
     },
     /**
      * Lấy ra từ khóa tìm kiếm sau khi nhập xong input
@@ -119,6 +120,21 @@ export default {
         maxPrice: this.priceEnd,
       });
     },
+
+    getCategoryId(categories) {
+      const unidecode = require("unidecode");
+      this.categoryId = 0;
+      if (categories) {
+        categories.forEach((category) => {
+          let str = unidecode(category.category_name.toLowerCase());
+          let router = str.replace(/\s+/g, "-");
+          if (this.$route.query.name == router) {
+            this.categoryId = category.id;
+            return;
+          }
+        });
+      }
+    },
   },
 };
 </script>
@@ -130,6 +146,7 @@ export default {
   align-items: flex-start;
   position: relative;
   min-height: 100vh;
+  padding-top: 32px;
 }
 .menu-navbar {
   width: 18%;
@@ -168,7 +185,11 @@ export default {
 .selection-item:hover {
   color: var(--text-primary-color) !important;
 }
-.selection-item.router-link-active {
+/* .selection-item.router-link-active {
+  color: var(--text-primary-color) !important;
+  font-family: Font Bold;
+} */
+.active-router{
   color: var(--text-primary-color) !important;
   font-family: Font Bold;
 }
@@ -212,4 +233,10 @@ export default {
 .arrange-selection {
   margin-top: 24px;
 }
+/* .exact-active{
+  color: var(--text-primary-color) ;
+}
+.exact-active{
+  color: var(--text-red-color);
+} */
 </style>

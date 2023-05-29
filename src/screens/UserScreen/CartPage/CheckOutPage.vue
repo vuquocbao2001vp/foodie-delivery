@@ -1,14 +1,28 @@
 <template>
   <div class="payment-page mgb64">
     <div class="payment-order" v-for="order in userOrderList" :key="order">
-      <div class="payment-order-title">Đơn hàng {{order.id}}</div>
+      <div class="payment-order-title">Đơn hàng {{ order.id }}</div>
       <div class="flex flex-order">
         <div class="order-left">
           <div class="payment-order-row flex">
             <div class="row-dot"></div>
             <div class="row-text">
               <span class="text-grey"
-                >Trạng thái: <span class="bold text-blue" :class="(order.status == 4) ? 'text-green' : ''">{{statusString[order.status - 1]}}</span></span
+                >Trạng thái:
+                <span
+                  class="bold text-blue"
+                  :class="{
+                    'text-green': order.status == 4,
+                    'text-red-color': order.status == 5,
+                  }"
+                  >{{ statusString[order.status - 1] }}</span
+                ></span
+              >
+              <span
+                @click="cancleOrderOnClick(order.id)"
+                v-if="order.status == 1"
+                class="cancelBtn"
+                >Hủy</span
               >
             </div>
           </div>
@@ -16,7 +30,10 @@
             <div class="row-dot"></div>
             <div class="row-text">
               <span class="text-grey"
-                >Ngày: <span class="bold">{{formatDate(order.created_at)}}</span></span
+                >Ngày:
+                <span class="bold">{{
+                  formatDate(order.created_at)
+                }}</span></span
               >
             </div>
           </div>
@@ -24,7 +41,10 @@
             <div class="row-dot"></div>
             <div class="row-text">
               <span class="text-grey"
-                >Tên người nhận: <span class="bold">{{order.last_name +' '+ order.first_name}}</span></span
+                >Tên người nhận:
+                <span class="bold">{{
+                  order.last_name + " " + order.first_name
+                }}</span></span
               >
             </div>
           </div>
@@ -32,7 +52,8 @@
             <div class="row-dot"></div>
             <div class="row-text">
               <span class="text-grey"
-                >Số điện thoại: <span class="bold">{{order.phone}}</span></span
+                >Số điện thoại:
+                <span class="bold">{{ order.phone }}</span></span
               >
             </div>
           </div>
@@ -40,7 +61,7 @@
             <div class="row-dot"></div>
             <div class="row-text">
               <span class="text-grey"
-                >Địa chỉ: <span class="bold">{{order.address}}</span></span
+                >Địa chỉ: <span class="bold">{{ order.address }}</span></span
               >
             </div>
           </div>
@@ -49,7 +70,9 @@
             <div class="row-text">
               <span class="text-grey"
                 >Tổng thanh toán:
-                <span class="bold text-primary">{{order.total_price.toLocaleString()}}đ</span></span
+                <span class="bold text-primary"
+                  >{{ order.total_price.toLocaleString() }}đ</span
+                ></span
               >
             </div>
           </div>
@@ -62,7 +85,6 @@
               >
             </div>
           </div>
-          
         </div>
         <div class="order-right">
           <div class="payment-order-contaner">
@@ -78,20 +100,30 @@
                   <td class="td-product flex">
                     <img class="td-img" :src="product.product.image" alt="" />
                     <div class="td-product-info">
-                      <div class="bold" @click="viewProduct(product.product.id)">{{product.product.name}}</div>
-                      <div class="text-grey">Số lượng: {{product.amount}}</div>
+                      <div
+                        class="bold"
+                        @click="viewProduct(product.product.id)"
+                      >
+                        {{ product.product.name }}
+                      </div>
+                      <div class="text-grey">
+                        Số lượng: {{ product.amount }}
+                      </div>
                     </div>
                   </td>
-                  <td class="bold text-right">{{product.product.price.toLocaleString()}}đ</td>
+                  <td class="bold text-right">
+                    {{ product.product.price.toLocaleString() }}đ
+                  </td>
                 </tr>
               </tbody>
             </table>
-            <div class="note-text">Ghi chú: <span class="text-grey">{{order.note}}</span> </div>
+            <div class="note-text">
+              Ghi chú: <span class="text-grey">{{ order.note }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 <script>
@@ -100,20 +132,44 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
-      statusString: ['Đã nhận đơn', 'Đang xử lý', 'Đang vận chuyển', 'Đã hoàn thành']
-    }
+      statusString: [
+        "Đã nhận đơn",
+        "Đang xử lý",
+        "Đang vận chuyển",
+        "Đã hoàn thành",
+        "Đã hủy",
+      ],
+      timer: null,
+    };
   },
   computed: {
     ...mapGetters(["userOrderList"]),
   },
-  created(){
+  created() {
     this.getUserOrderList();
+    this.timer = setInterval(() => {
+      this.getUserOrderList();
+    }, 10000);
+  },
+  unmounted() {
+    clearInterval(this.timer);
   },
   methods: {
-    ...mapActions(["getUserOrderList"]),
+    ...mapActions(["getUserOrderList", "updateOrder"]),
     formatDate,
     viewProduct(id) {
-      this.$router.push({ name: "detail", query: { id: id }});
+      this.$router.push({ name: "detail", query: { id: id } });
+    },
+    cancleOrderOnClick(id) {
+      if (confirm(`Bạn có chắc chắn muốn hủy đơn hàng ${id} không?`)) {
+        for (let i = 0; i < this.userOrderList.length; i++) {
+          if (this.userOrderList[i].id === id) {
+            this.userOrderList[i].status = 5;
+            break;
+          }
+        }
+        this.updateOrder({ id: id, status: 5 });
+      }
     },
   },
 };
@@ -122,11 +178,11 @@ export default {
 <style scoped>
 .payment-page {
   width: 100%;
-  padding: 32px 10% 0 10%;
+  padding: 64px 10% 0 10%;
   box-sizing: border-box;
   position: relative;
 }
-.mgb64{
+.mgb64 {
   margin-bottom: 64px;
 }
 .text-grey {
@@ -146,7 +202,7 @@ export default {
 .text-blue {
   color: var(--text-blue-color);
 }
-.text-green{
+.text-green {
   color: var(--text-green-color) !important;
 }
 .payment-order {
@@ -276,10 +332,26 @@ td {
   cursor: pointer;
   color: var(--text-red-color);
 }
-.td-product-info:hover{
+.td-product-info:hover {
   color: var(--text-primary-color);
 }
-.note-text{
+.note-text {
   padding-top: 16px;
+}
+.cancelBtn {
+  color: var(--text-red-color);
+  border: 1px solid var(--input-error-border-color);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 8px;
+}
+.cancelBtn:hover {
+  cursor: pointer;
+  color: var(--text-error);
+  background-color: var(--input-disable-bg-color);
+  border-color: var(--input-error-border-color);
+}
+.text-red-color {
+  color: var(--text-red-color);
 }
 </style>

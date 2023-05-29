@@ -106,10 +106,10 @@ const actions = {
   async getProductFilter({ commit}, {page, per_page, category_id, name, min_price, max_price}) {
     commit("setLoading", true);
     const formData = new FormData();
-    formData.append('category_id', category_id);
-    formData.append('name', name);
-    formData.append('min_price', min_price);
-    formData.append('max_price', max_price);
+    if(category_id) formData.append('category_id', category_id);
+    if(name) formData.append('name', name);
+    if(min_price) formData.append('min_price', min_price);
+    if(max_price) formData.append('max_price', max_price);
     try {
       await guestAxios
         .post("/product/list", formData, {

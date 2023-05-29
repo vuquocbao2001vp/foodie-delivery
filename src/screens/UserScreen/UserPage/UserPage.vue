@@ -187,6 +187,7 @@ export default {
   padding: 0 20%;
   box-sizing: border-box;
   position: relative;
+  padding-top: 32px;
 }
 .payment-login-header {
   padding-bottom: 12px;

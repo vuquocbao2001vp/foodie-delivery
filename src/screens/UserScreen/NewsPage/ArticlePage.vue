@@ -43,6 +43,7 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   padding-bottom: 64px;
+  padding-top: 24px;
 }
 #content {
   max-width: 100%;

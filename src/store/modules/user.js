@@ -238,7 +238,6 @@ const actions = {
   },
 
   async getUserOrderList({ commit }) {
-    commit("setLoading", true);
     try {
       await userAxios
         .post("/orders", {
@@ -249,10 +248,8 @@ const actions = {
         })
         .then((response) => {
           commit("setUserOrderList", response.data.data.data);
-          commit("setLoading", false);
         });
     } catch (error) {
-      commit("setLoading", false);
       console.log(error);
     }
   },

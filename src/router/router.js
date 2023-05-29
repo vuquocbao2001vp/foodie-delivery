@@ -46,7 +46,10 @@ const routers = [
     path: "/menu/",
     component: MenuPage,
     redirect: "/menu/all",
-    children: [{ path: "all", name: "menu", component: CategoryPage }],
+    children: [
+      { path: "all", name: "menu", component: CategoryPage },
+      { path: "danh-muc", name: "menu-filter", component: CategoryPage },
+    ],
   },
   {
     path: "/auth/",
@@ -74,7 +77,11 @@ const routers = [
     name: "admin",
     redirect: "/admin/overview",
     children: [
-      { path: "overview", name: "Quản trị viên", component: OverviewManagement },
+      {
+        path: "overview",
+        name: "Quản trị viên",
+        component: OverviewManagement,
+      },
       {
         path: "category-management",
         name: "Danh mục",
@@ -104,21 +111,8 @@ const routers = [
   },
 ];
 
-const unidecode = require("unidecode");
 const vuex = JSON.parse(localStorage.getItem("vuex"));
 
-const categories = store.state.user.listCategories;
-if (categories) {
-  categories.forEach((category) => {
-    let str = unidecode(category.category_name.toLowerCase());
-    let link = str.replace(/\s+/g, "-");
-    routers[1].children.push({
-      path: link,
-      name: link,
-      component: CategoryPage,
-    });
-  });
-}
 
 const router = createRouter({
   history: createWebHistory(),
@@ -171,5 +165,7 @@ router.beforeEach((to, from, next) => {
     store.dispatch("linkToLoginPage");
   }
 });
-
+router.afterEach(() => {
+  window.scrollTo(0, 0);
+});
 export default router;

@@ -2,11 +2,9 @@
   <div class="slideshow flex">
     <DxGallery
         :data-source="dataSourse"
-        :loop="true"
+        :loop="false"
         :slideshow-delay="3000"
         :show-indicator="true"
-        :width="600"
-        :height="600"
       />
   </div>
   <div class="productshow slideshow flex">
@@ -51,10 +49,12 @@ export default {
   data() {
     return {
       dataSourse: [
-        "https://js.devexpress.com/Content/images/doc/22_2/PhoneJS/person1.png",
-        "https://js.devexpress.com/Content/images/doc/22_2/PhoneJS/person2.png",
-        "https://js.devexpress.com/Content/images/doc/22_2/PhoneJS/person3.png",
-        "https://js.devexpress.com/Content/images/doc/22_2/PhoneJS/person4.png",
+        "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1685243841_background1%5B1%5D.png",
+        "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1685243936_Banner1%5B1%5D.jpg",
+        "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1685243968_Banner2%5B1%5D.jpg",
+        "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1685244013_bg2%5B1%5D.jpg",
+        "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1685244044_bg3%5B1%5D.jpg",
+        "https://followers-lib.s3.ap-northeast-1.amazonaws.com/1685244077_bg4%5B1%5D.jpg",
       ],
     };
   },
@@ -72,6 +72,9 @@ export default {
       highlight: 1,
     });
     this.getShowArticles();
+  },
+  unmounted() {
+    this.setListProducts([]);
   },
   methods: {
     ...mapMutations(["setListProducts"]),
@@ -94,11 +97,12 @@ export default {
 <style scoped>
 .slideshow {
   width: 100%;
-  padding: 0 10%;
   box-sizing: border-box;
   justify-content: center;
+  padding-top: 0;
 }
 .productshow{
+  padding: 0 10%;
   padding-top: 36px;
   padding-bottom: 24px;
   flex-direction: column;
@@ -189,4 +193,5 @@ export default {
 .article-item:hover{
   color: var(--text-blue-color);
 }
+
 </style>

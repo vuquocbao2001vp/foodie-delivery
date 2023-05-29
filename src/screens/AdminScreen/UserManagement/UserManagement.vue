@@ -15,9 +15,7 @@
           <div class="icon-prev icon-center"></div>
         </div>
         <span class="paging-number"
-          ><span class="font-semibold"
-            >{{ paging.from }}-{{ paging.to }}
-          </span>
+          ><span class="font-semibold">{{ paging.from }}-{{ paging.to }} </span>
           trong số <span class="font-semibold">{{ paging.total }}</span></span
         >
         <div @click="nextPage" class="paging-icon flex" title="Trang sau">
@@ -29,24 +27,30 @@
       <BaseTable>
         <template #table-header>
           <tr>
-            <th class="w120">Họ </th>
+            <th class="w120">Họ</th>
             <th>Tên</th>
             <th>Điện thoại</th>
             <th>Email</th>
             <th>Địa chỉ</th>
-            <th>Trạng thái</th>
+            <th class="td-text-center">Trạng thái</th>
             <th class="td-text-center">Ngày tạo</th>
           </tr>
         </template>
         <template #table-body>
           <tr v-for="user in listUsers" :key="user">
-            <td class="w120">{{user.last_name}}</td>
-            <td>{{user.first_name}}</td>
-            <td>{{user.phone}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.address}}</td>
-            <td>{{user.status}}</td>
-            <td class="td-text-center">{{formatDate(user.created_at)}}</td>
+            <td class="w120">{{ user.last_name }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.address }}</td>
+            <td>
+              <div class="status-flex flex">
+                <div class="status-text" :class="{'status-1': user.status==1, 'status-0': user.status==0}">
+                  {{ statusText[user.status] }}
+                </div>
+              </div>
+            </td>
+            <td class="td-text-center">{{ formatDate(user.created_at) }}</td>
           </tr>
         </template>
       </BaseTable>
@@ -65,24 +69,25 @@ export default {
       timeout: null,
       textSearch: "",
       paging: {},
+      statusText: ["Chưa kích hoạt", "Đang sử dụng"],
     };
   },
   computed: {
     ...mapGetters(["userList"]),
   },
   watch: {
-    userList: function(value){
-      if(value){
+    userList: function (value) {
+      if (value) {
         this.listUsers = value.data;
-        this.paging = {from: value.from, to: value.to, total: value.total}
+        this.paging = { from: value.from, to: value.to, total: value.total };
       }
     },
     textSearch: function (value) {
-      this.getUserList({page: 1, per_page: 10, search: value})
+      this.getUserList({ page: 1, per_page: 10, search: value });
     },
   },
-  created(){
-    this.getUserList({page: 1, per_page: 10, search: ''})
+  created() {
+    this.getUserList({ page: 1, per_page: 10, search: "" });
   },
   methods: {
     ...mapMutations(["setUserList"]),
@@ -100,12 +105,20 @@ export default {
     },
     previousPage() {
       if (this.userList.current_page > 1) {
-        this.getUserList({page: this.userList.current_page - 1, per_page: 10, search: this.textSearch})
+        this.getUserList({
+          page: this.userList.current_page - 1,
+          per_page: 10,
+          search: this.textSearch,
+        });
       }
     },
     nextPage() {
       if (this.userList.current_page < this.userList.last_page) {
-        this.getUserList({page: this.userList.current_page + 1, per_page: 10, search: this.textSearch})
+        this.getUserList({
+          page: this.userList.current_page + 1,
+          per_page: 10,
+          search: this.textSearch,
+        });
       }
     },
   },
@@ -186,7 +199,26 @@ tbody tr {
   margin-right: 8px;
   min-width: 96px;
 }
-.w120{
+.w120 {
   padding-left: 8px;
+}
+.status-flex {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+.status-text{
+  background-color: aqua;
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+.status-1{
+  background-color: var(--text-green-color);
+  color: #fff;
+}
+.status-0{
+  background-color: var(--text-error);
+  color: #fff;
 }
 </style>

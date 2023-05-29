@@ -239,6 +239,7 @@ export default {
      * Khi form validate thành công thì thực hiện gọi api
      */
     submitForm() {
+      console.log(this.content);
         if (this.articleImageUrl == "") {
           this.isEmptyImage = true;
         }

@@ -157,7 +157,7 @@ export default {
       return router;
     },
     linkToMenu(){
-      this.$router.push({ name: this.getRouterLink()});
+      this.$router.push({ name: 'menu-filter', query: {name: this.getRouterLink()}});
     }
   },
 };

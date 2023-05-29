@@ -5,7 +5,7 @@
         <span class="empty-cart-text"
           >Chưa có sản phẩm nào trong giỏ hàng.</span
         >
-        <router-link to="/menu">
+        <router-link to="/menu/all">
           <BaseButton
             buttonType="regular-square"
             buttonName="QUAY TRỞ LẠI CỬA HÀNG"
@@ -198,7 +198,7 @@ export default {
 <style scoped>
 .cart-page {
   width: 100%;
-  padding: 32px 0 0 4%;
+  padding: 64px 0 0 4%;
   box-sizing: border-box;
   position: relative;
   min-height: 100vh;

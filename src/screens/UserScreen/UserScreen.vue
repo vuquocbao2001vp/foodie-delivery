@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .container {
     display: flex;
     flex-direction: column;
@@ -60,7 +60,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     margin-top: 65px;
-    padding-top: 32px;
+    /* padding-top: 32px;  */
     z-index: 1;
 }
 

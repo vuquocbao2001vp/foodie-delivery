@@ -515,7 +515,7 @@ export default {
 <style scoped>
 .payment-page {
   width: 100%;
-  padding: 32px 0 0 6%;
+  padding: 64px 0 0 6%;
   box-sizing: border-box;
   position: relative;
 }

@@ -89,6 +89,7 @@ export default {
   align-items: flex-start;
   position: relative;
   padding-bottom: 64px;
+  padding-top: 32px;
 }
 .menu-navbar {
   width: 28%;

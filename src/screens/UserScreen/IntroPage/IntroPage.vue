@@ -36,14 +36,16 @@ export default {
 <style scoped>
 .intro-container {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   padding: 0 10%;
   align-items: baseline;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
+  padding-top: 24px;
 }
 #content {
-  max-width: 100%;
+  width: 100%;
 }
+
 </style>

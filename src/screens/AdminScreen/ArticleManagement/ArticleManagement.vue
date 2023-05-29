@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setArticles", "setArticle"]),
-    ...mapActions(["getArticleList", "getArticle", "deleteArticle"]),
+    ...mapActions(["getArticleList", "getArticle", "deleteArticle", "deleteMultiArticle"]),
     formatDate,
     /**
      * Hiển thị chi tiết sản phẩm
@@ -187,12 +187,12 @@ export default {
      * sự kiện click xác nhận ở popup
      */
     confirmPopupAction(action) {
-      
       if(action == "delete"){
         this.deleteArticle(this.deleteToArticle.id);
       }
       else if(action == "deleteMulti"){
         console.log(this.selectedArticles);
+        this.deleteMultiArticle(this.selectedArticles)
       }
       this.selectedArticles = [];
       this.isSelectAll = false;
@@ -228,7 +228,6 @@ export default {
       }
     },
     deleteMultiArticleOnClick() {
-      console.log(this.selectedArticles);
       this.showPopup(true, "Bạn có chắc chắn muốn xóa những bài viết đã chọn không?")
       this.popupAction = "deleteMulti";
     },

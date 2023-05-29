@@ -9,3 +9,11 @@
     background-color: rgba(255, 255, 255, 0) !important;
     color: var(--text-red-color) !important;
 }
+.dx-gallery-item-image {
+    width: 100% !important;
+    height: 100% !important;
+}
+.dx-gallery{
+    width: 100% !important;
+    height: calc(100vh - 65px) !important;
+}
