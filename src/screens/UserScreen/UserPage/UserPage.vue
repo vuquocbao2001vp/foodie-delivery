@@ -80,16 +80,15 @@
             <div class="input-item flex">
               <span class="input-title">Địa chỉ *</span>
               <div class="input-box">
-                <!-- <vue-google-autocomplete
-                  ref="address"
-                  id="map"
-                  classname="form-control"
-                  placeholder=""
+                <vue-google-autocomplete
+                  ref="userAddress"
+                  id="userMap"
+                  classname="user-form-control"
+                  :placeholder="payUser.address"
                   v-on:placechanged="getAddressData"
                   country="vn"
                 >
-                </vue-google-autocomplete> -->
-                <DxTextBox v-model="address" />
+                </vue-google-autocomplete>
                 <span v-if="isEmptyAddress" class="error-text-address"
                   >Địa chỉ không được để trống.</span
                 >
@@ -121,10 +120,10 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-// import VueGoogleAutocomplete from "vue-google-autocomplete";
+import VueGoogleAutocomplete from "vue-google-autocomplete";
 
 export default {
-  // components: { VueGoogleAutocomplete },
+  components: { VueGoogleAutocomplete },
   data() {
     return {
       elementFocus: null,
@@ -166,8 +165,15 @@ export default {
     changUserInfo() {
       this.$refs.submitButton.$el.click();
     },
+
+    async getAddressData(addressData, placeResultData, id) {
+      if (addressData && placeResultData && id) {
+        this.address = placeResultData.formatted_address;
+      }
+    },
+
     async submitForm() {
-      if (!this.address) {
+      if (!this.address && !this.payUser.address) {
         this.isEmptyAddress = true;
       }
       else if(this.payUser.address !== this.address || !this.$compareObjects(this.payUser, this.oldUser)){
@@ -246,6 +252,13 @@ export default {
 }
 .mgt-24 {
   margin-top: 32px;
+}
+.user-form-control {
+  height: 34px;
+  border: 1px solid #ccc;
+  width: 100%;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 .pac-target-input {
   padding: 0 10px;

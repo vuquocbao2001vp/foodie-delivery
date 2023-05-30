@@ -256,6 +256,7 @@ export default {
 }
 .product-option {
   margin-top: 16px;
+  align-items: flex-start;
 }
 .product-option-title {
   font-size: 1rem;

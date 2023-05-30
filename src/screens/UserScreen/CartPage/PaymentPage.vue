@@ -104,13 +104,11 @@
                       ref="address"
                       id="map"
                       classname="form-control"
-                      placeholder=""
+                      :placeholder="payUser.address"
                       v-on:placechanged="getAddressData"
                       country="vn"
-                      v-model="address"
                     >
                     </vue-google-autocomplete>
-                    <!-- <DxTextBox v-model="address" /> -->
                     <span v-if="isEmptyAddress" class="error-text-address"
                       >Địa chỉ không được để trống.</span
                     >
@@ -385,6 +383,7 @@ export default {
     checkout: function (value) {
       this.checkoutInfo = { ...value };
     },
+    
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
@@ -423,7 +422,6 @@ export default {
     async getAddressData(addressData, placeResultData, id) {
       if (addressData && placeResultData && id) {
         this.address = placeResultData.formatted_address;
-        console.log(placeResultData.formatted_address);
         const service = new window.google.maps.DistanceMatrixService();
         service.getDistanceMatrix(
           {
@@ -435,7 +433,6 @@ export default {
           (response, status) => {
             if (status === window.google.maps.DistanceMatrixStatus.OK) {
               this.distance = response.rows[0].elements[0].distance.value;
-              console.log(this.distance);
             } else {
               console.log("Error: " + status);
             }
@@ -455,13 +452,16 @@ export default {
       this.$refs.submitButton.$el.click();
     },
     async submitForm() {
-      if (!this.address) {
+      if (!this.address && !this.payUser.address) {
         this.isEmptyAddress = true;
       } else if (!this.isAgreeRule) {
         alert("Bạn cần đọc và đồng ý với điều khoản của website.");
-      } else {
+      } else if (this.distance > 10000){
+        alert("Rất tiếc, vị trí của quý khách nằm ngoài phạm vi phục vụ. Vui lòng chọn điểm giao hàng gần hơn 10km.")
+      }
+      else {
         this.isEmptyAddress = false;
-        this.payUser.address = this.address;
+        if(this.address) this.payUser.address = this.address;
         if (this.submitMode == 1) {
           let is_user = 0;
           let user_id = 0;
@@ -757,5 +757,8 @@ td {
 }
 .ph4 {
   padding: 4px 0;
+}
+.is-default-address {
+  padding: 8px 0;
 }
 </style>

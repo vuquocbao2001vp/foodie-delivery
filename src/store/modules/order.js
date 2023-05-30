@@ -50,9 +50,6 @@ const actions = {
     formData.append("phone", user.phone);
     formData.append("email", user.email);
     formData.append("address", user.address);
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
     try {
       await guestAxios.post("/order/create", formData).then((response) => {
         commit("setLoading", false);
