@@ -100,79 +100,23 @@
                 <div class="input-item">
                   <span class="input-title">Địa chỉ *</span>
                   <div class="input-box">
-                    <!-- <vue-google-autocomplete
-                  ref="address"
-                  id="map"
-                  classname="form-control"
-                  placeholder=""
-                  v-on:placechanged="getAddressData"
-                  country="vn"
-                >
-                </vue-google-autocomplete> -->
-                    <DxTextBox v-model="address" />
+                    <vue-google-autocomplete
+                      ref="address"
+                      id="map"
+                      classname="form-control"
+                      placeholder=""
+                      v-on:placechanged="getAddressData"
+                      country="vn"
+                      v-model="address"
+                    >
+                    </vue-google-autocomplete>
+                    <!-- <DxTextBox v-model="address" /> -->
                     <span v-if="isEmptyAddress" class="error-text-address"
                       >Địa chỉ không được để trống.</span
                     >
                   </div>
                 </div>
               </div>
-              <!-- <div class="row-container flex" v-if="!isLogin">
-                <div>
-                  <DxCheckBox v-model="isRegister" text="Tạo tài khoản mới" />
-                </div>
-              </div>
-              <div v-if="isRegister">
-                <div class="row-container flex">
-                  <div class="input-item">
-                    <span class="input-title">Tạo mật khẩu của bạn *</span>
-                    <div class="input-box">
-                      <DxTextBox
-                        :mode="'password'"
-                        :passwordChar="'*'"
-                        v-model="passwordInput"
-                        max-length="100"
-                      >
-                        <DxValidator>
-                          <DxRequiredRule
-                            message="Mật khẩu không được để trống."
-                          />
-                          <DxStringLengthRule
-                            min="6"
-                            message="Mật khẩu phải nhiều hơn 6 kí tự."
-                          />
-                        </DxValidator>
-                      </DxTextBox>
-                    </div>
-                  </div>
-                </div>
-                <div class="row-container flex">
-                  <div class="input-item">
-                    <span class="input-title">Nhập lại mật khẩu *</span>
-                    <div class="input-box">
-                      <DxTextBox :mode="'password'" :passwordChar="'*'">
-                        <DxValidator>
-                          <DxRequiredRule
-                            message="Nhập lại mật khẩu không được để trống."
-                          />
-                          <DxCompareRule
-                            :comparison-target="passwordComparison"
-                            message="Mật khẩu không khớp."
-                          />
-                        </DxValidator>
-                      </DxTextBox>
-                    </div>
-                  </div>
-                </div>
-                <div class="row-container flex flex-end">
-                  <div class="create-new-account" @click="createAccount">
-                    <BaseButton
-                      buttonName="Tạo tài khoản"
-                      buttonType="regular-square"
-                    />
-                  </div>
-                </div>
-              </div> -->
-
               <div v-show="false">
                 <DxButton
                   ref="submitButton"
@@ -277,9 +221,11 @@
   <div v-if="isCheckout" class="payment-page pdb56">
     <div class="payment-container flex">
       <div class="user-payment-info user-checkout-info">
-        <div class="user-payment-title user-checkout-title">CHI TIẾT ĐƠN HÀNG</div>
+        <div class="user-payment-title user-checkout-title">
+          CHI TIẾT ĐƠN HÀNG
+        </div>
         <div class="user-payment-container">
-            <table>
+          <table>
             <thead>
               <tr>
                 <th>SẢN PHẨM</th>
@@ -289,10 +235,16 @@
             <tbody>
               <tr v-for="item in productsPayment" :key="item">
                 <td class="td-product">
-                  <div @click="linkToDetail" class="text-red ph4 bold flex">{{item.product.name}}</div>
-                  <div class="text-grey ph4 flex">Số lượng: {{item.amount}}</div>
+                  <div @click="linkToDetail" class="text-red ph4 bold flex">
+                    {{ item.product.name }}
+                  </div>
+                  <div class="text-grey ph4 flex">
+                    Số lượng: {{ item.amount }}
+                  </div>
                 </td>
-                <td class="bold text-right">{{(item.product.price * item.amount).toLocaleString()}}đ</td>
+                <td class="bold text-right">
+                  {{ (item.product.price * item.amount).toLocaleString() }}đ
+                </td>
               </tr>
               <tr>
                 <td>Phương thức thanh toán</td>
@@ -300,11 +252,15 @@
               </tr>
               <tr>
                 <td>Phí giao hàng</td>
-                <td class="bold text-right">{{ shippingFee.toLocaleString() }}đ</td>
+                <td class="bold text-right">
+                  {{ shippingFee.toLocaleString() }}đ
+                </td>
               </tr>
               <tr>
                 <td>Tổng cộng</td>
-                <td class="bold text-right">{{ (total + shippingFee).toLocaleString() }}đ</td>
+                <td class="bold text-right">
+                  {{ (total + shippingFee).toLocaleString() }}đ
+                </td>
               </tr>
             </tbody>
           </table>
@@ -315,37 +271,65 @@
         <div class="checkout-order-row flex">
           <div class="row-dot"></div>
           <div class="row-text">
-            <span class="text-grey">Mã đơn hàng: <span class="bold">{{checkoutInfo.id}}</span></span>
+            <span class="text-grey"
+              >Mã đơn hàng:
+              <span class="bold">{{ checkoutInfo.id }}</span></span
+            >
           </div>
         </div>
         <div class="checkout-order-row flex">
           <div class="row-dot"></div>
           <div class="row-text">
-            <span class="text-grey">Ngày: <span class="bold">{{formatDate(checkoutInfo.created_at)}}</span></span>
+            <span class="text-grey"
+              >Ngày:
+              <span class="bold">{{
+                formatDate(checkoutInfo.created_at)
+              }}</span></span
+            >
           </div>
         </div>
         <div class="checkout-order-row flex">
           <div class="row-dot"></div>
           <div class="row-text">
-            <span class="text-grey">Tên khách hàng: <span class="bold">{{checkoutInfo.last_name + ' '+ checkoutInfo.first_name}}</span></span>
+            <span class="text-grey"
+              >Tên khách hàng:
+              <span class="bold">{{
+                checkoutInfo.last_name + " " + checkoutInfo.first_name
+              }}</span></span
+            >
           </div>
         </div>
         <div class="checkout-order-row flex">
           <div class="row-dot"></div>
           <div class="row-text">
-            <span class="text-grey">Số điện thoại: <span class="bold">{{checkoutInfo.phone}}</span></span>
+            <span class="text-grey"
+              >Số điện thoại:
+              <span class="bold">{{ checkoutInfo.phone }}</span></span
+            >
           </div>
         </div>
         <div class="checkout-order-row flex">
           <div class="row-dot"></div>
           <div class="row-text">
-            <span class="text-grey">Tổng cộng: <span class="bold text-primary">{{(checkoutInfo.total_price) ? checkoutInfo.total_price.toLocaleString() : ''}}đ</span></span>
+            <span class="text-grey"
+              >Tổng cộng:
+              <span class="bold text-primary"
+                >{{
+                  checkoutInfo.total_price
+                    ? checkoutInfo.total_price.toLocaleString()
+                    : ""
+                }}đ</span
+              ></span
+            >
           </div>
         </div>
         <div class="checkout-order-row flex">
           <div class="row-dot"></div>
           <div class="row-text">
-            <span class="text-grey">Phương thức thanh toán: <span class="bold">Thanh toán khi nhận hàng</span></span>
+            <span class="text-grey"
+              >Phương thức thanh toán:
+              <span class="bold">Thanh toán khi nhận hàng</span></span
+            >
           </div>
         </div>
       </div>
@@ -356,10 +340,10 @@
 <script>
 import formatDate from "@/constants/functions/formatDate.js";
 import { mapGetters, mapMutations, mapActions } from "vuex";
-// import VueGoogleAutocomplete from "vue-google-autocomplete";
+import VueGoogleAutocomplete from "vue-google-autocomplete";
 
 export default {
-  // components: { VueGoogleAutocomplete },
+  components: { VueGoogleAutocomplete },
   data() {
     return {
       screen: 1,
@@ -398,9 +382,9 @@ export default {
       },
       deep: true,
     },
-    checkout: function(value){
-      this.checkoutInfo = {...value}
-    }
+    checkout: function (value) {
+      this.checkoutInfo = { ...value };
+    },
   },
   created() {
     const vuex = JSON.parse(localStorage.getItem("vuex"));
@@ -415,7 +399,7 @@ export default {
         if (cart.length > 0) {
           this.setCart(cart);
           this.emptyCart = false;
-          this.productsPayment = {...this.cart}
+          this.productsPayment = { ...this.cart };
         } else {
           this.emptyCart = true;
         }
@@ -436,29 +420,29 @@ export default {
       }, 0);
     },
 
-    // async getAddressData(addressData, placeResultData, id) {
-    //   if (addressData && placeResultData && id) {
-    //     this.address = placeResultData.formatted_address;
-    //     console.log(placeResultData.formatted_address);
-    //     const service = new window.google.maps.DistanceMatrixService();
-    //     service.getDistanceMatrix(
-    //       {
-    //         origins: [this.defaultAddress],
-    //         destinations: [this.address],
-    //         travelMode: window.google.maps.TravelMode.DRIVING,
-    //         unitSystem: window.google.maps.UnitSystem.METRIC,
-    //       },
-    //       (response, status) => {
-    //         if (status === window.google.maps.DistanceMatrixStatus.OK) {
-    //           this.distance = response.rows[0].elements[0].distance.value;
-    //           console.log(this.distance);
-    //         } else {
-    //           console.log("Error: " + status);
-    //         }
-    //       }
-    //     );
-    //   }
-    // },
+    async getAddressData(addressData, placeResultData, id) {
+      if (addressData && placeResultData && id) {
+        this.address = placeResultData.formatted_address;
+        console.log(placeResultData.formatted_address);
+        const service = new window.google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            origins: [this.defaultAddress],
+            destinations: [this.address],
+            travelMode: window.google.maps.TravelMode.DRIVING,
+            unitSystem: window.google.maps.UnitSystem.METRIC,
+          },
+          (response, status) => {
+            if (status === window.google.maps.DistanceMatrixStatus.OK) {
+              this.distance = response.rows[0].elements[0].distance.value;
+              console.log(this.distance);
+            } else {
+              console.log("Error: " + status);
+            }
+          }
+        );
+      }
+    },
     passwordComparison() {
       return this.passwordInput;
     },
@@ -478,9 +462,7 @@ export default {
       } else {
         this.isEmptyAddress = false;
         this.payUser.address = this.address;
-        if (this.submitMode == 2) {
-          console.log("ok2");
-        } else if (this.submitMode == 1) {
+        if (this.submitMode == 1) {
           let is_user = 0;
           let user_id = 0;
           let products_id = this.cart.map((item) => item.product.id);
@@ -519,7 +501,7 @@ export default {
   box-sizing: border-box;
   position: relative;
 }
-.pdb56{
+.pdb56 {
   min-height: 100vh;
 }
 .payment-login-header {
@@ -549,7 +531,7 @@ export default {
   margin-right: 36px;
   border-top: 2px solid var(--grid-border);
 }
-.user-checkout-info{
+.user-checkout-info {
   padding: 0;
   border: none;
 }
@@ -715,19 +697,6 @@ td {
   color: var(--text-secondary-color);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 .text-grey {
   color: var(--text-secondary-color);
   margin-right: 8px;
@@ -749,11 +718,12 @@ td {
   padding: 32px 24px;
   background-color: var(--grey-bg);
   border-radius: 4px;
-  box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%), inset 0 0 0 1px rgb(0 0 0 / 5%);
+  box-shadow: 1px 1px 3px 0px rgb(0 0 0 / 20%), 0 1px 0 rgb(0 0 0 / 7%),
+    inset 0 0 0 1px rgb(0 0 0 / 5%);
 }
 .user-payment-container {
-    width: 100%;
-    margin-top: 12px;
+  width: 100%;
+  margin-top: 12px;
 }
 .payment-info div {
   height: 28px;
@@ -785,7 +755,7 @@ td {
 .row-text .bold {
   font-size: 1.025rem;
 }
-.ph4{
+.ph4 {
   padding: 4px 0;
 }
 </style>
