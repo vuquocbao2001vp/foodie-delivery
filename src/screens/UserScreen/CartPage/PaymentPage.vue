@@ -104,7 +104,7 @@
                       ref="address"
                       id="map"
                       classname="form-control"
-                      :placeholder="payUser.address"
+                      :placeholder="payUser.address ? payUser.address : ''"
                       v-on:placechanged="getAddressData"
                       country="vn"
                     >
