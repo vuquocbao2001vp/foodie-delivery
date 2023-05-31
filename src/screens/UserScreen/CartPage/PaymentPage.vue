@@ -257,7 +257,9 @@
               <tr>
                 <td>Tổng cộng</td>
                 <td class="bold text-right">
-                  {{ (total + shippingFee).toLocaleString() }}đ
+                  {{ checkoutInfo.total_price
+                    ? checkoutInfo.total_price.toLocaleString()
+                    : "" }}đ
                 </td>
               </tr>
             </tbody>
